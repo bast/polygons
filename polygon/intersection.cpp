@@ -8,7 +8,7 @@
 // liable for any real or imagined damage resulting from its use.
 // Users of this code must verify correctness for their application.
 
-#include "helpers.h"
+#include "intersection.h"
 
 // tests if a point is left|on|right of an infinite line
 // input:  three points p0, p1, and p2

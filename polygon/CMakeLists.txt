@@ -7,8 +7,8 @@ add_library(
     SHARED
     polygon.cpp
     polygon.h
-    helpers.cpp
-    helpers.h
+    intersection.cpp
+    intersection.h
     )
 
 # clang seems to need this

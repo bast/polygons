@@ -168,7 +168,7 @@ def build_nodes(n, children):
         node = Node()
         for _ in range(n):
             try:
-                node.add_child(_children.next())
+                node.add_child(_children.__next__())
             except StopIteration:
                 done = True
         if len(node.children) > 0:

@@ -251,7 +251,7 @@ print('time used in polygons: {}'.format(time.time() - t0))
 poly.free_context(context)
 
 for i, point in enumerate(points):
-    diff = abs(distances_squared_tree[i] - distances_poly[i])
+    diff = abs(distances_squared_tree[i] - distances_poly[i]**2.0)
     assert diff < 1.0e-7
 
 sys.exit()

@@ -48,4 +48,25 @@ def add_polygon(context, points):
                               y_coordinates_p)
 
 
-get_distance = _lib.polygons_get_distance
+def get_distances(context, points):
+
+    num_points = len(points)
+
+    # cast a pointer which points to the numpy array data
+    # we work with numpy because tree initialization with normal lists segfault
+    # for lists longer than ca. 0.5 million points
+    x_coordinates, y_coordinates = zip(*points)
+    x_coordinates_np = np.array(x_coordinates)
+    x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
+    y_coordinates_np = np.array(y_coordinates)
+    y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
+    distances_np = np.zeros(num_points, dtype=np.bool)
+    distances_p = _ffi.cast("double *", distances_np.ctypes.data)
+
+    _lib.polygons_get_distances(context,
+                                num_points,
+                                x_coordinates_p,
+                                y_coordinates_p,
+                                distances_p)
+
+    return distances_np.tolist()

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <random>
 #include <limits>
+#include <math.h>
 
 #include "polygons.h"
 #include "intersection.h"
@@ -96,7 +97,7 @@ void polygons_context::add_polygon(const int num_points,
             if (i < num_edges)
             {
                 point p1 = {x[i], y[i]};
-                point p2 = {x[i+1], y[i+1]};
+                point p2 = {x[i + 1], y[i + 1]};
                 edge e = {p1, p2};
                 new_node.add_child_edge(e);
                 i++;
@@ -113,15 +114,24 @@ void polygons_context::add_polygon(const int num_points,
 }
 
 POLYGONS_API
-double polygons_get_distance(const polygons_context *context,
-                             const double x,
-                             const double y)
+void polygons_get_distances(const polygons_context *context,
+                            const int num_points,
+                            const double x[],
+                            const double y[],
+                            double distances[])
 {
-    return AS_CTYPE(polygons_context, context)->get_distance(x, y);
+    AS_CTYPE(polygons_context, context)
+        ->get_distances(num_points, x, y, distances);
 }
-double polygons_context::get_distance(const double px, const double py) const
+void polygons_context::get_distances(const int num_points,
+                                     const double x[],
+                                     const double y[],
+                                     double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
-    point p = {px, py};
-    return nodes[0].get_distance(large_number, p);
+    for (int i = 0; i < num_points; i++)
+    {
+        point p = {x[i], y[i]};
+        distances[i] = sqrt(nodes[0].get_distance(large_number, p));
+    }
 }

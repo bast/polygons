@@ -246,10 +246,7 @@ vertices, _ = read_polygon('polygon.txt', xshift=0.0, yshift=0.0)
 poly.add_polygon(context, vertices)
 
 t0 = time.time()
-distances_poly = []
-for polygon in polygons:
-    for i, point in enumerate(points):
-        distances_poly.append(poly.get_distance(context, point[0], point[1]))
+distances_poly = poly.get_distances(context, points)  # FIXME so far only one polygon
 print('time used in polygons: {}'.format(time.time() - t0))
 poly.free_context(context)
 

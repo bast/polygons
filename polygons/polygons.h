@@ -20,8 +20,10 @@ class polygons_context
     // FIXME currently only supports adding one polygon
     //       untested for multiple polygons
     void add_polygon(const int num_points, const double x[], const double y[]);
-    // FIXME vectorize
-    double get_distance(const double px, const double py) const;
+    void get_distances(const int num_points,
+                       const double x[],
+                       const double y[],
+                       double distances[]) const;
 
   private:
     polygons_context(const polygons_context &rhs);            // not implemented
@@ -56,9 +58,11 @@ void polygons_add_polygon(polygons_context *context,
                           const double y[]);
 
 POLYGONS_API
-double polygons_get_distance(const polygons_context *context,
-                             const double x,
-                             const double y);
+void polygons_get_distances(const polygons_context *context,
+                            const int num_points,
+                            const double x[],
+                            const double y[],
+                            const double distances[]);
 
 #ifdef __cplusplus
 }

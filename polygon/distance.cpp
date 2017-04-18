@@ -6,15 +6,6 @@
 #include <limits>
 
 
-// Quick routines
-static inline double length(double x, double y)
-{
-//  return sqrt(x*x + y*y);
-    return      x*x + y*y;  // we cheat - we compute square root at the very end only for the closest line
-                            //            instead of every line
-}
-
-
 double dsegment(const double x0,
                 const double y0,
                 const double p1x,
@@ -29,19 +20,19 @@ double dsegment(const double x0,
 
   if (c1 <= 0.0)
   {
-    return length(x0 - p1x, y0 - p1y);
+    return distance_squared(x0 - p1x, y0 - p1y);
   }
 
   double c2 = v[0]*v[0] + v[1]*v[1];
 
   if (c1 >= c2)
   {
-    return length(x0 - p2x, y0 - p2y);
+    return distance_squared(x0 - p2x, y0 - p2y);
   }
   else
   {
-    return length(x0 - (p1x + c1/c2*v[0]),
-                  y0 - (p1y + c1/c2*v[1]));
+    return distance_squared(x0 - (p1x + c1/c2*v[0]),
+                            y0 - (p1y + c1/c2*v[1]));
   }
 }
 

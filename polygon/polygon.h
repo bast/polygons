@@ -16,6 +16,37 @@ struct point
     double y;
 };
 
+struct edge
+{
+    point p1;
+    point p2;
+};
+
+class node
+{
+  public:
+    node();
+    ~node();
+
+//  void add_polygon(const int num_points, const double x[], const double y[]);
+//  void contains_points(const int num_points,
+//                       const double x[],
+//                       const double y[],
+//                       bool contains_points[]) const;
+
+  private:
+    node(const node &rhs);            // not implemented
+    node &operator=(const node &rhs); // not implemented
+
+    double xmin;
+    double xmax;
+    double ymin;
+    double ymax;
+//  int num_polygons;
+//  std::vector<std::array<point, 2> > bounding_box;
+//  std::vector<std::vector<point> > polygons_v;
+};
+
 class polygon_context
 {
   public:

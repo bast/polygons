@@ -28,23 +28,20 @@ class node
     node();
     ~node();
 
-//  void add_polygon(const int num_points, const double x[], const double y[]);
-//  void contains_points(const int num_points,
-//                       const double x[],
-//                       const double y[],
-//                       bool contains_points[]) const;
+    double get_distance(const double d, const point p) const;
+    void add_child_node(const node child);
+    void add_child_edge(const edge child);
 
   private:
-    node(const node &rhs);            // not implemented
+//  node(const node &rhs);            // not implemented
     node &operator=(const node &rhs); // not implemented
 
     double xmin;
     double xmax;
     double ymin;
     double ymax;
-//  int num_polygons;
-//  std::vector<std::array<point, 2> > bounding_box;
-//  std::vector<std::vector<point> > polygons_v;
+    std::vector<node> children_nodes;
+    std::vector<edge> children_edges;
 };
 
 class polygon_context

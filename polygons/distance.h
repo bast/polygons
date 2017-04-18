@@ -7,9 +7,10 @@ extern "C" {
 
 static inline double distance_squared(double x, double y)
 {
-//  return sqrt(x*x + y*y);
-    return      x*x + y*y;  // we cheat - we compute square root at the very end only for the closest line
-                            //            instead of every line
+    //  return sqrt(x*x + y*y);
+    return x * x + y * y; // we cheat - we compute square root at the very end
+                          // only for the closest line
+                          //            instead of every line
 }
 
 double dsegment(const double x0,
@@ -25,7 +26,7 @@ double vdsegment(const int num_points,
                  const int num_vertices,
                  const double vs_x[],
                  const double vs_y[],
-                       double distances[]);
+                 double distances[]);
 
 #ifdef __cplusplus
 }

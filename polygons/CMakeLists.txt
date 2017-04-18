@@ -5,12 +5,16 @@ include_directories(
 add_library(
     polygons
     SHARED
-    polygons.cpp
-    polygons.h
-    intersection.cpp
-    intersection.h
     distance.cpp
     distance.h
+    edge.h
+    intersection.cpp
+    intersection.h
+    node.cpp
+    node.h
+    point.h
+    polygons.cpp
+    polygons.h
     )
 
 # clang seems to need this

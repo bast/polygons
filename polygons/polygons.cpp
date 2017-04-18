@@ -82,8 +82,9 @@ void polygons_context::add_polygon(const int num_points,
 
     int N = 4; // FIXME
 
-    int num_nodes = num_points / N;
-    if (num_points % N > 0)
+    int num_edges = num_points - 1;
+    int num_nodes = num_edges / N;
+    if (num_edges % N > 0)
         num_nodes++;
 
     int i = 0;
@@ -92,9 +93,11 @@ void polygons_context::add_polygon(const int num_points,
         node new_node;
         for (int l = 0; l < N; l++)
         {
-            if (i < num_points)
+            if (i < num_edges)
             {
-                edge e = {x[i], y[i]};
+                point p1 = {x[i], y[i]};
+                point p2 = {x[i+1], y[i+1]};
+                edge e = {p1, p2};
                 new_node.add_child_edge(e);
                 i++;
             }

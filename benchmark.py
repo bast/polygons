@@ -255,7 +255,6 @@ poly.free_context(context)
 
 for i, point in enumerate(points):
     diff = abs(distances_squared_tree[i] - distances_poly[i])
-    print(distances_poly[i], diff)
     assert diff < 1.0e-7
 
 sys.exit()

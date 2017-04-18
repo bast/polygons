@@ -4,7 +4,7 @@
 #include <random>
 #include <limits>
 
-#include "polygon.h"
+#include "polygons.h"
 #include "intersection.h"
 #include "distance.h"
 
@@ -89,7 +89,7 @@ bool skip_box(const double d,
     }
 }
 
-void polygon_context::check_that_context_is_initialized() const
+void polygons_context::check_that_context_is_initialized() const
 {
     if (not is_initialized)
     {
@@ -98,25 +98,25 @@ void polygon_context::check_that_context_is_initialized() const
     }
 }
 
-POLYGON_API
-polygon_context *polygon_new_context()
+POLYGONS_API
+polygons_context *polygons_new_context()
 {
-    return AS_TYPE(polygon_context, new polygon_context());
+    return AS_TYPE(polygons_context, new polygons_context());
 }
-polygon_context::polygon_context()
+polygons_context::polygons_context()
 {
     num_polygons = 0;
     is_initialized = true;
 }
 
-POLYGON_API
-void polygon_free_context(polygon_context *context)
+POLYGONS_API
+void polygons_free_context(polygons_context *context)
 {
     if (!context)
         return;
-    delete AS_TYPE(polygon_context, context);
+    delete AS_TYPE(polygons_context, context);
 }
-polygon_context::~polygon_context()
+polygons_context::~polygons_context()
 {
     num_polygons = 0;
 
@@ -131,15 +131,15 @@ polygon_context::~polygon_context()
     is_initialized = false;
 }
 
-POLYGON_API
-void polygon_add_polygon(polygon_context *context,
+POLYGONS_API
+void polygons_add_polygon(polygons_context *context,
                         const int num_points,
                         const double x[],
                         const double y[])
 {
-    AS_TYPE(polygon_context, context)->add_polygon(num_points, x, y);
+    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y);
 }
-void polygon_context::add_polygon(const int num_points,
+void polygons_context::add_polygon(const int num_points,
                                  const double x[],
                                  const double y[])
 {
@@ -172,16 +172,16 @@ void polygon_context::add_polygon(const int num_points,
     temp.clear();
 }
 
-POLYGON_API
-void polygon_contains_points(const polygon_context *context,
+POLYGONS_API
+void polygons_contains_points(const polygons_context *context,
                             const int num_points,
                             const double x[],
                             const double y[],
                             bool contains_points[])
 {
-    AS_CTYPE(polygon_context, context)->contains_points(num_points, x, y, contains_points);
+    AS_CTYPE(polygons_context, context)->contains_points(num_points, x, y, contains_points);
 }
-void polygon_context::contains_points(const int num_points,
+void polygons_context::contains_points(const int num_points,
                                      const double x[],
                                      const double y[],
                                      bool contains_points[]) const

@@ -1,9 +1,9 @@
-#ifndef POLYGON_H_INCLUDED
-#define POLYGON_H_INCLUDED
+#ifndef POLYGONS_H_INCLUDED
+#define POLYGONS_H_INCLUDED
 
-#ifndef POLYGON_API
-#include "polygon_export.h"
-#define POLYGON_API polygon_EXPORT
+#ifndef POLYGONS_API
+#include "polygons_export.h"
+#define POLYGONS_API polygons_EXPORT
 #endif
 
 #ifdef __cplusplus
@@ -44,11 +44,11 @@ class node
     std::vector<edge> children_edges;
 };
 
-class polygon_context
+class polygons_context
 {
   public:
-    polygon_context();
-    ~polygon_context();
+    polygons_context();
+    ~polygons_context();
 
     void add_polygon(const int num_points, const double x[], const double y[]);
     void contains_points(const int num_points,
@@ -57,8 +57,8 @@ class polygon_context
                          bool contains_points[]) const;
 
   private:
-    polygon_context(const polygon_context &rhs);            // not implemented
-    polygon_context &operator=(const polygon_context &rhs); // not implemented
+    polygons_context(const polygons_context &rhs);            // not implemented
+    polygons_context &operator=(const polygons_context &rhs); // not implemented
 
     int num_polygons;
     std::vector<std::array<point, 2> > bounding_box;
@@ -75,24 +75,24 @@ extern "C" {
 #endif
 
 #ifndef __cplusplus
-struct polygon_context_s;
-typedef struct polygon_context_s polygon_context;
+struct polygons_context_s;
+typedef struct polygons_context_s polygons_context;
 #endif
 
-POLYGON_API
-polygon_context *polygon_new_context();
+POLYGONS_API
+polygons_context *polygons_new_context();
 
-POLYGON_API
-void polygon_free_context(polygon_context *context);
+POLYGONS_API
+void polygons_free_context(polygons_context *context);
 
-POLYGON_API
-void polygon_add_polygon(polygon_context *context,
+POLYGONS_API
+void polygons_add_polygon(polygons_context *context,
                         const int num_points,
                         const double x[],
                         const double y[]);
 
-POLYGON_API
-void polygon_contains_points(const polygon_context *context,
+POLYGONS_API
+void polygons_contains_points(const polygons_context *context,
                             const int num_points,
                             const double x[],
                             const double y[],
@@ -102,4 +102,4 @@ void polygon_contains_points(const polygon_context *context,
 }
 #endif
 
-#endif /* POLYGON_H_INCLUDED */
+#endif /* POLYGONS_H_INCLUDED */

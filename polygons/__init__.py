@@ -6,7 +6,7 @@ import numpy as np
 
 _this_path = os.path.dirname(os.path.realpath(__file__))
 
-_build_dir = os.getenv('POLYGON_BUILD_DIR')
+_build_dir = os.getenv('POLYGONS_BUILD_DIR')
 if _build_dir is None:
     _build_dir = _this_path
 else:
@@ -15,7 +15,7 @@ else:
 _include_dir = _this_path
 
 _lib = get_lib_handle(
-    ['-DPOLYGON_API=', '-DCPP_INTERFACE_NOINCLUDE'],
+    ['-DPOLYGONS_API=', '-DCPP_INTERFACE_NOINCLUDE'],
     'polygon.h',
     'polygon',
     _build_dir,
@@ -25,8 +25,8 @@ _lib = get_lib_handle(
 _ffi = FFI()
 
 
-new_context = _lib.polygon_new_context
-free_context = _lib.polygon_free_context
+new_context = _lib.polygons_new_context
+free_context = _lib.polygons_free_context
 
 
 def add_polygon(context, points):
@@ -42,7 +42,7 @@ def add_polygon(context, points):
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
 
-    _lib.polygon_add_polygon(context,
+    _lib.polygons_add_polygon(context,
                             num_points,
                             x_coordinates_p,
                             y_coordinates_p)
@@ -63,7 +63,7 @@ def contains_points(context, points):
     contains_points_np = np.zeros(num_points, dtype=np.bool)
     contains_points_p = _ffi.cast("bool *", contains_points_np.ctypes.data)
 
-    _lib.polygon_contains_points(context,
+    _lib.polygons_contains_points(context,
                                 num_points,
                                 x_coordinates_p,
                                 y_coordinates_p,

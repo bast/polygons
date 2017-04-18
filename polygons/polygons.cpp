@@ -25,11 +25,7 @@ polygons_context *polygons_new_context()
 {
     return AS_TYPE(polygons_context, new polygons_context());
 }
-polygons_context::polygons_context()
-{
-    num_polygons = 0;
-    is_initialized = true;
-}
+polygons_context::polygons_context() { is_initialized = true; }
 
 POLYGONS_API
 void polygons_free_context(polygons_context *context)
@@ -40,17 +36,34 @@ void polygons_free_context(polygons_context *context)
 }
 polygons_context::~polygons_context()
 {
-    num_polygons = 0;
-
-    bounding_box.clear();
-
-    for (int i = 0; i < polygons_v.size(); i++)
-    {
-        polygons_v[i].clear();
-    }
-    polygons_v.clear();
-
+    nodes.clear();
     is_initialized = false;
+}
+
+std::vector<node> build_nodes(const int n, const std::vector<node> children)
+{
+    int num_new_nodes = children.size() / n;
+    if (children.size() % n > 0)
+        num_new_nodes++;
+
+    std::vector<node> new_nodes;
+
+    int i = 0;
+    for (int k = 0; k < num_new_nodes; k++)
+    {
+        node new_node;
+        for (int l = 0; l < n; l++)
+        {
+            if (i < children.size())
+            {
+                new_node.add_child_node(children[i]);
+                i++;
+            }
+        }
+        new_nodes.push_back(new_node);
+    }
+
+    return new_nodes;
 }
 
 POLYGONS_API
@@ -67,72 +80,45 @@ void polygons_context::add_polygon(const int num_points,
 {
     check_that_context_is_initialized();
 
-    int ipolygon = num_polygons;
-    num_polygons++;
+    int N = 4; // FIXME
 
-    double large_number = std::numeric_limits<double>::max();
+    int num_nodes = num_points / N;
+    if (num_points % N > 0)
+        num_nodes++;
 
-    bounding_box.push_back({point{large_number, large_number},
-                            point{-large_number, -large_number}});
-
-    std::vector<point> temp;
-
-    for (int ipoint = 0; ipoint < num_points; ipoint++)
+    int i = 0;
+    for (int k = 0; k < num_nodes; k++)
     {
-        double x_ = x[ipoint];
-        double y_ = y[ipoint];
-
-        temp.push_back({x_, y_});
-
-        bounding_box[ipolygon][0].x = std::min(bounding_box[ipolygon][0].x, x_);
-        bounding_box[ipolygon][0].y = std::min(bounding_box[ipolygon][0].y, y_);
-        bounding_box[ipolygon][1].x = std::max(bounding_box[ipolygon][1].x, x_);
-        bounding_box[ipolygon][1].y = std::max(bounding_box[ipolygon][1].y, y_);
+        node new_node;
+        for (int l = 0; l < N; l++)
+        {
+            if (i < num_points)
+            {
+                edge e = {x[i], y[i]};
+                new_node.add_child_edge(e);
+                i++;
+            }
+        }
+        nodes.push_back(new_node);
     }
 
-    polygons_v.push_back(temp);
-    temp.clear();
+    while (nodes.size() > 1)
+    {
+        // FIXME N is hardcoded to the same value as above
+        nodes = build_nodes(N, nodes);
+    }
 }
 
 POLYGONS_API
-void polygons_contains_points(const polygons_context *context,
-                              const int num_points,
-                              const double x[],
-                              const double y[],
-                              bool contains_points[])
+double polygons_get_distance(const polygons_context *context,
+                             const double x,
+                             const double y)
 {
-    AS_CTYPE(polygons_context, context)
-        ->contains_points(num_points, x, y, contains_points);
+    return AS_CTYPE(polygons_context, context)->get_distance(x, y);
 }
-void polygons_context::contains_points(const int num_points,
-                                       const double x[],
-                                       const double y[],
-                                       bool contains_points[]) const
+double polygons_context::get_distance(const double px, const double py) const
 {
-    check_that_context_is_initialized();
-
-    std::fill(&contains_points[0], &contains_points[num_points], false);
-#pragma omp parallel for
-    for (int ipoint = 0; ipoint < num_points; ipoint++)
-    {
-        for (int ipolygon = 0; ipolygon < num_polygons; ipolygon++)
-        {
-            if (!contains_points[ipoint])
-            {
-                // check whether we are not outside the bounding box
-                if (x[ipoint] < bounding_box[ipolygon][0].x)
-                    continue;
-                if (y[ipoint] < bounding_box[ipolygon][0].y)
-                    continue;
-                if (x[ipoint] > bounding_box[ipolygon][1].x)
-                    continue;
-                if (y[ipoint] > bounding_box[ipolygon][1].y)
-                    continue;
-
-                int wn =
-                    winding_number(x[ipoint], y[ipoint], polygons_v[ipolygon]);
-                contains_points[ipoint] = (wn != 0);
-            }
-        }
-    }
+    double large_number = std::numeric_limits<double>::max();
+    point p = {px, py};
+    return nodes[0].get_distance(large_number, p);
 }

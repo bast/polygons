@@ -8,9 +8,8 @@
 
 #ifdef __cplusplus
 #include <vector>
-#include <array>
 
-#include "point.h"
+#include "node.h"
 
 class polygons_context
 {
@@ -18,21 +17,18 @@ class polygons_context
     polygons_context();
     ~polygons_context();
 
+    // FIXME currently only supports adding one polygon
+    //       untested for multiple polygons
     void add_polygon(const int num_points, const double x[], const double y[]);
-    void contains_points(const int num_points,
-                         const double x[],
-                         const double y[],
-                         bool contains_points[]) const;
+    // FIXME vectorize
+    double get_distance(const double px, const double py) const;
 
   private:
     polygons_context(const polygons_context &rhs);            // not implemented
     polygons_context &operator=(const polygons_context &rhs); // not implemented
 
-    int num_polygons;
-    std::vector<std::array<point, 2>> bounding_box;
-    std::vector<std::vector<point>> polygons_v;
+    std::vector<node> nodes;
 
-    // FIXME
     void check_that_context_is_initialized() const;
     bool is_initialized = false;
 };
@@ -60,11 +56,9 @@ void polygons_add_polygon(polygons_context *context,
                           const double y[]);
 
 POLYGONS_API
-void polygons_contains_points(const polygons_context *context,
-                              const int num_points,
-                              const double x[],
-                              const double y[],
-                              bool contains_points[]);
+double polygons_get_distance(const polygons_context *context,
+                             const double x,
+                             const double y);
 
 #ifdef __cplusplus
 }

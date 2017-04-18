@@ -16,8 +16,8 @@ _include_dir = _this_path
 
 _lib = get_lib_handle(
     ['-DPOLYGONS_API=', '-DCPP_INTERFACE_NOINCLUDE'],
-    'polygon.h',
-    'polygon',
+    'polygons.h',
+    'polygons',
     _build_dir,
     _include_dir
 )
@@ -43,30 +43,9 @@ def add_polygon(context, points):
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
 
     _lib.polygons_add_polygon(context,
-                            num_points,
-                            x_coordinates_p,
-                            y_coordinates_p)
+                              num_points,
+                              x_coordinates_p,
+                              y_coordinates_p)
 
 
-def contains_points(context, points):
-
-    num_points = len(points)
-
-    # cast a pointer which points to the numpy array data
-    # we work with numpy because tree initialization with normal lists segfault
-    # for lists longer than ca. 0.5 million points
-    x_coordinates, y_coordinates = zip(*points)
-    x_coordinates_np = np.array(x_coordinates)
-    x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
-    y_coordinates_np = np.array(y_coordinates)
-    y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    contains_points_np = np.zeros(num_points, dtype=np.bool)
-    contains_points_p = _ffi.cast("bool *", contains_points_np.ctypes.data)
-
-    _lib.polygons_contains_points(context,
-                                num_points,
-                                x_coordinates_p,
-                                y_coordinates_p,
-                                contains_points_p)
-
-    return contains_points_np.tolist()
+get_distance = _lib.polygons_get_distance

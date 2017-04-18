@@ -2,6 +2,7 @@
 #define NODE_H_INCLUDED
 
 #include <vector>
+#include "edge.h"
 
 class node
 {

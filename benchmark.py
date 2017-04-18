@@ -1,9 +1,9 @@
 import sys
 import random
 import time
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from shapely.geometry import Polygon, Point
+# import matplotlib.pyplot as plt
+# import matplotlib.patches as patches
+# from shapely.geometry import Polygon, Point
 
 # fig = plt.figure()
 # ax2 = fig.add_subplot(111, aspect='equal')
@@ -172,7 +172,7 @@ def build_nodes(n, children):
         node = Node()
         for _ in range(n):
             try:
-                node.add_child(_children.__next__())
+                node.add_child(_children.next())
             except StopIteration:
                 done = True
         if len(node.children) > 0:
@@ -190,7 +190,7 @@ def generate_random_points(num_points, bounds):
 
 
 num_points = 1000
-num_polygons = 30
+num_polygons = 8
 max_num_edges = 4
 max_num_children = 4
 
@@ -241,6 +241,7 @@ for i, point in enumerate(points):
 
 # fig.savefig('rect.png', dpi=90, bbox_inches='tight')
 
+sys.exit()
 polygons = []
 for i in range(num_polygons):
     vertices, _ = read_polygon('polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)

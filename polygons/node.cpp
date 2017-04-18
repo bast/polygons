@@ -1,17 +1,8 @@
-//#include <stdio.h>
-//#include <iostream>
-//#include <fstream>
-//#include <random>
 #include <limits>
-//
-//#include "polygons.h"
-//#include "intersection.h"
+
 #include "edge.h"
 #include "node.h"
 #include "distance.h"
-//
-//#define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
-//#define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
 
 // if best case distance is larger than currently optimum distance, this box is
 // rejected

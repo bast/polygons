@@ -15,8 +15,6 @@ def length_squared(x, y):
 
 
 def dsegment(point, vertex1, vertex2):
-    global num_calls
-    num_calls += 1
     v = (vertex2[0] - vertex1[0], vertex2[1] - vertex1[1])
     w = (point[0] - vertex1[0], point[1] - vertex1[1])
     c1 = v[0] * w[0] + v[1] * w[1]
@@ -208,11 +206,9 @@ points = generate_random_points(num_points, bounds)
 # for edge in edges:
 #     plt.plot([edge.point1[0], edge.point2[0]], [edge.point1[1], edge.point2[1]], 'k-')
 
-num_calls = 0
 t0 = time.time()
 distances_squared_naive = vdsegment(points, polygons)
 print('time used in naive search: {}'.format(time.time() - t0))
-print('num calls:', num_calls)
 
 t0 = time.time()
 nodes = []
@@ -224,14 +220,12 @@ while len(nodes) > 1:
 root = nodes[0]
 print('time used in building tree: {}'.format(time.time() - t0))
 
-num_calls = 0
 t0 = time.time()
 huge = sys.float_info.max
 distances_squared_tree = []
 for i, point in enumerate(points):
     distances_squared_tree.append(root.get_distance(huge, point))
 print('time used in tree search: {}'.format(time.time() - t0))
-print('num calls:', num_calls)
 
 for i, point in enumerate(points):
     diff = abs(distances_squared_tree[i] - distances_squared_naive[i])

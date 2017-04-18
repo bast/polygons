@@ -62,7 +62,7 @@ void polygons_get_distances(const polygons_context *context,
                             const int num_points,
                             const double x[],
                             const double y[],
-                                  double distances[]);
+                            double distances[]);
 
 #ifdef __cplusplus
 }

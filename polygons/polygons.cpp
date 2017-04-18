@@ -129,6 +129,7 @@ void polygons_context::get_distances(const int num_points,
                                      double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
+
     for (int i = 0; i < num_points; i++)
     {
         point p = {x[i], y[i]};

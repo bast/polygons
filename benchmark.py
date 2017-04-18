@@ -1,6 +1,7 @@
 import sys
 import random
 import time
+import polygons as poly
 # import matplotlib.pyplot as plt
 # import matplotlib.patches as patches
 # from shapely.geometry import Polygon, Point
@@ -187,7 +188,7 @@ def generate_random_points(num_points, bounds):
 
 
 num_points = 1000
-num_polygons = 8
+num_polygons = 1
 max_num_edges = 4
 max_num_children = 4
 
@@ -237,6 +238,24 @@ for i, point in enumerate(points):
     assert diff < 1.0e-7
 
 # fig.savefig('rect.png', dpi=90, bbox_inches='tight')
+
+context = poly.new_context()
+
+vertices, _ = read_polygon('polygon.txt', xshift=0.0, yshift=0.0)
+
+poly.add_polygon(context, vertices)
+
+t0 = time.time()
+distances_poly = []
+for polygon in polygons:
+    for i, point in enumerate(points):
+        distances_poly.append(poly.get_distance(context, point[0], point[1]))
+print('time used in polygons: {}'.format(time.time() - t0))
+poly.free_context(context)
+
+for i, point in enumerate(points):
+    diff = abs(distances_squared_tree[i] - distances_poly[i])
+    assert diff < 1.0e-7
 
 sys.exit()
 polygons = []

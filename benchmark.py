@@ -87,9 +87,6 @@ class Node():
         self.children = []
         self.bounds = init_bounds()
 
-    def get_length(self):
-        return len(self.children)
-
     def skip_box(self, distance, point):
         """
         If best case distance is larger than currently optimum distance, this box is rejected.

@@ -23,62 +23,43 @@ bool skip_box(const double d,
               const double ymin,
               const double ymax)
 {
-    if (p.y > ymax)
+    double difx;
+
+    if (p.x < xmin)
     {
-        // 1, 2, 3
-        if (p.x < xmin)
-        {
-            // 1
-            return distance_squared(p.x - xmin, p.y - ymax) > d;
-        }
-        else if (p.x > xmax)
-        {
-            // 3
-            return distance_squared(p.x - xmax, p.y - ymax) > d;
-        }
-        else
-        {
-            // 2
-            return distance_squared(0.0, p.y - ymax) > d;
-        }
+        difx = p.x - xmin;
     }
-    else if (p.y < ymin)
+    else if (p.x > xmax)
     {
-        // 7, 8, 9
-        if (p.x < xmin)
-        {
-            // 7
-            return distance_squared(p.x - xmin, p.y - ymin) > d;
-        }
-        else if (p.x > xmax)
-        {
-            // 9
-            return distance_squared(p.x - xmax, p.y - ymin) > d;
-        }
-        else
-        {
-            // 8
-            return distance_squared(0.0, p.y - ymin) > d;
-        }
+        difx = p.x - xmax;
     }
     else
     {
-        // 4, 5, 6
-        if (p.x < xmin)
-        {
-            // 4
-            return distance_squared(p.x - xmin, 0.0) > d;
-        }
-        else if (p.x > xmax)
-        {
-            // 6
-            return distance_squared(p.x - xmax, 0.0) > d;
-        }
-        else
-        {
-            // 5
-            return false;
-        }
+        difx = 0.0;
+    }
+
+    double dify;
+
+    if (p.y < ymin)
+    {
+        dify = p.y - ymin;
+    }
+    else if (p.y > ymax)
+    {
+        dify = p.y - ymax;
+    }
+    else
+    {
+        dify = 0.0;
+    }
+
+    if (difx == 0.0 and dify == 0.0)
+    {
+        return false;
+    }
+    else
+    {
+        return distance_squared(difx, dify) > d;
     }
 }
 
@@ -111,23 +92,29 @@ double node::get_distance(const double d, const point p) const
 
     double d_ = d;
 
-    for (int i = 0; i < children_nodes.size(); i++)
+    if (children_nodes.size() > 0)
     {
-        d_ = std::min(d_, children_nodes[i].get_distance(d_, p));
+        for (int i = 0; i < children_nodes.size(); i++)
+        {
+            d_ = std::min(d_, children_nodes[i].get_distance(d_, p));
+        }
+        return d_;
     }
 
-    for (int i = 0; i < children_edges.size(); i++)
+    if (children_edges.size() > 0)
     {
-        d_ = std::min(d_,
-                      dsegment(p.x,
-                               p.y,
-                               children_edges[i].p1.x,
-                               children_edges[i].p1.y,
-                               children_edges[i].p2.x,
-                               children_edges[i].p2.y));
+        for (int i = 0; i < children_edges.size(); i++)
+        {
+            d_ = std::min(d_,
+                          dsegment(p.x,
+                                   p.y,
+                                   children_edges[i].p1.x,
+                                   children_edges[i].p1.y,
+                                   children_edges[i].p2.x,
+                                   children_edges[i].p2.y));
+        }
+        return d_;
     }
-
-    return d_;
 }
 
 void node::add_child_node(const node child)

@@ -9,6 +9,8 @@ add_library(
     polygon.h
     intersection.cpp
     intersection.h
+    distance.cpp
+    distance.h
     )
 
 # clang seems to need this

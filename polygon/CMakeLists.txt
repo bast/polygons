@@ -5,8 +5,8 @@ include_directories(
 add_library(
     polygon
     SHARED
-#   inpoly.cpp
-#   inpoly.h
+    polygon.cpp
+    polygon.h
     helpers.cpp
     helpers.h
     )

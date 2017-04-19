@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include <random>
 #include <limits>
 #include <math.h>
 
@@ -38,6 +37,13 @@ void polygons_free_context(polygons_context *context)
 polygons_context::~polygons_context()
 {
     nodes.clear();
+
+    for (int i = 0; i < polygons.size(); i++)
+    {
+        polygons[i].clear();
+    }
+    polygons.clear();
+
     is_initialized = false;
 }
 
@@ -81,35 +87,53 @@ void polygons_context::add_polygon(const int num_points,
 {
     check_that_context_is_initialized();
 
-    int N = 4; // FIXME
-
-    int num_edges = num_points - 1;
-    int num_nodes = num_edges / N;
-    if (num_edges % N > 0)
-        num_nodes++;
-
-    int i = 0;
-    for (int k = 0; k < num_nodes; k++)
+    std::vector<edge> temp;
+    for (int i = 0; i < num_points - 1; i++)
     {
-        node new_node;
-        for (int l = 0; l < N; l++)
+        point p1 = {x[i], y[i]};
+        point p2 = {x[i + 1], y[i + 1]};
+        edge e = {p1, p2};
+
+        temp.push_back(e);
+    }
+    polygons.push_back(temp);
+    temp.clear();
+
+    // we clear and rebuild tree every time we add a polygon
+    nodes.clear();
+
+    // FIXME move this outside and make it configurable
+    const int NUM_EDGES_PER_NODE = 4;
+    const int NUM_NODE_CHILDREN = 4;
+
+    for (int ip = 0; ip < polygons.size(); ip++)
+    {
+        int num_edges = polygons[ip].size();
+        int num_nodes = num_edges / NUM_EDGES_PER_NODE;
+        if (num_edges % NUM_EDGES_PER_NODE > 0)
+            num_nodes++;
+
+        // collect NUM_EDGES_PER_NODE edges into each node
+        int i = 0;
+        for (int k = 0; k < num_nodes; k++)
         {
-            if (i < num_edges)
+            node new_node;
+            for (int l = 0; l < NUM_EDGES_PER_NODE; l++)
             {
-                point p1 = {x[i], y[i]};
-                point p2 = {x[i + 1], y[i + 1]};
-                edge e = {p1, p2};
-                new_node.add_child_edge(e);
-                i++;
+                if (i < num_edges)
+                {
+                    new_node.add_child_edge(polygons[ip][i]);
+                    i++;
+                }
             }
+            nodes.push_back(new_node);
         }
-        nodes.push_back(new_node);
     }
 
+    // build the tree of nodes
     while (nodes.size() > 1)
     {
-        // FIXME N is hardcoded to the same value as above
-        nodes = build_nodes(N, nodes);
+        nodes = build_nodes(NUM_NODE_CHILDREN, nodes);
     }
 }
 

@@ -43,7 +43,7 @@ script:
   - cd build
   - make
   - cd ..
-# - POLYGONS_BUILD_DIR=$PWD/build py.test -s -vv test.py
+  - POLYGONS_BUILD_DIR=$PWD/build py.test -s -vv test.py
 
 after_success:
   - pip install git+https://github.com/bast/polygons.git

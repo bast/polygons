@@ -16,12 +16,12 @@
 //    |   |
 //  7 | 8 | 9
 //    |   |
-bool skip_box(const double d,
-              const point p,
-              const double xmin,
-              const double xmax,
-              const double ymin,
-              const double ymax)
+bool skip_box_distance(const double d,
+                       const point p,
+                       const double xmin,
+                       const double xmax,
+                       const double ymin,
+                       const double ymax)
 {
     double difx;
 
@@ -85,7 +85,7 @@ node::~node()
 
 double node::get_distance(const double d, const point p) const
 {
-    if (skip_box(d, p, xmin, xmax, ymin, ymax))
+    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax))
     {
         return d;
     }

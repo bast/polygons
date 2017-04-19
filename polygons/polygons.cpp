@@ -160,3 +160,47 @@ void polygons_context::get_distances(const int num_points,
         distances[i] = sqrt(nodes[0].get_distance(large_number, p));
     }
 }
+
+POLYGONS_API
+void polygons_contains_points(const polygons_context *context,
+                              const int num_points,
+                              const double x[],
+                              const double y[],
+                              bool contains_points[])
+{
+    AS_CTYPE(polygons_context, context)
+        ->contains_points(num_points, x, y, contains_points);
+}
+void polygons_context::contains_points(const int num_points,
+                                       const double x[],
+                                       const double y[],
+                                       bool contains_points[]) const
+{
+    check_that_context_is_initialized();
+
+    std::fill(&contains_points[0], &contains_points[num_points], false);
+#pragma omp parallel for
+    for (int ipoint = 0; ipoint < num_points; ipoint++)
+    {
+        //      for (int ipolygon = 0; ipolygon < num_polygons; ipolygon++)
+        //      {
+        //          if (!contains_points[ipoint])
+        //          {
+        //              // check whether we are not outside the bounding box
+        //              if (x[ipoint] < bounding_box[ipolygon][0].x)
+        //                  continue;
+        //              if (y[ipoint] < bounding_box[ipolygon][0].y)
+        //                  continue;
+        //              if (x[ipoint] > bounding_box[ipolygon][1].x)
+        //                  continue;
+        //              if (y[ipoint] > bounding_box[ipolygon][1].y)
+        //                  continue;
+
+        //              int wn =
+        //                  winding_number(x[ipoint], y[ipoint],
+        //                  polygons_v[ipolygon]);
+        //              contains_points[ipoint] = (wn != 0);
+        //          }
+        //      }
+    }
+}

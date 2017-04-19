@@ -180,27 +180,10 @@ void polygons_context::contains_points(const int num_points,
 
     std::fill(&contains_points[0], &contains_points[num_points], false);
 #pragma omp parallel for
-    for (int ipoint = 0; ipoint < num_points; ipoint++)
+    for (int i = 0; i < num_points; i++)
     {
-        //      for (int ipolygon = 0; ipolygon < num_polygons; ipolygon++)
-        //      {
-        //          if (!contains_points[ipoint])
-        //          {
-        //              // check whether we are not outside the bounding box
-        //              if (x[ipoint] < bounding_box[ipolygon][0].x)
-        //                  continue;
-        //              if (y[ipoint] < bounding_box[ipolygon][0].y)
-        //                  continue;
-        //              if (x[ipoint] > bounding_box[ipolygon][1].x)
-        //                  continue;
-        //              if (y[ipoint] > bounding_box[ipolygon][1].y)
-        //                  continue;
-
-        //              int wn =
-        //                  winding_number(x[ipoint], y[ipoint],
-        //                  polygons_v[ipolygon]);
-        //              contains_points[ipoint] = (wn != 0);
-        //          }
-        //      }
+        point p = {x[i], y[i]};
+        int n = 0;
+        contains_points[i] = nodes[0].num_intersections(n, p) % 2 != 0;
     }
 }

@@ -10,9 +10,11 @@ class node
     node();
     ~node();
 
-    double get_distance(const double d, const point p) const;
     void add_child_node(const node child);
     void add_child_edge(const edge child);
+
+    double get_distance(const double d, const point p) const;
+    int num_intersections(const int n, const point p) const;
 
   private:
     //  node(const node &rhs);            // not implemented

@@ -15,12 +15,13 @@
 // return: > 0 for p2 left of the line through p0 and p1
 //         = 0 for p2 on the line
 //         < 0 for p2 right of the line
-inline double is_left(const double p0x,
-                      const double p0y,
-                      const double p1x,
-                      const double p1y,
-                      const double p2x,
-                      const double p2y)
+// FIXME inline
+double is_left(const double p0x,
+               const double p0y,
+               const double p1x,
+               const double p1y,
+               const double p2x,
+               const double p2y)
 {
     return ((p1x - p0x) * (p2y - p0y) - (p2x - p0x) * (p1y - p0y));
 }

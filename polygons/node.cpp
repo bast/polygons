@@ -3,6 +3,7 @@
 #include "edge.h"
 #include "node.h"
 #include "distance.h"
+#include "intersection.h"
 
 // if best case distance is larger than currently optimum distance, this box is
 // rejected
@@ -63,6 +64,17 @@ bool skip_box_distance(const double d,
     }
 }
 
+bool skip_box_intersection(const point p,
+                           const double xmax,
+                           const double ymin,
+                           const double ymax)
+{
+    if (p.x > xmax) return true;
+    if (p.y < ymin) return true;
+    if (p.y > ymax) return true;
+    return false;
+}
+
 double distance_to_edge(const point p, const edge e)
 {
     return dsegment(p.x, p.y, e.p1.x, e.p1.y, e.p2.x, e.p2.y);
@@ -114,6 +126,37 @@ double node::get_distance(const double d, const point p) const
                                    children_edges[i].p2.y));
         }
         return d_;
+    }
+}
+
+int node::num_intersections(const int n, const point p) const
+{
+    if (skip_box_intersection(p, xmax, ymin, ymax))
+    {
+        return n;
+    }
+
+    int n_ = n;
+
+    if (children_nodes.size() > 0)
+    {
+        for (int i = 0; i < children_nodes.size(); i++)
+        {
+            n_ += children_nodes[i].num_intersections(n_, p);
+        }
+        return n_;
+    }
+
+    if (children_edges.size() > 0)
+    {
+        for (int i = 0; i < children_edges.size(); i++)
+        {
+            if (is_left(children_edges[i].p1.x, children_edges[i].p1.y, children_edges[i].p2.x, children_edges[i].p2.y, p.x, p.y) > 0.0)
+            {
+                n_++;
+            }
+        }
+        return n_;
     }
 }
 

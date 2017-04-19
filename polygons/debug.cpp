@@ -35,11 +35,22 @@ int main()
                     37.0,
                     38.0,
                     39.0};
-
     polygons_add_polygon(context, 30, x, x);
 
-    double px[5] = {0.0, 1.0, 2.0, 3.0, 4.0};
-    double py[5] = {0.0, 1.0, 2.0, 3.0, 4.0};
+    for (int i = 0; i < 30; i++)
+    {
+        x[i] += 10.0;
+    }
+    polygons_add_polygon(context, 30, x, x);
+
+    for (int i = 0; i < 30; i++)
+    {
+        x[i] += 10.0;
+    }
+    polygons_add_polygon(context, 30, x, x);
+
+    double px[5] = {0.0, 1.0, 2.0, 3.0, 100.0};
+    double py[5] = {0.0, 1.0, 2.0, 3.0, 100.0};
     double distances[5];
 
     polygons_get_distances(context, 5, px, py, distances);

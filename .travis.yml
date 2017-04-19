@@ -1,0 +1,52 @@
+language: python
+
+sudo: false
+
+matrix:
+  include:
+    - os: linux
+      python: 2.7
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-4.9
+            - g++-4.9
+      env:
+        - CC='gcc-4.9'
+        - CXX='g++-4.9'
+    - os: linux
+      python: 3.6
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-4.9
+            - g++-4.9
+      env:
+        - CC='gcc-4.9'
+        - CXX='g++-4.9'
+#         packages:
+#           - clang
+#           - g++-4.9
+#     env:
+#       - CC=clang
+#       - CXX=clang++
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - ./setup --cxx=$CXX
+  - cd build
+  - make
+  - cd ..
+# - POLYGONS_BUILD_DIR=$PWD/build py.test -s -vv test.py
+
+after_success:
+  - pip install git+https://github.com/bast/polygons.git
+
+notifications:
+  email: false

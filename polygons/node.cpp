@@ -151,10 +151,7 @@ int node::num_intersections(const int n, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            if (is_left(children_edges[i].p1.x, children_edges[i].p1.y, children_edges[i].p2.x, children_edges[i].p2.y, p.x, p.y) > 0.0)
-            {
-                n_++;
-            }
+            if (crosses(p.x, p.y, children_edges[i])) n_++;
         }
         return n_;
     }

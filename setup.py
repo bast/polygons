@@ -61,7 +61,7 @@ class install(_install.install):
 
 setup(name='polygons',
       version='0.0.0',
-      description='Library to compute polygon things.',
+      description='Fast points-in-polygon test and distances to polygons.',
       author='Radovan Bast',
       author_email='radovan.bast@gmail.com',
       url='https://github.com/bast/polygons',

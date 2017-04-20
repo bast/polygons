@@ -4,12 +4,6 @@
 
 ## Polygons: Library to compute polygon things.
 
-Testing:
-```
-$ POLYGONS_BUILD_DIR=build python benchmark.py
-```
-
-
 ### Installation using pip
 
 ```shell

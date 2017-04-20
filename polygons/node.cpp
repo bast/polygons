@@ -70,8 +70,8 @@ bool skip_box_intersection(const point p,
                            const double ymax)
 {
     if (p.x > xmax) return true;
-    if (p.y < ymin) return true;
     if (p.y > ymax) return true;
+    if (p.y < ymin) return true;
     return false;
 }
 
@@ -97,10 +97,7 @@ node::~node()
 
 double node::get_distance(const double d, const point p) const
 {
-    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax))
-    {
-        return d;
-    }
+    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax)) return d;
 
     double d_ = d;
 
@@ -131,10 +128,7 @@ double node::get_distance(const double d, const point p) const
 
 int node::num_intersections(const int n, const point p) const
 {
-    if (skip_box_intersection(p, xmax, ymin, ymax))
-    {
-        return n;
-    }
+    if (skip_box_intersection(p, xmax, ymin, ymax)) return n;
 
     int n_ = n;
 
@@ -142,7 +136,7 @@ int node::num_intersections(const int n, const point p) const
     {
         for (int i = 0; i < children_nodes.size(); i++)
         {
-            n_ += children_nodes[i].num_intersections(n_, p);
+            n_ = children_nodes[i].num_intersections(n_, p);
         }
         return n_;
     }

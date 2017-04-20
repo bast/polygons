@@ -192,7 +192,7 @@ max_num_children = 4
 
 polygons = []
 for i in range(num_polygons):
-    _, polygon = read_polygon('polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
+    _, polygon = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
     polygons.append(polygon)
 
 bounds = init_bounds()
@@ -235,7 +235,7 @@ for i, point in enumerate(points):
 
 context = poly.new_context()
 
-vertices, _ = read_polygon('polygon.txt', xshift=0.0, yshift=0.0)
+vertices, _ = read_polygon('data/polygon.txt', xshift=0.0, yshift=0.0)
 
 poly.add_polygon(context, vertices)
 
@@ -251,7 +251,7 @@ for i, point in enumerate(points):
 sys.exit()
 polygons = []
 for i in range(num_polygons):
-    vertices, _ = read_polygon('polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
+    vertices, _ = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
     polygons.append(Polygon(vertices))
 
 t0 = time.time()

@@ -14,12 +14,14 @@ $ pip install git+https://github.com/bast/polygons.git
 ### Example
 
 ```python
->>> import inpoly
->>> context = inpoly.new_context()
->>> inpoly.add_polygon(context, [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)])
->>> inpoly.contains_points(context, [(0.5, 0.5), (0.5, -0.5)])
+>>> import polygons
+>>> context = polygons.new_context()
+>>> polygons.add_polygon(context, [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)])
+>>> polygons.contains_points(context, [(0.5, 0.5), (0.5, -0.5)])
 [True, False]
->>> inpoly.free_context(context)
+>>> polygons.get_distances(context, [(0.5, 0.5), (0.5, -0.5)])
+[0.5, 0.5]
+>>> polygons.free_context(context)
 ```
 
 

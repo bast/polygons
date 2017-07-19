@@ -17,8 +17,8 @@ class node
     int num_intersections(const int n, const point p) const;
 
   private:
-    //  node(const node &rhs);            // not implemented
-    node &operator=(const node &rhs); // not implemented
+    // node(const node &rhs);            // not implemented
+    // node &operator=(const node &rhs); // not implemented
 
     double xmin;
     double xmax;

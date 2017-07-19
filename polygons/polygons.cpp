@@ -3,6 +3,7 @@
 #include <fstream>
 #include <limits>
 #include <math.h>
+#include <stdlib.h>
 
 #include "polygons.h"
 #include "intersection.h"

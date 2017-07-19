@@ -8,6 +8,7 @@ url_root: https://github.com/coderefinery/autocmake/raw/master/
 
 language:
   - CXX
+  - C
 
 setup_script: None
 

@@ -19,8 +19,7 @@
 //    |   |
 //  7 | 8 | 9
 //    |   |
-double box_distance(const double d,
-                    const point p,
+double box_distance(const point p,
                     const double xmin,
                     const double xmax,
                     const double ymin,
@@ -56,7 +55,7 @@ double box_distance(const double d,
         dify = 0.0;
     }
 
-    return distance_squared(difx, dify) > d;
+    return distance_squared(difx, dify);
 }
 
 bool skip_box_intersection(const point p,
@@ -91,7 +90,7 @@ node::~node()
 
 double node::get_distance_edge(const double d, const point p) const
 {
-    if (box_distance(d, p, xmin, xmax, ymin, ymax) > d) return d;
+    if (box_distance(p, xmin, xmax, ymin, ymax) > d) return d;
 
     double d_ = d;
 
@@ -122,7 +121,7 @@ double node::get_distance_edge(const double d, const point p) const
 
 double node::get_distance_vertex(const double d, const point p) const
 {
-    if (box_distance(d, p, xmin, xmax, ymin, ymax) > d) return d;
+    if (box_distance(p, xmin, xmax, ymin, ymax) > d) return d;
 
     double d_ = d;
 
@@ -161,7 +160,7 @@ double linear_function(const double nearest_distance_at_coastline_point,
 
 double node::get_distance_vertex_weighted(const double d, const point p) const
 {
-    double r_ = linear_function(weight, box_distance(d, p, xmin, xmax, ymin, ymax));
+    double r_ = linear_function(weight, box_distance(p, xmin, xmax, ymin, ymax));
     if (r_ > d) return d;
 
     double d_ = d;

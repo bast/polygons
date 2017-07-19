@@ -112,9 +112,8 @@ def test_distances():
     distances_naive = vdsegment(points, polygons)
 
     distances = poly.get_distances_to_nearest_edge(context, points)
-
-    poly.free_context(context)
-
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7
+
+    poly.free_context(context)

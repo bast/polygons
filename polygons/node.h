@@ -13,7 +13,8 @@ class node
     void add_child_node(const node child);
     void add_child_edge(const edge child);
 
-    double get_distance(const double d, const point p) const;
+    double get_distance_edge(const double d, const point p) const;
+    double get_distance_vertex(const double d, const point p) const;
     int num_intersections(const int n, const point p) const;
 
   private:

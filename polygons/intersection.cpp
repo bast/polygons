@@ -25,12 +25,12 @@ inline double is_left(const double p0x,
     return ((p1x - p0x) * (p2y - p0y) - (p2x - p0x) * (p1y - p0y));
 }
 
-bool crosses(const double px,
-             const double py,
-             const edge e)
+bool crosses(const double px, const double py, const edge e)
 {
-    if (py > std::max(e.p1.y, e.p2.y)) return false;
-    if (py < std::min(e.p1.y, e.p2.y)) return false;
+    if (py > std::max(e.p1.y, e.p2.y))
+        return false;
+    if (py < std::min(e.p1.y, e.p2.y))
+        return false;
 
     if (e.p1.y < e.p2.y)
     {

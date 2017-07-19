@@ -18,10 +18,14 @@ class polygons_context
     ~polygons_context();
 
     void add_polygon(const int num_points, const double x[], const double y[]);
-    void get_distances_to_nearest_edge(const int num_points,
-                       const double x[],
-                       const double y[],
-                       double distances[]) const;
+    void get_distances_edge(const int num_points,
+                            const double x[],
+                            const double y[],
+                            double distances[]) const;
+    void get_distances_vertex(const int num_points,
+                              const double x[],
+                              const double y[],
+                              double distances[]) const;
     void contains_points(const int num_points,
                          const double x[],
                          const double y[],
@@ -61,11 +65,18 @@ void polygons_add_polygon(polygons_context *context,
                           const double y[]);
 
 POLYGONS_API
-void polygons_get_distances_to_nearest_edge(const polygons_context *context,
-                            const int num_points,
-                            const double x[],
-                            const double y[],
-                            double distances[]);
+void polygons_get_distances_edge(const polygons_context *context,
+                                 const int num_points,
+                                 const double x[],
+                                 const double y[],
+                                 double distances[]);
+
+POLYGONS_API
+void polygons_get_distances_vertex(const polygons_context *context,
+                                   const int num_points,
+                                   const double x[],
+                                   const double y[],
+                                   double distances[]);
 
 POLYGONS_API
 void polygons_contains_points(const polygons_context *context,

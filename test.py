@@ -58,6 +58,19 @@ def vdsegment(points, polygons):
     return distances
 
 
+def get_distances_vertex_naive(points, polygons):
+    huge = sys.float_info.max
+    distances = []
+    for point in points:
+        d = huge
+        for polygon in polygons:
+            for vertex in polygon:
+                _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
+                d = min(d, _d)
+        distances.append(math.sqrt(d))
+    return distances
+
+
 def read_polygon(file_name, xshift, yshift):
     vertices = []
     with open(file_name, 'r') as f:
@@ -109,9 +122,14 @@ def test_distances():
 
     points = generate_random_points(num_points, bounds)
 
+    distances = poly.get_distances_edge(context, points)
     distances_naive = vdsegment(points, polygons)
+    for i, point in enumerate(points):
+        diff = abs(distances[i] - distances_naive[i])
+        assert diff < 1.0e-7
 
-    distances = poly.get_distances_to_nearest_edge(context, points)
+    distances = poly.get_distances_vertex(context, points)
+    distances_naive = get_distances_vertex_naive(points, polygons)
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7

@@ -69,9 +69,12 @@ bool skip_box_intersection(const point p,
                            const double ymin,
                            const double ymax)
 {
-    if (p.x > xmax) return true;
-    if (p.y > ymax) return true;
-    if (p.y < ymin) return true;
+    if (p.x > xmax)
+        return true;
+    if (p.y > ymax)
+        return true;
+    if (p.y < ymin)
+        return true;
     return false;
 }
 
@@ -90,9 +93,10 @@ node::~node()
     children_edges.clear();
 }
 
-double node::get_distance(const double d, const point p) const
+double node::get_distance_edge(const double d, const point p) const
 {
-    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax)) return d;
+    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax))
+        return d;
 
     double d_ = d;
 
@@ -100,7 +104,7 @@ double node::get_distance(const double d, const point p) const
     {
         for (int i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(d_, children_nodes[i].get_distance(d_, p));
+            d_ = std::min(d_, children_nodes[i].get_distance_edge(d_, p));
         }
         return d_;
     }
@@ -121,9 +125,38 @@ double node::get_distance(const double d, const point p) const
     }
 }
 
+double node::get_distance_vertex(const double d, const point p) const
+{
+    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax))
+        return d;
+
+    double d_ = d;
+
+    if (children_nodes.size() > 0)
+    {
+        for (int i = 0; i < children_nodes.size(); i++)
+        {
+            d_ = std::min(d_, children_nodes[i].get_distance_vertex(d_, p));
+        }
+        return d_;
+    }
+
+    if (children_edges.size() > 0)
+    {
+        for (int i = 0; i < children_edges.size(); i++)
+        {
+            d_ = std::min(d_, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y));
+         // no need to check the second point
+         // d_ = std::min(d_, distance_squared(children_edges[i].p2.x - p.x, children_edges[i].p2.y - p.y));
+        }
+        return d_;
+    }
+}
+
 int node::num_intersections(const int n, const point p) const
 {
-    if (skip_box_intersection(p, xmax, ymin, ymax)) return n;
+    if (skip_box_intersection(p, xmax, ymin, ymax))
+        return n;
 
     int n_ = n;
 
@@ -140,7 +173,8 @@ int node::num_intersections(const int n, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            if (crosses(p.x, p.y, children_edges[i])) n_++;
+            if (crosses(p.x, p.y, children_edges[i]))
+                n_++;
         }
         return n_;
     }

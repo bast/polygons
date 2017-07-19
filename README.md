@@ -19,7 +19,7 @@ $ pip install git+https://github.com/bast/polygons.git
 >>> polygons.add_polygon(context, [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)])
 >>> polygons.contains_points(context, [(0.5, 0.5), (0.5, -0.5)])
 [True, False]
->>> polygons.get_distances_to_nearest_edge(context, [(0.5, 0.5), (0.5, -0.5)])
+>>> polygons.get_distances_edge(context, [(0.5, 0.5), (0.5, -0.5)])
 [0.5, 0.5]
 >>> polygons.free_context(context)
 ```

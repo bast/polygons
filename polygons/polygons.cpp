@@ -185,6 +185,7 @@ void polygons_context::get_distances_vertex(const bool weighted,
 
     if (weighted)
     {
+#pragma omp parallel for
         for (int i = 0; i < num_points; i++)
         {
             point p = {x[i], y[i], 0.0};
@@ -193,6 +194,7 @@ void polygons_context::get_distances_vertex(const bool weighted,
     }
     else
     {
+#pragma omp parallel for
         for (int i = 0; i < num_points; i++)
         {
             point p = {x[i], y[i], 0.0};

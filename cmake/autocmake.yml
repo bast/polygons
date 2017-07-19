@@ -9,6 +9,8 @@ url_root: https://github.com/coderefinery/autocmake/raw/master/
 language:
   - CXX
 
+setup_script: None
+
 modules:
 - compilers:
   - source:

@@ -39,8 +39,9 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - ./setup --cxx=$CXX
+  - mkdir build
   - cd build
+  - cmake ..
   - make
   - cd ..
   - POLYGONS_BUILD_DIR=$PWD/build py.test -s -vv test.py

@@ -139,16 +139,16 @@ void polygons_context::add_polygon(const int num_points,
 }
 
 POLYGONS_API
-void polygons_get_distances(const polygons_context *context,
+void polygons_get_distances_to_nearest_edge(const polygons_context *context,
                             const int num_points,
                             const double x[],
                             const double y[],
                             double distances[])
 {
     AS_CTYPE(polygons_context, context)
-        ->get_distances(num_points, x, y, distances);
+        ->get_distances_to_nearest_edge(num_points, x, y, distances);
 }
-void polygons_context::get_distances(const int num_points,
+void polygons_context::get_distances_to_nearest_edge(const int num_points,
                                      const double x[],
                                      const double y[],
                                      double distances[]) const

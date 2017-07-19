@@ -48,7 +48,7 @@ def add_polygon(context, points):
                               y_coordinates_p)
 
 
-def get_distances(context, points):
+def get_distances_to_nearest_edge(context, points):
 
     num_points = len(points)
 
@@ -60,7 +60,7 @@ def get_distances(context, points):
     distances_np = np.zeros(num_points, dtype=np.float64)
     distances_p = _ffi.cast("double *", distances_np.ctypes.data)
 
-    _lib.polygons_get_distances(context,
+    _lib.polygons_get_distances_to_nearest_edge(context,
                                 num_points,
                                 x_coordinates_p,
                                 y_coordinates_p,

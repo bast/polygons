@@ -26,7 +26,7 @@ int main()
     double py[2] = {0.0, 100.0};
     double distances[2];
 
-    polygons_get_distances(context, 2, px, py, distances);
+    polygons_get_distances_to_nearest_edge(context, 2, px, py, distances);
     printf("distances:\n");
     for (int i = 0; i < 2; i++)
     {

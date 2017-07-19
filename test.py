@@ -111,7 +111,7 @@ def test_distances():
 
     distances_naive = vdsegment(points, polygons)
 
-    distances = poly.get_distances(context, points)
+    distances = poly.get_distances_to_nearest_edge(context, points)
 
     poly.free_context(context)
 

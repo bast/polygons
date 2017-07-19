@@ -139,9 +139,9 @@ double node::get_distance_vertex(const double d, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            // no need to check the second point
             d_ = std::min(d_, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y));
         }
+        d_ = std::min(d_, distance_squared(children_edges[children_edges.size()-1].p2.x - p.x, children_edges[children_edges.size()-1].p2.y - p.y));
         return d_;
     }
 }
@@ -179,9 +179,9 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            // no need to check the second point
             d_ = std::min(d_, linear_function(children_edges[i].p1.weight, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)));
         }
+        d_ = std::min(d_, linear_function(children_edges[children_edges.size()-1].p2.weight, distance_squared(children_edges[children_edges.size()-1].p2.x - p.x, children_edges[children_edges.size()-1].p2.y - p.y)));
         return d_;
     }
 }

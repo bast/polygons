@@ -126,7 +126,7 @@ def get_distances_vertex_weighted_naive(points, polygons, weights):
 
 def test_distances():
     num_points = 1000
-    num_polygons = 1
+    num_polygons = 5
 
     context = poly.new_context()
 

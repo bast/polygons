@@ -52,9 +52,6 @@ def get_distances(context, points):
 
     num_points = len(points)
 
-    # cast a pointer which points to the numpy array data
-    # we work with numpy because tree initialization with normal lists segfault
-    # for lists longer than ca. 0.5 million points
     x_coordinates, y_coordinates = zip(*points)
     x_coordinates_np = np.array(x_coordinates)
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
@@ -76,9 +73,6 @@ def contains_points(context, points):
 
     num_points = len(points)
 
-    # cast a pointer which points to the numpy array data
-    # we work with numpy because tree initialization with normal lists segfault
-    # for lists longer than ca. 0.5 million points
     x_coordinates, y_coordinates = zip(*points)
     x_coordinates_np = np.array(x_coordinates)
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)

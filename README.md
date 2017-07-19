@@ -21,6 +21,8 @@ $ pip install git+https://github.com/bast/polygons.git
 [True, False]
 >>> polygons.get_distances_edge(context, [(0.5, 0.5), (0.5, -0.5)])
 [0.5, 0.5]
+>>> polygons.get_distances_vertex(context, [(0.5, 0.5), (0.5, -0.5)])
+[0.7071067811865476, 0.7071067811865476]
 >>> polygons.free_context(context)
 ```
 

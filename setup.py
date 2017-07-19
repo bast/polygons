@@ -67,8 +67,13 @@ class install(_install.install):
             copy2(os.path.join(cwd, f), _target_path)
 
 
+_this_path = os.path.dirname(os.path.realpath(__file__))
+with open(os.path.join(_this_path, 'VERSION'), 'r') as version_file:
+    version = version_file.read().strip()
+
+
 setup(name='polygons',
-      version='0.0.0',
+      version=version,
       description='Fast points-in-polygon test and distances to polygons.',
       author='Radovan Bast',
       author_email='radovan.bast@gmail.com',

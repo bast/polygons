@@ -1,4 +1,4 @@
-matplotlib
+numpy
 cffi
 pep8
 pytest

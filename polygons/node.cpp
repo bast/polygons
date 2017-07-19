@@ -75,11 +75,6 @@ bool skip_box_intersection(const point p,
     return false;
 }
 
-double distance_to_edge(const point p, const edge e)
-{
-    return dsegment(p.x, p.y, e.p1.x, e.p1.y, e.p2.x, e.p2.y);
-}
-
 node::node()
 {
     double large_number = std::numeric_limits<double>::max();

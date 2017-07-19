@@ -1,9 +1,8 @@
-// Copyright (C) 2004-2012 Per-Olof Persson. See COPYING.TXT for details.
+// Copyright (C) 2004-2012 Per-Olof Persson
 
 #include <algorithm>
 #include <math.h>
 #include "distance.h"
-//#include <limits>
 
 double dsegment(const double x0,
                 const double y0,

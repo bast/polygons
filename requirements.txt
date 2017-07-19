@@ -1,5 +1,4 @@
 matplotlib
 cffi
 pep8
-shapely
 pytest

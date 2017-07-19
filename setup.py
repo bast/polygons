@@ -74,6 +74,6 @@ setup(name='polygons',
       author_email='radovan.bast@gmail.com',
       url='https://github.com/bast/polygons',
       packages=['polygons'],
-      license='MPL-v2.0',
+      license='GPL-v3.0',
       install_requires=['cffi', 'numpy'],
       cmdclass={'install': install, 'build': build})

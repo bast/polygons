@@ -1,11 +1,13 @@
 #include <limits>
+#include <stdio.h>
+#include <math.h>
 
 #include "edge.h"
 #include "node.h"
 #include "distance.h"
 #include "intersection.h"
 
-// if best case distance is larger than currently optimum distance, this box is
+// get best case distance to box
 // rejected
 // the box is region 5:
 //    |   |
@@ -17,12 +19,12 @@
 //    |   |
 //  7 | 8 | 9
 //    |   |
-bool skip_box_distance(const double d,
-                       const point p,
-                       const double xmin,
-                       const double xmax,
-                       const double ymin,
-                       const double ymax)
+double box_distance(const double d,
+                    const point p,
+                    const double xmin,
+                    const double xmax,
+                    const double ymin,
+                    const double ymax)
 {
     double difx;
 
@@ -54,14 +56,7 @@ bool skip_box_distance(const double d,
         dify = 0.0;
     }
 
-    if (difx == 0.0 and dify == 0.0)
-    {
-        return false;
-    }
-    else
-    {
-        return distance_squared(difx, dify) > d;
-    }
+    return distance_squared(difx, dify) > d;
 }
 
 bool skip_box_intersection(const point p,
@@ -85,6 +80,7 @@ node::node()
     xmax = -large_number;
     ymin = large_number;
     ymax = -large_number;
+    weight = large_number;
 }
 
 node::~node()
@@ -95,8 +91,7 @@ node::~node()
 
 double node::get_distance_edge(const double d, const point p) const
 {
-    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax))
-        return d;
+    if (box_distance(d, p, xmin, xmax, ymin, ymax) > d) return d;
 
     double d_ = d;
 
@@ -127,8 +122,7 @@ double node::get_distance_edge(const double d, const point p) const
 
 double node::get_distance_vertex(const double d, const point p) const
 {
-    if (skip_box_distance(d, p, xmin, xmax, ymin, ymax))
-        return d;
+    if (box_distance(d, p, xmin, xmax, ymin, ymax) > d) return d;
 
     double d_ = d;
 
@@ -145,9 +139,48 @@ double node::get_distance_vertex(const double d, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
+            // no need to check the second point
             d_ = std::min(d_, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y));
-         // no need to check the second point
-         // d_ = std::min(d_, distance_squared(children_edges[i].p2.x - p.x, children_edges[i].p2.y - p.y));
+        }
+        return d_;
+    }
+}
+
+// FIXME this is hardcoded and not clear at all what it does - used in another project
+//       need to generalize and explain
+double linear_function(const double nearest_distance_at_coastline_point,
+                       const double distace_to_coastline_point)
+{
+    int num_points_across_bay = 5;
+    double resolution_at_coastline_point =
+        nearest_distance_at_coastline_point / (num_points_across_bay + 1);
+    double slope = 0.995792;
+
+    return resolution_at_coastline_point + slope * sqrt(distace_to_coastline_point);
+}
+
+double node::get_distance_vertex_weighted(const double d, const point p) const
+{
+    double r_ = linear_function(weight, box_distance(d, p, xmin, xmax, ymin, ymax));
+    if (r_ > d) return d;
+
+    double d_ = d;
+
+    if (children_nodes.size() > 0)
+    {
+        for (int i = 0; i < children_nodes.size(); i++)
+        {
+            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
+        }
+        return d_;
+    }
+
+    if (children_edges.size() > 0)
+    {
+        for (int i = 0; i < children_edges.size(); i++)
+        {
+            // no need to check the second point
+            d_ = std::min(d_, linear_function(children_edges[i].p1.weight, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)));
         }
         return d_;
     }
@@ -188,6 +221,8 @@ void node::add_child_node(const node child)
     xmax = std::max(xmax, child.xmax);
     ymin = std::min(ymin, child.ymin);
     ymax = std::max(ymax, child.ymax);
+
+    weight = std::min(weight, child.weight);
 }
 
 void node::add_child_edge(const edge child)
@@ -203,4 +238,7 @@ void node::add_child_edge(const edge child)
     xmax = std::max(xmax, child.p2.x);
     ymin = std::min(ymin, child.p2.y);
     ymax = std::max(ymax, child.p2.y);
+
+    weight = std::min(weight, child.p1.weight);
+    weight = std::min(weight, child.p2.weight);
 }

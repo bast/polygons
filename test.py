@@ -2,6 +2,7 @@ import random
 import polygons as poly
 import sys
 import math
+import time
 
 
 def test_contains():
@@ -9,9 +10,9 @@ def test_contains():
 
     context = poly.new_context()
 
-    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)])
-    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)])
-    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)])
+    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], [1.0]*4)
+    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], [1.0]*4)
+    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], [1.0]*4)
 
     random.seed(0)
     points = [(random.uniform(0.0, 3.0), random.uniform(0.0, 3.0)) for _ in range(num_points)]
@@ -103,17 +104,43 @@ def generate_random_points(num_points, bounds):
     return points
 
 
+def linear_function(w, d):
+    n = 5
+    r = w / (n + 1)
+    slope = 0.995792
+    return r + slope * d
+
+
+def get_distances_vertex_weighted_naive(points, polygons, weights):
+    huge = sys.float_info.max
+    distances = []
+    for point in points:
+        r = huge
+        for i, polygon in enumerate(polygons):
+            for j, vertex in enumerate(polygon):
+                _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
+                _r = linear_function(weights[i][j], math.sqrt(_d))
+                r = min(r, _r)
+        distances.append(r)
+    return distances
+
+
 def test_distances():
     num_points = 1000
     num_polygons = 1
 
     context = poly.new_context()
 
+    random.seed(0)
+
     polygons = []
+    weights = []
     for i in range(num_polygons):
         vertices = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
         polygons.append(vertices)
-        poly.add_polygon(context, vertices)
+        ws = [random.uniform(0.0, 5.0) for _ in range(len(vertices))]
+        weights.append(ws)
+        poly.add_polygon(context, vertices, ws)
 
     bounds = init_bounds()
     for polygon in polygons:
@@ -130,6 +157,16 @@ def test_distances():
 
     distances = poly.get_distances_vertex(context, points)
     distances_naive = get_distances_vertex_naive(points, polygons)
+    for i, point in enumerate(points):
+        diff = abs(distances[i] - distances_naive[i])
+        assert diff < 1.0e-7
+
+#   t0 = time.time()
+    distances = poly.get_distances_vertex(context, points, weighted=True)
+#   print('time spent in weighted vertex: {}'.format(time.time() - t0))
+#   t0 = time.time()
+    distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights)
+#   print('time spent in weighted vertex naive: {}'.format(time.time() - t0))
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7

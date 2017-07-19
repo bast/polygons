@@ -15,6 +15,7 @@ class node
 
     double get_distance_edge(const double d, const point p) const;
     double get_distance_vertex(const double d, const point p) const;
+    double get_distance_vertex_weighted(const double d, const point p) const;
     int num_intersections(const int n, const point p) const;
 
   private:
@@ -25,6 +26,9 @@ class node
     double xmax;
     double ymin;
     double ymax;
+
+    double weight;
+
     std::vector<node> children_nodes;
     std::vector<edge> children_edges;
 };

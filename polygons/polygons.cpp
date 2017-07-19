@@ -78,21 +78,23 @@ POLYGONS_API
 void polygons_add_polygon(polygons_context *context,
                           const int num_points,
                           const double x[],
-                          const double y[])
+                          const double y[],
+                          const double w[])
 {
-    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y);
+    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, w);
 }
 void polygons_context::add_polygon(const int num_points,
                                    const double x[],
-                                   const double y[])
+                                   const double y[],
+                                   const double w[])
 {
     check_that_context_is_initialized();
 
     std::vector<edge> temp;
     for (int i = 0; i < num_points - 1; i++)
     {
-        point p1 = {x[i], y[i]};
-        point p2 = {x[i + 1], y[i + 1]};
+        point p1 = {x[i], y[i], w[i]};
+        point p2 = {x[i + 1], y[i + 1], w[i + 1]};
         edge e = {p1, p2};
 
         temp.push_back(e);
@@ -157,32 +159,45 @@ void polygons_context::get_distances_edge(const int num_points,
 
     for (int i = 0; i < num_points; i++)
     {
-        point p = {x[i], y[i]};
+        point p = {x[i], y[i], 0.0};
         distances[i] = sqrt(nodes[0].get_distance_edge(large_number, p));
     }
 }
 
 POLYGONS_API
 void polygons_get_distances_vertex(const polygons_context *context,
+                                   const bool weighted,
                                    const int num_points,
                                    const double x[],
                                    const double y[],
                                    double distances[])
 {
     AS_CTYPE(polygons_context, context)
-        ->get_distances_vertex(num_points, x, y, distances);
+        ->get_distances_vertex(weighted, num_points, x, y, distances);
 }
-void polygons_context::get_distances_vertex(const int num_points,
+void polygons_context::get_distances_vertex(const bool weighted,
+                                            const int num_points,
                                             const double x[],
                                             const double y[],
                                             double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
 
-    for (int i = 0; i < num_points; i++)
+    if (weighted)
     {
-        point p = {x[i], y[i]};
-        distances[i] = sqrt(nodes[0].get_distance_vertex(large_number, p));
+        for (int i = 0; i < num_points; i++)
+        {
+            point p = {x[i], y[i], 0.0};
+            distances[i] = nodes[0].get_distance_vertex_weighted(large_number, p);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < num_points; i++)
+        {
+            point p = {x[i], y[i], 0.0};
+            distances[i] = sqrt(nodes[0].get_distance_vertex(large_number, p));
+        }
     }
 }
 

@@ -29,7 +29,7 @@ new_context = _lib.polygons_new_context
 free_context = _lib.polygons_free_context
 
 
-def add_polygon(context, points):
+def add_polygon(context, points, w):
 
     num_points = len(points)
 
@@ -41,11 +41,14 @@ def add_polygon(context, points):
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
+    w_np = np.array(w)
+    w_p = _ffi.cast("double *", w_np.ctypes.data)
 
     _lib.polygons_add_polygon(context,
                               num_points,
                               x_coordinates_p,
-                              y_coordinates_p)
+                              y_coordinates_p,
+                              w_p)
 
 
 def get_distances_edge(context, points):
@@ -69,7 +72,7 @@ def get_distances_edge(context, points):
     return distances_np.tolist()
 
 
-def get_distances_vertex(context, points):
+def get_distances_vertex(context, points, weighted=False):
 
     num_points = len(points)
 
@@ -82,6 +85,7 @@ def get_distances_vertex(context, points):
     distances_p = _ffi.cast("double *", distances_np.ctypes.data)
 
     _lib.polygons_get_distances_vertex(context,
+                                       weighted,
                                        num_points,
                                        x_coordinates_p,
                                        y_coordinates_p,

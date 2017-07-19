@@ -7,20 +7,21 @@ int main()
 
     double x[5] = {0.0, 1.0, 1.0, 0.0, 0.0};
     double y[5] = {0.0, 0.0, 1.0, 1.0, 0.0};
+    double w[5] = {1.0, 1.0, 1.0, 1.0, 1.0};
 
-    polygons_add_polygon(context, 5, x, y);
-
-    for (int i = 0; i < 5; i++)
-    {
-        x[i] += 5.0;
-    }
-    polygons_add_polygon(context, 5, x, y);
+    polygons_add_polygon(context, 5, x, y, w);
 
     for (int i = 0; i < 5; i++)
     {
         x[i] += 5.0;
     }
-    polygons_add_polygon(context, 5, x, y);
+    polygons_add_polygon(context, 5, x, y, w);
+
+    for (int i = 0; i < 5; i++)
+    {
+        x[i] += 5.0;
+    }
+    polygons_add_polygon(context, 5, x, y, w);
 
     double px[2] = {0.0, 100.0};
     double py[2] = {0.0, 100.0};

@@ -2,7 +2,6 @@ import random
 import polygons as poly
 import sys
 import math
-import time
 
 
 def test_contains():
@@ -161,12 +160,8 @@ def test_distances():
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7
 
-#   t0 = time.time()
     distances = poly.get_distances_vertex(context, points, weighted=True)
-#   print('time spent in weighted vertex: {}'.format(time.time() - t0))
-#   t0 = time.time()
     distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights)
-#   print('time spent in weighted vertex naive: {}'.format(time.time() - t0))
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7

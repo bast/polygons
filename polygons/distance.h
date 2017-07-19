@@ -20,14 +20,6 @@ double dsegment(const double x0,
                 const double p2x,
                 const double p2y);
 
-double vdsegment(const int num_points,
-                 const double ps_x[],
-                 const double ps_y[],
-                 const int num_vertices,
-                 const double vs_x[],
-                 const double vs_y[],
-                 double distances[]);
-
 #ifdef __cplusplus
 }
 #endif

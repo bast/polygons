@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <math.h>
 #include "distance.h"
-#include <limits>
+//#include <limits>
 
 double dsegment(const double x0,
                 const double y0,
@@ -32,32 +32,5 @@ double dsegment(const double x0,
     {
         return distance_squared(x0 - (p1x + c1 / c2 * v[0]),
                                 y0 - (p1y + c1 / c2 * v[1]));
-    }
-}
-
-double vdsegment(const int num_points,
-                 const double ps_x[],
-                 const double ps_y[],
-                 const int num_vertices,
-                 const double vs_x[],
-                 const double vs_y[],
-                 double distances[])
-{
-    double huge = std::numeric_limits<float>::max();
-
-    for (int ip = 0; ip < num_points; ip++)
-    {
-        double d = huge;
-        for (int iv = 0; iv < num_vertices - 1; iv++)
-        {
-            double _d = dsegment(ps_x[ip],
-                                 ps_y[ip],
-                                 vs_x[iv],
-                                 vs_y[iv],
-                                 vs_x[iv + 1],
-                                 vs_y[iv + 1]);
-            d = std::min(d, _d);
-        }
-        distances[ip] = sqrt(d); // cheat, see above sqrt cheat
     }
 }

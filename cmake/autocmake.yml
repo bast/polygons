@@ -6,6 +6,9 @@ default_build_type: release
 
 url_root: https://github.com/coderefinery/autocmake/raw/master/
 
+language:
+  - CXX
+
 modules:
 - compilers:
   - source:

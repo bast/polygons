@@ -24,14 +24,18 @@ $ pip install git+https://github.com/bast/polygons.git
 ```python
 >>> import polygons
 >>> context = polygons.new_context()
->>> polygons.add_polygon(context, points=[(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)], weights=[1.0]*5)
->>> polygons.contains_points(context, points=[(0.5, 0.5), (0.5, -0.5)])
+>>> polygon_points = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)]
+>>> weights = [1.0]*5
+>>> polygons.add_polygon(context, polygon_points, weights)
+>>> points = [(0.5, 0.5), (0.5, -0.5)]
+>>> polygons.contains_points(context, points)
 [True, False]
->>> polygons.get_distances_edge(context, points=[(0.5, 0.5), (0.5, -0.5)])
+>>> polygons.get_distances_edge(context, points)
 [0.5, 0.5]
->>> polygons.get_distances_vertex(context, points=[(0.5, 0.5), (0.5, -0.5)])
+>>> polygons.get_distances_vertex(context, points)
 [0.7071067811865476, 0.7071067811865476]
->>> polygons.get_distances_vertex_weighted(context, points=[(0.5, 0.5), (0.5, -0.5)], scale_factors=[1.0]*2)
+>>> scale_factors = [1.0]*2
+>>> polygons.get_distances_vertex_weighted(context, points, scale_factors)
 [1.7071067811865475, 1.7071067811865475]
 >>> polygons.free_context(context)
 ```

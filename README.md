@@ -24,13 +24,15 @@ $ pip install git+https://github.com/bast/polygons.git
 ```python
 >>> import polygons
 >>> context = polygons.new_context()
->>> polygons.add_polygon(context, [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)])
->>> polygons.contains_points(context, [(0.5, 0.5), (0.5, -0.5)])
+>>> polygons.add_polygon(context, points=[(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)], weights=[1.0]*5)
+>>> polygons.contains_points(context, points=[(0.5, 0.5), (0.5, -0.5)])
 [True, False]
->>> polygons.get_distances_edge(context, [(0.5, 0.5), (0.5, -0.5)])
+>>> polygons.get_distances_edge(context, points=[(0.5, 0.5), (0.5, -0.5)])
 [0.5, 0.5]
->>> polygons.get_distances_vertex(context, [(0.5, 0.5), (0.5, -0.5)])
+>>> polygons.get_distances_vertex(context, points=[(0.5, 0.5), (0.5, -0.5)])
 [0.7071067811865476, 0.7071067811865476]
+>>> polygons.get_distances_vertex_weighted(context, points=[(0.5, 0.5), (0.5, -0.5)], scale_factors=[1.0]*2)
+[1.7071067811865475, 1.7071067811865475]
 >>> polygons.free_context(context)
 ```
 
@@ -39,12 +41,14 @@ $ pip install git+https://github.com/bast/polygons.git
 
 Instead of finding r by minimizing
 ```
-f(r0, r) = d(r0, r)
+f(r0, r) = distance(r0, r)
 ```
 it is possible to minimize
 ```
-f(r0, r) = a * d(r0, r) + w(r)
+f(r0, r) = scale_factor * distance(r0, r) + weight(r)
 ```
+
+Polygon weights have no effect for non-weighted distance functions.
 
 
 ### References which were used during coding

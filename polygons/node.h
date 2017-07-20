@@ -15,7 +15,7 @@ class node
 
     double get_distance_edge(const double d, const point p) const;
     double get_distance_vertex(const double d, const point p) const;
-    double get_distance_vertex_weighted(const double slope, const double d, const point p) const;
+    double get_distance_vertex_weighted(const double scale_factor, const double d, const point p) const;
     int num_intersections(const int n, const point p) const;
 
   private:

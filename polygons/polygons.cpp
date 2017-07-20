@@ -79,22 +79,22 @@ void polygons_add_polygon(polygons_context *context,
                           const int num_points,
                           const double x[],
                           const double y[],
-                          const double w[])
+                          const double weights[])
 {
-    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, w);
+    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, weights);
 }
 void polygons_context::add_polygon(const int num_points,
                                    const double x[],
                                    const double y[],
-                                   const double w[])
+                                   const double weights[])
 {
     check_that_context_is_initialized();
 
     std::vector<edge> temp;
     for (int i = 0; i < num_points - 1; i++)
     {
-        point p1 = {x[i], y[i], w[i]};
-        point p2 = {x[i + 1], y[i + 1], w[i + 1]};
+        point p1 = {x[i], y[i], weights[i]};
+        point p2 = {x[i + 1], y[i + 1], weights[i + 1]};
         edge e = {p1, p2};
 
         temp.push_back(e);
@@ -194,16 +194,16 @@ void polygons_get_distances_vertex_weighted(const polygons_context *context,
                                             const int num_points,
                                             const double x[],
                                             const double y[],
-                                            const double slopes[],
+                                            const double scale_factors[],
                                             double distances[])
 {
     AS_CTYPE(polygons_context, context)
-        ->get_distances_vertex_weighted(num_points, x, y, slopes, distances);
+        ->get_distances_vertex_weighted(num_points, x, y, scale_factors, distances);
 }
 void polygons_context::get_distances_vertex_weighted(const int num_points,
                                                      const double x[],
                                                      const double y[],
-                                                     const double slopes[],
+                                                     const double scale_factors[],
                                                      double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
@@ -211,7 +211,7 @@ void polygons_context::get_distances_vertex_weighted(const int num_points,
     for (int i = 0; i < num_points; i++)
     {
         point p = {x[i], y[i], 0.0};
-        distances[i] = nodes[0].get_distance_vertex_weighted(slopes[i], large_number, p);
+        distances[i] = nodes[0].get_distance_vertex_weighted(scale_factors[i], large_number, p);
     }
 }
 

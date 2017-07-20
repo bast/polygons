@@ -145,14 +145,14 @@ double node::get_distance_vertex(const double d, const point p) const
     }
 }
 
-inline double linear_function(const double slope, const double distance, const double w)
+inline double linear_function(const double scale_factor, const double distance, const double w)
 {
-    return slope * distance + w;
+    return scale_factor * distance + w;
 }
 
-double node::get_distance_vertex_weighted(const double slope, const double d, const point p) const
+double node::get_distance_vertex_weighted(const double scale_factor, const double d, const point p) const
 {
-    double r_ = linear_function(slope,
+    double r_ = linear_function(scale_factor,
                                 sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
                                 weight);
     if (r_ > d) return d;
@@ -163,7 +163,7 @@ double node::get_distance_vertex_weighted(const double slope, const double d, co
     {
         for (int i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(slope, d_, p));
+            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(scale_factor, d_, p));
         }
         return d_;
     }
@@ -172,12 +172,12 @@ double node::get_distance_vertex_weighted(const double slope, const double d, co
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            d_ = std::min(d_, linear_function(slope,
+            d_ = std::min(d_, linear_function(scale_factor,
                                               sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)),
                                               children_edges[i].p1.weight));
         }
         int last = children_edges.size() - 1;
-        d_ = std::min(d_, linear_function(slope,
+        d_ = std::min(d_, linear_function(scale_factor,
                                           sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)),
                                           children_edges[last].p2.weight));
         return d_;

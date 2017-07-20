@@ -29,7 +29,7 @@ new_context = _lib.polygons_new_context
 free_context = _lib.polygons_free_context
 
 
-def add_polygon(context, points, w):
+def add_polygon(context, points, weights):
 
     num_points = len(points)
 
@@ -41,14 +41,14 @@ def add_polygon(context, points, w):
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    w_np = np.array(w)
-    w_p = _ffi.cast("double *", w_np.ctypes.data)
+    weights_np = np.array(weights)
+    weights_p = _ffi.cast("double *", weights_np.ctypes.data)
 
     _lib.polygons_add_polygon(context,
                               num_points,
                               x_coordinates_p,
                               y_coordinates_p,
-                              w_p)
+                              weights_p)
 
 
 def get_distances_edge(context, points):
@@ -93,7 +93,7 @@ def get_distances_vertex(context, points):
     return distances_np.tolist()
 
 
-def get_distances_vertex_weighted(context, points, slopes):
+def get_distances_vertex_weighted(context, points, scale_factors):
 
     num_points = len(points)
 
@@ -102,8 +102,8 @@ def get_distances_vertex_weighted(context, points, slopes):
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    slopes_np = np.array(slopes)
-    slopes_p = _ffi.cast("double *", slopes_np.ctypes.data)
+    scale_factors_np = np.array(scale_factors)
+    scale_factors_p = _ffi.cast("double *", scale_factors_np.ctypes.data)
     distances_np = np.zeros(num_points, dtype=np.float64)
     distances_p = _ffi.cast("double *", distances_np.ctypes.data)
 
@@ -111,7 +111,7 @@ def get_distances_vertex_weighted(context, points, slopes):
                                                 num_points,
                                                 x_coordinates_p,
                                                 y_coordinates_p,
-                                                slopes_p,
+                                                scale_factors_p,
                                                 distances_p)
 
     return distances_np.tolist()

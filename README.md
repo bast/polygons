@@ -43,6 +43,8 @@ $ pip install git+https://github.com/bast/polygons.git
 
 ### Weighted distances to vertices
 
+OK these are a bit weird but I needed these for [another project](https://github.com/bast/smeshing).
+
 Instead of finding r by minimizing
 ```
 f(r0, r) = distance(r0, r)

@@ -61,8 +61,8 @@ class install(_install.install):
         else:
             suffix = 'so'
 
-        for f in [os.path.join('build', 'lib', 'libpolygons.{0}'.format(suffix)),
-                  os.path.join('build', 'include', 'polygons_export.h'),
+        for f in [os.path.join('build_setup_py', 'lib', 'libpolygons.{0}'.format(suffix)),
+                  os.path.join('build_setup_py', 'include', 'polygons_export.h'),
                   os.path.join('polygons', 'polygons.h')]:
             copy2(os.path.join(cwd, f), _target_path)
 

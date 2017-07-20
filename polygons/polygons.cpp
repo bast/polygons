@@ -166,40 +166,52 @@ void polygons_context::get_distances_edge(const int num_points,
 
 POLYGONS_API
 void polygons_get_distances_vertex(const polygons_context *context,
-                                   const bool weighted,
                                    const int num_points,
                                    const double x[],
                                    const double y[],
                                    double distances[])
 {
     AS_CTYPE(polygons_context, context)
-        ->get_distances_vertex(weighted, num_points, x, y, distances);
+        ->get_distances_vertex(num_points, x, y, distances);
 }
-void polygons_context::get_distances_vertex(const bool weighted,
-                                            const int num_points,
+void polygons_context::get_distances_vertex(const int num_points,
                                             const double x[],
                                             const double y[],
                                             double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
 
-    if (weighted)
-    {
 #pragma omp parallel for
-        for (int i = 0; i < num_points; i++)
-        {
-            point p = {x[i], y[i], 0.0};
-            distances[i] = nodes[0].get_distance_vertex_weighted(large_number, p);
-        }
+    for (int i = 0; i < num_points; i++)
+    {
+        point p = {x[i], y[i], 0.0};
+        distances[i] = sqrt(nodes[0].get_distance_vertex(large_number, p));
     }
-    else
+}
+
+POLYGONS_API
+void polygons_get_distances_vertex_weighted(const polygons_context *context,
+                                            const int num_points,
+                                            const double x[],
+                                            const double y[],
+                                            const double slopes[],
+                                            double distances[])
+{
+    AS_CTYPE(polygons_context, context)
+        ->get_distances_vertex_weighted(num_points, x, y, slopes, distances);
+}
+void polygons_context::get_distances_vertex_weighted(const int num_points,
+                                                     const double x[],
+                                                     const double y[],
+                                                     const double slopes[],
+                                                     double distances[]) const
+{
+    double large_number = std::numeric_limits<double>::max();
+
+    for (int i = 0; i < num_points; i++)
     {
-#pragma omp parallel for
-        for (int i = 0; i < num_points; i++)
-        {
-            point p = {x[i], y[i], 0.0};
-            distances[i] = sqrt(nodes[0].get_distance_vertex(large_number, p));
-        }
+        point p = {x[i], y[i], 0.0};
+        distances[i] = nodes[0].get_distance_vertex_weighted(slopes[i], large_number, p);
     }
 }
 

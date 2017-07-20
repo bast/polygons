@@ -37,7 +37,14 @@ $ pip install git+https://github.com/bast/polygons.git
 
 ### Weighted distances to vertices
 
-Needs to be documented ...
+Instead of finding r by minimizing
+```
+f(r0, r) = d(r0, r)
+```
+it is possible to minimize
+```
+f(r0, r) = a * d(r0, r) + w(r)
+```
 
 
 ### References which were used during coding

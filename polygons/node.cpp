@@ -145,22 +145,16 @@ double node::get_distance_vertex(const double d, const point p) const
     }
 }
 
-// FIXME this is hardcoded and not clear at all what it does - used in another project
-//       need to generalize and explain
-double linear_function(const double nearest_distance_at_coastline_point,
-                       const double distace_to_coastline_point)
+inline double linear_function(const double slope, const double distance, const double w)
 {
-    int num_points_across_bay = 5;
-    double resolution_at_coastline_point =
-        nearest_distance_at_coastline_point / (num_points_across_bay + 1);
-    double slope = 0.995792;
-
-    return resolution_at_coastline_point + slope * sqrt(distace_to_coastline_point);
+    return slope * distance + w;
 }
 
-double node::get_distance_vertex_weighted(const double d, const point p) const
+double node::get_distance_vertex_weighted(const double slope, const double d, const point p) const
 {
-    double r_ = linear_function(weight, box_distance(p, xmin, xmax, ymin, ymax));
+    double r_ = linear_function(slope,
+                                sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
+                                weight);
     if (r_ > d) return d;
 
     double d_ = d;
@@ -169,7 +163,7 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (int i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
+            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(slope, d_, p));
         }
         return d_;
     }
@@ -178,9 +172,14 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            d_ = std::min(d_, linear_function(children_edges[i].p1.weight, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)));
+            d_ = std::min(d_, linear_function(slope,
+                                              sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)),
+                                              children_edges[i].p1.weight));
         }
-        d_ = std::min(d_, linear_function(children_edges[children_edges.size()-1].p2.weight, distance_squared(children_edges[children_edges.size()-1].p2.x - p.x, children_edges[children_edges.size()-1].p2.y - p.y)));
+        int last = children_edges.size() - 1;
+        d_ = std::min(d_, linear_function(slope,
+                                          sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)),
+                                          children_edges[last].p2.weight));
         return d_;
     }
 }

@@ -103,22 +103,19 @@ def generate_random_points(num_points, bounds):
     return points
 
 
-def linear_function(w, d):
-    n = 5
-    r = w / (n + 1)
-    slope = 0.995792
-    return r + slope * d
+def linear_function(slope, distance, w):
+    return slope * distance + w
 
 
-def get_distances_vertex_weighted_naive(points, polygons, weights):
+def get_distances_vertex_weighted_naive(points, polygons, weights, slopes):
     huge = sys.float_info.max
     distances = []
-    for point in points:
+    for k, point in enumerate(points):
         r = huge
         for i, polygon in enumerate(polygons):
             for j, vertex in enumerate(polygon):
                 _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
-                _r = linear_function(weights[i][j], math.sqrt(_d))
+                _r = linear_function(slopes[k], math.sqrt(_d), weights[i][j])
                 r = min(r, _r)
         distances.append(r)
     return distances
@@ -137,7 +134,7 @@ def test_distances():
     for i in range(num_polygons):
         vertices = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
         polygons.append(vertices)
-        ws = [random.uniform(0.0, 5.0) for _ in range(len(vertices))]
+        ws = [random.uniform(0.0, 5.0)/6.0 for _ in range(len(vertices))]
         weights.append(ws)
         poly.add_polygon(context, vertices, ws)
 
@@ -160,8 +157,9 @@ def test_distances():
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7
 
-    distances = poly.get_distances_vertex(context, points, weighted=True)
-    distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights)
+    slopes = [0.995792 for _ in range(num_points)]
+    distances = poly.get_distances_vertex_weighted(context, points, slopes)
+    distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights, slopes)
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7

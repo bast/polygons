@@ -22,11 +22,15 @@ class polygons_context
                             const double x[],
                             const double y[],
                             double distances[]) const;
-    void get_distances_vertex(const bool weighted,
-                              const int num_points,
+    void get_distances_vertex(const int num_points,
                               const double x[],
                               const double y[],
                               double distances[]) const;
+    void get_distances_vertex_weighted(const int num_points,
+                                       const double x[],
+                                       const double y[],
+                                       const double slopes[],
+                                       double distances[]) const;
     void contains_points(const int num_points,
                          const double x[],
                          const double y[],
@@ -75,11 +79,18 @@ void polygons_get_distances_edge(const polygons_context *context,
 
 POLYGONS_API
 void polygons_get_distances_vertex(const polygons_context *context,
-                                   const bool weighted,
                                    const int num_points,
                                    const double x[],
                                    const double y[],
                                    double distances[]);
+
+POLYGONS_API
+void polygons_get_distances_vertex_weighted(const polygons_context *context,
+                                            const int num_points,
+                                            const double x[],
+                                            const double y[],
+                                            const double slopes[],
+                                            double distances[]);
 
 POLYGONS_API
 void polygons_contains_points(const polygons_context *context,

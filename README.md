@@ -16,7 +16,7 @@ $ pip install git+https://github.com/bast/polygons.git
 - check whether points are inside or outside polygons
 - nearest distances to edges
 - nearest distances to vertices
-- nearest weighted distances to vertices (see below for explanation)
+- indices of nearest vertices
 
 
 ### Example

@@ -25,7 +25,7 @@ $ pip install git+https://github.com/bast/polygons.git
 >>> import polygons
 >>> context = polygons.new_context()
 >>> polygon_points = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)]
->>> polygons.add_polygon(context, polygon_points)
+>>> polygons.add_polygon(context, polygon_points, [0, 1, 2, 3, 0])
 >>> points = [(0.5, 0.5), (0.5, -0.5)]
 >>> polygons.contains_points(context, points)
 [True, False]
@@ -33,6 +33,10 @@ $ pip install git+https://github.com/bast/polygons.git
 [0.5, 0.5]
 >>> polygons.get_distances_vertex(context, points)
 [0.7071067811865476, 0.7071067811865476]
+>>> polygons.get_closest_vertices(context, points)
+[0, 0]
+>>> polygons.get_closest_vertices(context, [(0.6, 0.6), (0.5, -0.5)])
+[2, 0]
 >>> polygons.free_context(context)
 ```
 

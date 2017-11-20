@@ -18,6 +18,7 @@ modules:
     - '%(url_root)modules/cxx.cmake'
 - flags:
   - source:
+    - 'custom/c++11.cmake'
     - '%(url_root)compilers/GNU.CXX.cmake'
     - '%(url_root)compilers/Intel.CXX.cmake'
     - '%(url_root)compilers/Clang.CXX.cmake'

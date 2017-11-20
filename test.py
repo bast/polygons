@@ -161,6 +161,9 @@ def test_distances():
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7
 
+#   indices = poly.get_closest_vertices(context, points)
+#   print(indices)
+
     scale_factors = [0.995792 for _ in range(num_points)]
     distances = poly.get_distances_vertex_weighted(context, points, scale_factors)
     distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights, scale_factors)

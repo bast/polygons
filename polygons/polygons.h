@@ -1,4 +1,5 @@
-#pragma once
+#ifndef POLYGONS_H_INCLUDED
+#define POLYGONS_H_INCLUDED
 
 #ifndef POLYGONS_API
 #include "polygons_export.h"
@@ -101,3 +102,5 @@ void polygons_contains_points(const polygons_context *context,
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* POLYGONS_H_INCLUDED */

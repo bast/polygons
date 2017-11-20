@@ -39,7 +39,7 @@ polygons_context::~polygons_context()
 {
     nodes.clear();
 
-    for (int i = 0; i < polygons.size(); i++)
+    for (std::size_t i = 0; i < polygons.size(); i++)
     {
         polygons[i].clear();
     }
@@ -56,7 +56,7 @@ std::vector<node> build_nodes(const int n, const std::vector<node> children)
 
     std::vector<node> new_nodes;
 
-    int i = 0;
+    std::size_t i = 0;
     for (int k = 0; k < num_new_nodes; k++)
     {
         node new_node;
@@ -109,7 +109,7 @@ void polygons_context::add_polygon(const int num_points,
     const int NUM_EDGES_PER_NODE = 4;
     const int NUM_NODE_CHILDREN = 4;
 
-    for (int ip = 0; ip < polygons.size(); ip++)
+    for (std::size_t ip = 0; ip < polygons.size(); ip++)
     {
         int num_edges = polygons[ip].size();
         int num_nodes = num_edges / NUM_EDGES_PER_NODE;

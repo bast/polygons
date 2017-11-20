@@ -1,10 +1,7 @@
-#ifndef HELPERS_H_INCLUDED
-#define HELPERS_H_INCLUDED
+#pragma once
 
 #include <vector>
 
 #include "polygons.h"
 
 bool crosses(const double px, const double py, const edge e);
-
-#endif /* HELPERS_H_INCLUDED */

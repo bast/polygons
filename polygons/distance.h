@@ -1,5 +1,4 @@
-#ifndef DISTANCE_H_INCLUDED
-#define DISTANCE_H_INCLUDED
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,5 +22,3 @@ double dsegment(const double x0,
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* DISTANCE_H_INCLUDED */

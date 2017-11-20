@@ -1,5 +1,4 @@
-#ifndef POINT_H_INCLUDED
-#define POINT_H_INCLUDED
+#pragma once
 
 struct point
 {
@@ -7,5 +6,3 @@ struct point
     double y;
     double weight;
 };
-
-#endif /* POINT_H_INCLUDED */

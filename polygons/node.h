@@ -1,5 +1,4 @@
-#ifndef NODE_H_INCLUDED
-#define NODE_H_INCLUDED
+#pragma once
 
 #include <vector>
 #include "edge.h"
@@ -32,5 +31,3 @@ class node
     std::vector<node> children_nodes;
     std::vector<edge> children_edges;
 };
-
-#endif /* NODE_H_INCLUDED */

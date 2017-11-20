@@ -29,7 +29,7 @@ new_context = _lib.polygons_new_context
 free_context = _lib.polygons_free_context
 
 
-def add_polygon(context, points, weights):
+def add_polygon(context, points, indices, weights):
 
     num_points = len(points)
 
@@ -43,11 +43,14 @@ def add_polygon(context, points, weights):
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
     weights_np = np.array(weights)
     weights_p = _ffi.cast("double *", weights_np.ctypes.data)
+    indices_np = np.array(indices)
+    indices_p = _ffi.cast("int *", indices_np.ctypes.data)
 
     _lib.polygons_add_polygon(context,
                               num_points,
                               x_coordinates_p,
                               y_coordinates_p,
+                              indices_p,
                               weights_p)
 
 

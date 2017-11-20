@@ -9,9 +9,10 @@ def test_contains():
 
     context = poly.new_context()
 
-    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], [1.0]*4)
-    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], [1.0]*4)
-    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], [1.0]*4)
+    indices = list(range(4))
+    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], indices, [1.0]*4)
+    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], indices, [1.0]*4)
+    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], indices, [1.0]*4)
 
     random.seed(0)
     points = [(random.uniform(0.0, 3.0), random.uniform(0.0, 3.0)) for _ in range(num_points)]
@@ -131,12 +132,15 @@ def test_distances():
 
     polygons = []
     weights = []
+    index_offset = 0
     for i in range(num_polygons):
         vertices = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
         polygons.append(vertices)
         ws = [random.uniform(0.0, 5.0)/6.0 for _ in range(len(vertices))]
         weights.append(ws)
-        poly.add_polygon(context, vertices, ws)
+        indices = list(range(index_offset, len(vertices)))
+        index_offset += len(vertices)
+        poly.add_polygon(context, vertices, indices, ws)
 
     bounds = init_bounds()
     for polygon in polygons:

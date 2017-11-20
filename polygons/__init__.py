@@ -29,7 +29,7 @@ new_context = _lib.polygons_new_context
 free_context = _lib.polygons_free_context
 
 
-def add_polygon(context, points, indices, weights):
+def add_polygon(context, points, indices):
 
     num_points = len(points)
 
@@ -41,8 +41,6 @@ def add_polygon(context, points, indices, weights):
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    weights_np = np.array(weights)
-    weights_p = _ffi.cast("double *", weights_np.ctypes.data)
 #   fails for reason not clear to me
 #   indices_np = np.array(indices)
 #   indices_p = _ffi.cast("int *", indices_np.ctypes.data)
@@ -52,8 +50,7 @@ def add_polygon(context, points, indices, weights):
                               x_coordinates_p,
                               y_coordinates_p,
 #                             indices_p,
-                              indices,
-                              weights_p)
+                              indices)
 
 
 def get_distances_edge(context, points):
@@ -117,30 +114,6 @@ def get_closest_vertices(context, points):
                                        indices_p)
 
     return indices_np.tolist()
-
-
-def get_distances_vertex_weighted(context, points, scale_factors):
-
-    num_points = len(points)
-
-    x_coordinates, y_coordinates = zip(*points)
-    x_coordinates_np = np.array(x_coordinates)
-    x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
-    y_coordinates_np = np.array(y_coordinates)
-    y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    scale_factors_np = np.array(scale_factors)
-    scale_factors_p = _ffi.cast("double *", scale_factors_np.ctypes.data)
-    distances_np = np.zeros(num_points, dtype=np.float64)
-    distances_p = _ffi.cast("double *", distances_np.ctypes.data)
-
-    _lib.polygons_get_distances_vertex_weighted(context,
-                                                num_points,
-                                                x_coordinates_p,
-                                                y_coordinates_p,
-                                                scale_factors_p,
-                                                distances_p)
-
-    return distances_np.tolist()
 
 
 def contains_points(context, points):

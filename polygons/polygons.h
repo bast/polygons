@@ -17,7 +17,7 @@ class polygons_context
     polygons_context();
     ~polygons_context();
 
-    void add_polygon(const int num_points, const double x[], const double y[], const int indices[], const double weights[]);
+    void add_polygon(const int num_points, const double x[], const double y[], const int indices[]);
     void get_distances_edge(const int num_points,
                             const double x[],
                             const double y[],
@@ -30,11 +30,6 @@ class polygons_context
                               const double x[],
                               const double y[],
                               int indices[]) const;
-    void get_distances_vertex_weighted(const int num_points,
-                                       const double x[],
-                                       const double y[],
-                                       const double scale_factors[],
-                                       double distances[]) const;
     void contains_points(const int num_points,
                          const double x[],
                          const double y[],
@@ -72,8 +67,7 @@ void polygons_add_polygon(polygons_context *context,
                           const int num_points,
                           const double x[],
                           const double y[],
-                          const int indices[],
-                          const double weights[]);
+                          const int indices[]);
 
 POLYGONS_API
 void polygons_get_distances_edge(const polygons_context *context,
@@ -95,14 +89,6 @@ void polygons_get_closest_vertices(const polygons_context *context,
                                    const double x[],
                                    const double y[],
                                    int indices[]);
-
-POLYGONS_API
-void polygons_get_distances_vertex_weighted(const polygons_context *context,
-                                            const int num_points,
-                                            const double x[],
-                                            const double y[],
-                                            const double scale_factors[],
-                                            double distances[]);
 
 POLYGONS_API
 void polygons_contains_points(const polygons_context *context,

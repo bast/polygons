@@ -9,9 +9,9 @@ def test_contains():
 
     context = poly.new_context()
 
-    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], list(range(0, 4)), [1.0]*4)
-    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], list(range(4, 8)), [1.0]*4)
-    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], list(range(7, 12)), [1.0]*4)
+    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], list(range(0, 4)))
+    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], list(range(4, 8)))
+    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], list(range(7, 12)))
 
     random.seed(0)
     points = [(random.uniform(0.0, 3.0), random.uniform(0.0, 3.0)) for _ in range(num_points)]
@@ -110,24 +110,6 @@ def generate_random_points(num_points, bounds):
     return points
 
 
-def linear_function(scale_factor, distance, w):
-    return scale_factor * distance + w
-
-
-def get_distances_vertex_weighted_naive(points, polygons, weights, scale_factors):
-    huge = sys.float_info.max
-    distances = []
-    for k, point in enumerate(points):
-        r = huge
-        for i, polygon in enumerate(polygons):
-            for j, vertex in enumerate(polygon):
-                _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
-                _r = linear_function(scale_factors[k], math.sqrt(_d), weights[i][j])
-                r = min(r, _r)
-        distances.append(r)
-    return distances
-
-
 def test_distances():
     num_points = 1000
     num_polygons = 5
@@ -137,16 +119,13 @@ def test_distances():
     random.seed(0)
 
     polygons = []
-    weights = []
     index_offset = 0
     for i in range(num_polygons):
         vertices = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
         polygons.append(vertices)
-        ws = [random.uniform(0.0, 5.0)/6.0 for _ in range(len(vertices))]
-        weights.append(ws)
         indices = list(range(index_offset, index_offset + len(vertices)))
         index_offset += len(vertices)
-        poly.add_polygon(context, vertices, indices, ws)
+        poly.add_polygon(context, vertices, indices)
 
     bounds = init_bounds()
     for polygon in polygons:
@@ -169,12 +148,5 @@ def test_distances():
 
     closest_indices = poly.get_closest_vertices(context, points)
     assert closest_indices_naive == closest_indices
-
-    scale_factors = [0.995792 for _ in range(num_points)]
-    distances = poly.get_distances_vertex_weighted(context, points, scale_factors)
-    distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights, scale_factors)
-    for i, point in enumerate(points):
-        diff = abs(distances[i] - distances_naive[i])
-        assert diff < 1.0e-7
 
     poly.free_context(context)

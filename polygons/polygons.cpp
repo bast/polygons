@@ -80,24 +80,22 @@ void polygons_add_polygon(polygons_context *context,
                           const int num_points,
                           const double x[],
                           const double y[],
-                          const int indices[],
-                          const double weights[])
+                          const int indices[])
 {
-    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, indices, weights);
+    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, indices);
 }
 void polygons_context::add_polygon(const int num_points,
                                    const double x[],
                                    const double y[],
-                                   const int indices[],
-                                   const double weights[])
+                                   const int indices[])
 {
     check_that_context_is_initialized();
 
     std::vector<edge> temp;
     for (int i = 0; i < num_points - 1; i++)
     {
-        point p1 = {indices[i], x[i], y[i], weights[i]};
-        point p2 = {indices[i + 1], x[i + 1], y[i + 1], weights[i + 1]};
+        point p1 = {indices[i], x[i], y[i]};
+        point p2 = {indices[i + 1], x[i + 1], y[i + 1]};
         edge e = {p1, p2};
 
         temp.push_back(e);
@@ -162,7 +160,7 @@ void polygons_context::get_distances_edge(const int num_points,
 
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0};
+        point p = {-1, x[i], y[i]};
         distances[i] = sqrt(nodes[0].get_distance_edge(large_number, p));
     }
 }
@@ -187,7 +185,7 @@ void polygons_context::get_distances_vertex(const int num_points,
 #pragma omp parallel for
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0};
+        point p = {-1, x[i], y[i]};
         auto t = nodes[0].get_distance_vertex(0, large_number, p);
         distances[i] = sqrt(std::get<1>(t));
     }
@@ -213,35 +211,9 @@ void polygons_context::get_closest_vertices(const int num_points,
 #pragma omp parallel for
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0};
+        point p = {-1, x[i], y[i]};
         auto t = nodes[0].get_distance_vertex(0, large_number, p);
         indices[i] = std::get<0>(t);
-    }
-}
-
-POLYGONS_API
-void polygons_get_distances_vertex_weighted(const polygons_context *context,
-                                            const int num_points,
-                                            const double x[],
-                                            const double y[],
-                                            const double scale_factors[],
-                                            double distances[])
-{
-    AS_CTYPE(polygons_context, context)
-        ->get_distances_vertex_weighted(num_points, x, y, scale_factors, distances);
-}
-void polygons_context::get_distances_vertex_weighted(const int num_points,
-                                                     const double x[],
-                                                     const double y[],
-                                                     const double scale_factors[],
-                                                     double distances[]) const
-{
-    double large_number = std::numeric_limits<double>::max();
-
-    for (int i = 0; i < num_points; i++)
-    {
-        point p = {-1, x[i], y[i], 0.0};
-        distances[i] = nodes[0].get_distance_vertex_weighted(scale_factors[i], large_number, p);
     }
 }
 
@@ -266,7 +238,7 @@ void polygons_context::contains_points(const int num_points,
 #pragma omp parallel for
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0};
+        point p = {-1, x[i], y[i]};
         int n = 0;
         contains_points[i] = nodes[0].num_intersections(n, p) % 2 != 0;
     }

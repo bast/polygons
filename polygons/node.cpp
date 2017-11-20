@@ -80,7 +80,6 @@ node::node()
     xmax = -large_number;
     ymin = large_number;
     ymax = -large_number;
-    weight = large_number;
 }
 
 node::~node()
@@ -166,45 +165,6 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
     }
 }
 
-inline double linear_function(const double scale_factor, const double distance, const double w)
-{
-    return scale_factor * distance + w;
-}
-
-double node::get_distance_vertex_weighted(const double scale_factor, const double d, const point p) const
-{
-    double r_ = linear_function(scale_factor,
-                                sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
-                                weight);
-    if (r_ > d) return d;
-
-    double d_ = d;
-
-    if (children_nodes.size() > 0)
-    {
-        for (int i = 0; i < children_nodes.size(); i++)
-        {
-            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(scale_factor, d_, p));
-        }
-        return d_;
-    }
-
-    if (children_edges.size() > 0)
-    {
-        for (int i = 0; i < children_edges.size(); i++)
-        {
-            d_ = std::min(d_, linear_function(scale_factor,
-                                              sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)),
-                                              children_edges[i].p1.weight));
-        }
-        int last = children_edges.size() - 1;
-        d_ = std::min(d_, linear_function(scale_factor,
-                                          sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)),
-                                          children_edges[last].p2.weight));
-        return d_;
-    }
-}
-
 int node::num_intersections(const int n, const point p) const
 {
     if (skip_box_intersection(p, xmax, ymin, ymax))
@@ -240,8 +200,6 @@ void node::add_child_node(const node child)
     xmax = std::max(xmax, child.xmax);
     ymin = std::min(ymin, child.ymin);
     ymax = std::max(ymax, child.ymax);
-
-    weight = std::min(weight, child.weight);
 }
 
 void node::add_child_edge(const edge child)
@@ -257,7 +215,4 @@ void node::add_child_edge(const edge child)
     xmax = std::max(xmax, child.p2.x);
     ymin = std::min(ymin, child.p2.y);
     ymax = std::max(ymax, child.p2.y);
-
-    weight = std::min(weight, child.p1.weight);
-    weight = std::min(weight, child.p2.weight);
 }

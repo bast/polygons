@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <tuple>
 #include <math.h>
 #include <stdlib.h>
 
@@ -187,7 +188,34 @@ void polygons_context::get_distances_vertex(const int num_points,
     for (int i = 0; i < num_points; i++)
     {
         point p = {-1, x[i], y[i], 0.0};
-        distances[i] = sqrt(nodes[0].get_distance_vertex(large_number, p));
+        auto t = nodes[0].get_distance_vertex(0, large_number, p);
+        distances[i] = sqrt(std::get<1>(t));
+    }
+}
+
+POLYGONS_API
+void polygons_get_closest_vertices(const polygons_context *context,
+                                   const int num_points,
+                                   const double x[],
+                                   const double y[],
+                                   int incides[])
+{
+    AS_CTYPE(polygons_context, context)
+        ->get_closest_vertices(num_points, x, y, incides);
+}
+void polygons_context::get_closest_vertices(const int num_points,
+                                            const double x[],
+                                            const double y[],
+                                            int indices[]) const
+{
+    double large_number = std::numeric_limits<double>::max();
+
+#pragma omp parallel for
+    for (int i = 0; i < num_points; i++)
+    {
+        point p = {-1, x[i], y[i], 0.0};
+        auto t = nodes[0].get_distance_vertex(0, large_number, p);
+        indices[i] = std::get<0>(t);
     }
 }
 

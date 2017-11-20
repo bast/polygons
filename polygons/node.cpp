@@ -1,4 +1,5 @@
 #include <limits>
+#include <tuple>
 #include <stdio.h>
 #include <math.h>
 
@@ -119,29 +120,49 @@ double node::get_distance_edge(const double d, const point p) const
     }
 }
 
-double node::get_distance_vertex(const double d, const point p) const
+std::tuple<int, double> node::get_distance_vertex(const int index, const double d, const point p) const
 {
-    if (box_distance(p, xmin, xmax, ymin, ymax) > d) return d;
+    if (box_distance(p, xmin, xmax, ymin, ymax) > d)
+    {
+        return std::make_tuple(index, d);
+    }
 
     double d_ = d;
+    int index_ = index;
 
     if (children_nodes.size() > 0)
     {
         for (int i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(d_, children_nodes[i].get_distance_vertex(d_, p));
+            auto t = children_nodes[i].get_distance_vertex(index_, d_, p);
+            double d_temp = std::get<1>(t);
+            if (d_temp < d_)
+            {
+                d_ = d_temp;
+                index_ = std::get<0>(t);
+            }
         }
-        return d_;
+        return std::make_tuple(index_, d_);
     }
 
     if (children_edges.size() > 0)
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            d_ = std::min(d_, distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y));
+            double d_temp = distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y);
+            if (d_temp < d_)
+            {
+                d_ = d_temp;
+                index_ = children_edges[i].p1.index;
+            }
         }
-        d_ = std::min(d_, distance_squared(children_edges[children_edges.size()-1].p2.x - p.x, children_edges[children_edges.size()-1].p2.y - p.y));
-        return d_;
+        double d_temp = distance_squared(children_edges[children_edges.size()-1].p2.x - p.x, children_edges[children_edges.size()-1].p2.y - p.y);
+        if (d_temp < d_)
+        {
+            d_ = d_temp;
+            index_ = children_edges[children_edges.size()-1].p2.index;
+        }
+        return std::make_tuple(index_, d_);
     }
 }
 

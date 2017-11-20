@@ -9,10 +9,9 @@ def test_contains():
 
     context = poly.new_context()
 
-    indices = list(range(4))
-    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], indices, [1.0]*4)
-    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], indices, [1.0]*4)
-    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], indices, [1.0]*4)
+    poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], list(range(0, 4)), [1.0]*4)
+    poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], list(range(4, 8)), [1.0]*4)
+    poly.add_polygon(context, [(0.0, 2.0), (1.0, 2.5), (0.5, 3.0), (0.0, 2.0)], list(range(7, 12)), [1.0]*4)
 
     random.seed(0)
     points = [(random.uniform(0.0, 3.0), random.uniform(0.0, 3.0)) for _ in range(num_points)]
@@ -61,15 +60,22 @@ def vdsegment(points, polygons):
 
 def get_distances_vertex_naive(points, polygons):
     huge = sys.float_info.max
+    indices = []
     distances = []
     for point in points:
         d = huge
+        index = -1
+        i = 0
         for polygon in polygons:
             for vertex in polygon:
                 _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
-                d = min(d, _d)
+                if _d < d:
+                    d = _d
+                    index = i
+                i += 1
         distances.append(math.sqrt(d))
-    return distances
+        indices.append(index)
+    return indices, distances
 
 
 def read_polygon(file_name, xshift, yshift):
@@ -138,7 +144,7 @@ def test_distances():
         polygons.append(vertices)
         ws = [random.uniform(0.0, 5.0)/6.0 for _ in range(len(vertices))]
         weights.append(ws)
-        indices = list(range(index_offset, len(vertices)))
+        indices = list(range(index_offset, index_offset + len(vertices)))
         index_offset += len(vertices)
         poly.add_polygon(context, vertices, indices, ws)
 
@@ -156,13 +162,13 @@ def test_distances():
         assert diff < 1.0e-7
 
     distances = poly.get_distances_vertex(context, points)
-    distances_naive = get_distances_vertex_naive(points, polygons)
+    closest_indices_naive, distances_naive = get_distances_vertex_naive(points, polygons)
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7
 
-#   indices = poly.get_closest_vertices(context, points)
-#   print(indices)
+    closest_indices = poly.get_closest_vertices(context, points)
+    assert closest_indices_naive == closest_indices
 
     scale_factors = [0.995792 for _ in range(num_points)]
     distances = poly.get_distances_vertex_weighted(context, points, scale_factors)

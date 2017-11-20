@@ -43,14 +43,16 @@ def add_polygon(context, points, indices, weights):
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
     weights_np = np.array(weights)
     weights_p = _ffi.cast("double *", weights_np.ctypes.data)
-    indices_np = np.array(indices)
-    indices_p = _ffi.cast("int *", indices_np.ctypes.data)
+#   fails for reason not clear to me
+#   indices_np = np.array(indices)
+#   indices_p = _ffi.cast("int *", indices_np.ctypes.data)
 
     _lib.polygons_add_polygon(context,
                               num_points,
                               x_coordinates_p,
                               y_coordinates_p,
-                              indices_p,
+#                             indices_p,
+                              indices,
                               weights_p)
 
 
@@ -105,7 +107,7 @@ def get_closest_vertices(context, points):
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    indices_np = np.zeros(num_points, dtype=np.int32)
+    indices_np = np.zeros(num_points, dtype=np.intc)
     indices_p = _ffi.cast("int *", indices_np.ctypes.data)
 
     _lib.polygons_get_closest_vertices(context,

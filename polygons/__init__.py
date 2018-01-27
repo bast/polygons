@@ -119,7 +119,7 @@ def get_closest_vertices(context, points):
     return indices_np.tolist()
 
 
-def get_distances_vertex_weighted(context, points, scale_factors):
+def get_distances_vertex_weighted(context, points):
 
     num_points = len(points)
 
@@ -128,8 +128,6 @@ def get_distances_vertex_weighted(context, points, scale_factors):
     x_coordinates_p = _ffi.cast("double *", x_coordinates_np.ctypes.data)
     y_coordinates_np = np.array(y_coordinates)
     y_coordinates_p = _ffi.cast("double *", y_coordinates_np.ctypes.data)
-    scale_factors_np = np.array(scale_factors)
-    scale_factors_p = _ffi.cast("double *", scale_factors_np.ctypes.data)
     distances_np = np.zeros(num_points, dtype=np.float64)
     distances_p = _ffi.cast("double *", distances_np.ctypes.data)
 
@@ -137,7 +135,6 @@ def get_distances_vertex_weighted(context, points, scale_factors):
                                                 num_points,
                                                 x_coordinates_p,
                                                 y_coordinates_p,
-                                                scale_factors_p,
                                                 distances_p)
 
     return distances_np.tolist()

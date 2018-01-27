@@ -7,6 +7,7 @@
 #include "node.h"
 #include "distance.h"
 #include "intersection.h"
+#include "functions.h"
 
 // get best case distance to box
 // rejected
@@ -175,15 +176,14 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
     }
 }
 
-inline double linear_function(const double scale_factor, const double distance, const double w)
+inline double linear_function(const double distance, const double w)
 {
-    return scale_factor * distance + w;
+    return g_function(distance) + w;
 }
 
-double node::get_distance_vertex_weighted(const double scale_factor, const double d, const point p) const
+double node::get_distance_vertex_weighted(const double d, const point p) const
 {
-    double r_ = linear_function(scale_factor,
-                                sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
+    double r_ = linear_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
                                 weight);
 
     // estimated minimum distance_function is larger than d
@@ -197,7 +197,7 @@ double node::get_distance_vertex_weighted(const double scale_factor, const doubl
     {
         for (int i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(scale_factor, d_, p));
+            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
         }
         return d_;
     }
@@ -206,13 +206,11 @@ double node::get_distance_vertex_weighted(const double scale_factor, const doubl
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            d_ = std::min(d_, linear_function(scale_factor,
-                                              sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)),
+            d_ = std::min(d_, linear_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)),
                                               children_edges[i].p1.weight));
         }
         int last = children_edges.size() - 1;
-        d_ = std::min(d_, linear_function(scale_factor,
-                                          sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)),
+        d_ = std::min(d_, linear_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)),
                                           children_edges[last].p2.weight));
         return d_;
     }

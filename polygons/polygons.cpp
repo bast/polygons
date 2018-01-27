@@ -225,16 +225,14 @@ void polygons_get_distances_vertex_weighted(const polygons_context *context,
                                             const int num_points,
                                             const double x[],
                                             const double y[],
-                                            const double scale_factors[],
                                             double distances[])
 {
     AS_CTYPE(polygons_context, context)
-        ->get_distances_vertex_weighted(num_points, x, y, scale_factors, distances);
+        ->get_distances_vertex_weighted(num_points, x, y, distances);
 }
 void polygons_context::get_distances_vertex_weighted(const int num_points,
                                                      const double x[],
                                                      const double y[],
-                                                     const double scale_factors[],
                                                      double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
@@ -242,7 +240,7 @@ void polygons_context::get_distances_vertex_weighted(const int num_points,
     for (int i = 0; i < num_points; i++)
     {
         point p = {-1, x[i], y[i], 0.0, 0.0};
-        distances[i] = nodes[0].get_distance_vertex_weighted(scale_factors[i], large_number, p);
+        distances[i] = nodes[0].get_distance_vertex_weighted(large_number, p);
     }
 }
 

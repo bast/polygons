@@ -33,7 +33,6 @@ class polygons_context
     void get_distances_vertex_weighted(const int num_points,
                                        const double x[],
                                        const double y[],
-                                       const double scale_factors[],
                                        double distances[]) const;
     void contains_points(const int num_points,
                          const double x[],
@@ -101,7 +100,6 @@ void polygons_get_distances_vertex_weighted(const polygons_context *context,
                                             const int num_points,
                                             const double x[],
                                             const double y[],
-                                            const double scale_factors[],
                                             double distances[]);
 
 POLYGONS_API

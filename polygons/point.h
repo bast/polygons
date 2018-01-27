@@ -6,4 +6,5 @@ struct point
     double x;
     double y;
     double weight;
+    double h;
 };

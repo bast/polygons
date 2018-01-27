@@ -76,11 +76,20 @@ bool skip_box_intersection(const point p,
 node::node()
 {
     double large_number = std::numeric_limits<double>::max();
+
+    // initialize bounding box for this node
     xmin = large_number;
     xmax = -large_number;
     ymin = large_number;
     ymax = -large_number;
+
+    // FIXME will be removed
     weight = large_number;
+
+    // initialize to a large number
+    // we will minimize this number for each node
+    // when building the tree
+    min_h = large_number;
 }
 
 node::~node()
@@ -246,6 +255,7 @@ void node::add_child_node(const node child)
     ymax = std::max(ymax, child.ymax);
 
     weight = std::min(weight, child.weight);
+    min_h = std::min(min_h, child.min_h);
 }
 
 void node::add_child_edge(const edge child)
@@ -264,4 +274,6 @@ void node::add_child_edge(const edge child)
 
     weight = std::min(weight, child.p1.weight);
     weight = std::min(weight, child.p2.weight);
+    min_h = std::min(weight, child.p1.h);
+    min_h = std::min(weight, child.p2.h);
 }

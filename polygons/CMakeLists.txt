@@ -15,6 +15,8 @@ add_library(
     point.h
     polygons.cpp
     polygons.h
+    functions.cpp # FIXME move to own shared lib
+    functions.h
     )
 
 # clang seems to need this

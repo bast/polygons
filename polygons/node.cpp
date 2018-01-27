@@ -7,7 +7,7 @@
 #include "node.h"
 #include "distance.h"
 #include "intersection.h"
-#include "functions.h"
+#include "custom_functions.h"
 
 // get best case distance to box
 // rejected

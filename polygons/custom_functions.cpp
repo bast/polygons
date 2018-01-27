@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "custom_functions.h"
 
 double h_function(const double a)
 {

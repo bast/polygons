@@ -9,7 +9,7 @@
 #include "polygons.h"
 #include "intersection.h"
 #include "distance.h"
-#include "functions.h"
+#include "custom_functions.h"
 
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)

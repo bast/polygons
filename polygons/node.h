@@ -27,8 +27,7 @@ class node
     double ymin;
     double ymax;
 
-    double weight;
-    double min_h;
+    double h_min;
 
     std::vector<node> children_nodes;
     std::vector<edge> children_edges;

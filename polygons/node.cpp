@@ -84,13 +84,10 @@ node::node()
     ymin = large_number;
     ymax = -large_number;
 
-    // FIXME will be removed
-    weight = large_number;
-
     // initialize to a large number
     // we will minimize this number for each node
     // when building the tree
-    min_h = large_number;
+    h_min = large_number;
 }
 
 node::~node()
@@ -178,7 +175,7 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
 
 double node::get_distance_vertex_weighted(const double d, const point p) const
 {
-    double r_ = g_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax))) + weight;
+    double r_ = g_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax))) + h_min;
 
     // estimated minimum distance_function is larger than d
     // this means we can reject this node and return
@@ -201,12 +198,12 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
         for (int i = 0; i < children_edges.size(); i++)
         {
             double f = g_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)))
-                     + children_edges[i].p1.weight;
+                     + children_edges[i].p1.h;
             d_ = std::min(d_, f);
         }
         int last = children_edges.size() - 1;
         double f = g_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)))
-                 + children_edges[last].p2.weight;
+                 + children_edges[last].p2.h;
         d_ = std::min(d_, f);
         return d_;
     }
@@ -248,8 +245,7 @@ void node::add_child_node(const node child)
     ymin = std::min(ymin, child.ymin);
     ymax = std::max(ymax, child.ymax);
 
-    weight = std::min(weight, child.weight);
-    min_h = std::min(min_h, child.min_h);
+    h_min = std::min(h_min, child.h_min);
 }
 
 void node::add_child_edge(const edge child)
@@ -266,8 +262,6 @@ void node::add_child_edge(const edge child)
     ymin = std::min(ymin, child.p2.y);
     ymax = std::max(ymax, child.p2.y);
 
-    weight = std::min(weight, child.p1.weight);
-    weight = std::min(weight, child.p2.weight);
-    min_h = std::min(weight, child.p1.h);
-    min_h = std::min(weight, child.p2.h);
+    h_min = std::min(h_min, child.p1.h);
+    h_min = std::min(h_min, child.p2.h);
 }

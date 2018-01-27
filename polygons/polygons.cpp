@@ -97,8 +97,8 @@ void polygons_context::add_polygon(const int num_points,
     std::vector<edge> temp;
     for (int i = 0; i < num_points - 1; i++)
     {
-        point p1 = {indices[i], x[i], y[i], weights[i], h_function(weights[i])};
-        point p2 = {indices[i + 1], x[i + 1], y[i + 1], weights[i + 1], h_function(weights[i + 1])};
+        point p1 = {indices[i], x[i], y[i], h_function(weights[i])};
+        point p2 = {indices[i + 1], x[i + 1], y[i + 1], h_function(weights[i + 1])};
         edge e = {p1, p2};
 
         temp.push_back(e);
@@ -163,7 +163,7 @@ void polygons_context::get_distances_edge(const int num_points,
 
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0, 0.0};
+        point p = {-1, x[i], y[i], 0.0};
         distances[i] = sqrt(nodes[0].get_distance_edge(large_number, p));
     }
 }
@@ -188,7 +188,7 @@ void polygons_context::get_distances_vertex(const int num_points,
 #pragma omp parallel for
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0, 0.0};
+        point p = {-1, x[i], y[i], 0.0};
         auto t = nodes[0].get_distance_vertex(0, large_number, p);
         distances[i] = sqrt(std::get<1>(t));
     }
@@ -214,7 +214,7 @@ void polygons_context::get_closest_vertices(const int num_points,
 #pragma omp parallel for
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0, 0.0};
+        point p = {-1, x[i], y[i], 0.0};
         auto t = nodes[0].get_distance_vertex(0, large_number, p);
         indices[i] = std::get<0>(t);
     }
@@ -239,7 +239,7 @@ void polygons_context::get_distances_vertex_weighted(const int num_points,
 
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0, 0.0};
+        point p = {-1, x[i], y[i], 0.0};
         distances[i] = nodes[0].get_distance_vertex_weighted(large_number, p);
     }
 }
@@ -265,7 +265,7 @@ void polygons_context::contains_points(const int num_points,
 #pragma omp parallel for
     for (int i = 0; i < num_points; i++)
     {
-        point p = {-1, x[i], y[i], 0.0, 0.0};
+        point p = {-1, x[i], y[i], 0.0};
         int n = 0;
         contains_points[i] = nodes[0].num_intersections(n, p) % 2 != 0;
     }

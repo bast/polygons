@@ -17,7 +17,7 @@ class polygons_context
     polygons_context();
     ~polygons_context();
 
-    void add_polygon(const int num_points, const double x[], const double y[], const int indices[], const double weights[]);
+    void add_polygon(const int num_points, const double x[], const double y[], const int indices[], const double coefficients[]);
     void get_distances_edge(const int num_points,
                             const double x[],
                             const double y[],
@@ -72,7 +72,7 @@ void polygons_add_polygon(polygons_context *context,
                           const double x[],
                           const double y[],
                           const int indices[],
-                          const double weights[]);
+                          const double coefficients[]);
 
 POLYGONS_API
 void polygons_get_distances_edge(const polygons_context *context,

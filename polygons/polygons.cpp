@@ -82,23 +82,23 @@ void polygons_add_polygon(polygons_context *context,
                           const double x[],
                           const double y[],
                           const int indices[],
-                          const double weights[])
+                          const double coefficients[])
 {
-    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, indices, weights);
+    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, indices, coefficients);
 }
 void polygons_context::add_polygon(const int num_points,
                                    const double x[],
                                    const double y[],
                                    const int indices[],
-                                   const double weights[])
+                                   const double coefficients[])
 {
     check_that_context_is_initialized();
 
     std::vector<edge> temp;
     for (int i = 0; i < num_points - 1; i++)
     {
-        point p1 = {indices[i], x[i], y[i], h_function(weights[i])};
-        point p2 = {indices[i + 1], x[i + 1], y[i + 1], h_function(weights[i + 1])};
+        point p1 = {indices[i], x[i], y[i], h_function(coefficients[i])};
+        point p2 = {indices[i + 1], x[i + 1], y[i + 1], h_function(coefficients[i + 1])};
         edge e = {p1, p2};
 
         temp.push_back(e);

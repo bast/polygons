@@ -1,8 +1,8 @@
 // Copyright (C) 2004-2012 Per-Olof Persson
 
+#include "distance.h"
 #include <algorithm>
 #include <math.h>
-#include "distance.h"
 
 double dsegment(const double x0,
                 const double y0,

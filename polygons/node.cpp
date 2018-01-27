@@ -1,13 +1,13 @@
 #include <limits>
-#include <tuple>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <tuple>
 
-#include "edge.h"
-#include "node.h"
-#include "distance.h"
-#include "intersection.h"
 #include "custom_functions.h"
+#include "distance.h"
+#include "edge.h"
+#include "intersection.h"
+#include "node.h"
 
 // get best case distance to box
 // rejected
@@ -98,7 +98,8 @@ node::~node()
 
 double node::get_distance_edge(const double d, const point p) const
 {
-    if (box_distance(p, xmin, xmax, ymin, ymax) > d) return d;
+    if (box_distance(p, xmin, xmax, ymin, ymax) > d)
+        return d;
 
     double d_ = d;
 
@@ -131,7 +132,8 @@ double node::get_distance_edge(const double d, const point p) const
     return d_;
 }
 
-std::tuple<int, double> node::get_distance_vertex(const int index, const double d, const point p) const
+std::tuple<int, double>
+node::get_distance_vertex(const int index, const double d, const point p) const
 {
     if (box_distance(p, xmin, xmax, ymin, ymax) > d)
     {
@@ -160,18 +162,21 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
     {
         for (size_t i = 0; i < children_edges.size(); i++)
         {
-            double d_temp = distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y);
+            double d_temp = distance_squared(children_edges[i].p1.x - p.x,
+                                             children_edges[i].p1.y - p.y);
             if (d_temp < d_)
             {
                 d_ = d_temp;
                 index_ = children_edges[i].p1.index;
             }
         }
-        double d_temp = distance_squared(children_edges[children_edges.size()-1].p2.x - p.x, children_edges[children_edges.size()-1].p2.y - p.y);
+        double d_temp = distance_squared(
+            children_edges[children_edges.size() - 1].p2.x - p.x,
+            children_edges[children_edges.size() - 1].p2.y - p.y);
         if (d_temp < d_)
         {
             d_ = d_temp;
-            index_ = children_edges[children_edges.size()-1].p2.index;
+            index_ = children_edges[children_edges.size() - 1].p2.index;
         }
         return std::make_tuple(index_, d_);
     }
@@ -189,7 +194,8 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     // estimated minimum distance_function is larger than d
     // this means we can reject this node and return
     // if the estimate is not larger, we go down the tree
-    if (f > d) return d;
+    if (f > d)
+        return d;
 
     double d_ = d;
 
@@ -197,7 +203,8 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (size_t i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
+            d_ = std::min(
+                d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
         }
         return d_;
     }
@@ -206,13 +213,17 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (size_t i = 0; i < children_edges.size(); i++)
         {
-            f = g_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)))
-              + children_edges[i].p1.h;
+            f = g_function(
+                    sqrt(distance_squared(children_edges[i].p1.x - p.x,
+                                          children_edges[i].p1.y - p.y))) +
+                children_edges[i].p1.h;
             d_ = std::min(d_, f);
         }
         int last = children_edges.size() - 1;
-        f = g_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)))
-          + children_edges[last].p2.h;
+        f = g_function(
+                sqrt(distance_squared(children_edges[last].p2.x - p.x,
+                                      children_edges[last].p2.y - p.y))) +
+            children_edges[last].p2.h;
         d_ = std::min(d_, f);
         return d_;
     }

@@ -17,7 +17,11 @@ class polygons_context
     polygons_context();
     ~polygons_context();
 
-    void add_polygon(const int num_points, const double x[], const double y[], const int indices[], const double coefficients[]);
+    void add_polygon(const int num_points,
+                     const double x[],
+                     const double y[],
+                     const int indices[],
+                     const double coefficients[]);
     void get_distances_edge(const int num_points,
                             const double x[],
                             const double y[],
@@ -44,7 +48,7 @@ class polygons_context
     polygons_context &operator=(const polygons_context &rhs); // not implemented
 
     std::vector<node> nodes;
-    std::vector<std::vector<edge> > polygons;
+    std::vector<std::vector<edge>> polygons;
 
     void check_that_context_is_initialized() const;
     bool is_initialized = false;

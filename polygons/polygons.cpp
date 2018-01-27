@@ -1,15 +1,15 @@
-#include <stdio.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <limits>
-#include <tuple>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <tuple>
 
-#include "polygons.h"
-#include "intersection.h"
-#include "distance.h"
 #include "custom_functions.h"
+#include "distance.h"
+#include "intersection.h"
+#include "polygons.h"
 
 #define AS_TYPE(Type, Obj) reinterpret_cast<Type *>(Obj)
 #define AS_CTYPE(Type, Obj) reinterpret_cast<const Type *>(Obj)
@@ -84,7 +84,8 @@ void polygons_add_polygon(polygons_context *context,
                           const int indices[],
                           const double coefficients[])
 {
-    AS_TYPE(polygons_context, context)->add_polygon(num_points, x, y, indices, coefficients);
+    AS_TYPE(polygons_context, context)
+        ->add_polygon(num_points, x, y, indices, coefficients);
 }
 void polygons_context::add_polygon(const int num_points,
                                    const double x[],
@@ -98,7 +99,10 @@ void polygons_context::add_polygon(const int num_points,
     for (int i = 0; i < num_points - 1; i++)
     {
         point p1 = {indices[i], x[i], y[i], h_function(coefficients[i])};
-        point p2 = {indices[i + 1], x[i + 1], y[i + 1], h_function(coefficients[i + 1])};
+        point p2 = {indices[i + 1],
+                    x[i + 1],
+                    y[i + 1],
+                    h_function(coefficients[i + 1])};
         edge e = {p1, p2};
 
         temp.push_back(e);

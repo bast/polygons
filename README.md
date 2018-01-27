@@ -25,8 +25,8 @@ $ pip install git+https://github.com/bast/polygons.git
 >>> import polygons
 >>> context = polygons.new_context()
 >>> polygon_points = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)]
->>> weights = [1.0]*5
->>> polygons.add_polygon(context, polygon_points, weights)
+>>> coefficients = [1.0]*5
+>>> polygons.add_polygon(context, polygon_points, coefficients)
 >>> points = [(0.5, 0.5), (0.5, -0.5)]
 >>> polygons.contains_points(context, points)
 [True, False]
@@ -54,7 +54,7 @@ it is possible to minimize
 f(r0, r) = scale_factor * distance(r0, r) + weight(r)
 ```
 
-Polygon weights have no effect for non-weighted distance functions.
+Polygon coefficients have no effect for non-weighted distance functions.
 
 
 ### References which were used during coding

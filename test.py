@@ -115,7 +115,7 @@ def linear_function(distance, w):
     return scale_factor * distance + w
 
 
-def get_distances_vertex_weighted_naive(points, polygons, weights):
+def get_distances_vertex_weighted_naive(points, polygons, coefficients):
     huge = sys.float_info.max
     distances = []
     for k, point in enumerate(points):
@@ -123,7 +123,7 @@ def get_distances_vertex_weighted_naive(points, polygons, weights):
         for i, polygon in enumerate(polygons):
             for j, vertex in enumerate(polygon):
                 _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
-                _r = linear_function(math.sqrt(_d), weights[i][j])
+                _r = linear_function(math.sqrt(_d), coefficients[i][j])
                 r = min(r, _r)
         distances.append(r)
     return distances
@@ -138,13 +138,13 @@ def test_distances():
     random.seed(0)
 
     polygons = []
-    weights = []
+    coefficients = []
     index_offset = 0
     for i in range(num_polygons):
         vertices = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
         polygons.append(vertices)
         ws = [random.uniform(0.0, 5.0)/6.0 for _ in range(len(vertices))]
-        weights.append(ws)
+        coefficients.append(ws)
         indices = list(range(index_offset, index_offset + len(vertices)))
         index_offset += len(vertices)
         poly.add_polygon(context, vertices, indices, ws)
@@ -172,7 +172,7 @@ def test_distances():
     assert closest_indices_naive == closest_indices
 
     distances = poly.get_distances_vertex_weighted(context, points)
-    distances_naive = get_distances_vertex_weighted_naive(points, polygons, weights)
+    distances_naive = get_distances_vertex_weighted_naive(points, polygons, coefficients)
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7

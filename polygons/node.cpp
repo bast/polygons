@@ -176,15 +176,9 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
     }
 }
 
-inline double linear_function(const double distance, const double w)
-{
-    return g_function(distance) + w;
-}
-
 double node::get_distance_vertex_weighted(const double d, const point p) const
 {
-    double r_ = linear_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
-                                weight);
+    double r_ = g_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax))) + weight;
 
     // estimated minimum distance_function is larger than d
     // this means we can reject this node and return
@@ -206,12 +200,14 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (int i = 0; i < children_edges.size(); i++)
         {
-            d_ = std::min(d_, linear_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)),
-                                              children_edges[i].p1.weight));
+            double f = g_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)))
+                     + children_edges[i].p1.weight;
+            d_ = std::min(d_, f);
         }
         int last = children_edges.size() - 1;
-        d_ = std::min(d_, linear_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)),
-                                          children_edges[last].p2.weight));
+        double f = g_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)))
+                 + children_edges[last].p2.weight;
+        d_ = std::min(d_, f);
         return d_;
     }
 }

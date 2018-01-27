@@ -104,7 +104,7 @@ double node::get_distance_edge(const double d, const point p) const
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             d_ = std::min(d_, children_nodes[i].get_distance_edge(d_, p));
         }
@@ -113,7 +113,7 @@ double node::get_distance_edge(const double d, const point p) const
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
             d_ = std::min(d_,
                           dsegment(p.x,
@@ -125,6 +125,10 @@ double node::get_distance_edge(const double d, const point p) const
         }
         return d_;
     }
+
+    // this statement should never be reached
+    // but is here to avoid compile warning
+    return d_;
 }
 
 std::tuple<int, double> node::get_distance_vertex(const int index, const double d, const point p) const
@@ -139,7 +143,7 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             auto t = children_nodes[i].get_distance_vertex(index_, d_, p);
             double d_temp = std::get<1>(t);
@@ -154,7 +158,7 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
             double d_temp = distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y);
             if (d_temp < d_)
@@ -171,22 +175,27 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
         }
         return std::make_tuple(index_, d_);
     }
+
+    // this statement should never be reached
+    // but is here to avoid compile warning
+    return std::make_tuple(index, d);
 }
 
 double node::get_distance_vertex_weighted(const double d, const point p) const
 {
-    double r_ = g_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax))) + h_min;
+    double f;
+    f = g_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax))) + h_min;
 
     // estimated minimum distance_function is larger than d
     // this means we can reject this node and return
     // if the estimate is not larger, we go down the tree
-    if (r_ > d) return d;
+    if (f > d) return d;
 
     double d_ = d;
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             d_ = std::min(d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
         }
@@ -195,18 +204,22 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
-            double f = g_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)))
-                     + children_edges[i].p1.h;
+            f = g_function(sqrt(distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y)))
+              + children_edges[i].p1.h;
             d_ = std::min(d_, f);
         }
         int last = children_edges.size() - 1;
-        double f = g_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)))
-                 + children_edges[last].p2.h;
+        f = g_function(sqrt(distance_squared(children_edges[last].p2.x - p.x, children_edges[last].p2.y - p.y)))
+          + children_edges[last].p2.h;
         d_ = std::min(d_, f);
         return d_;
     }
+
+    // this statement should never be reached
+    // but is here to avoid compile warning
+    return d_;
 }
 
 int node::num_intersections(const int n, const point p) const
@@ -218,7 +231,7 @@ int node::num_intersections(const int n, const point p) const
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             n_ = children_nodes[i].num_intersections(n_, p);
         }
@@ -227,13 +240,17 @@ int node::num_intersections(const int n, const point p) const
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
             if (crosses(p.x, p.y, children_edges[i]))
                 n_++;
         }
         return n_;
     }
+
+    // this statement should never be reached
+    // but is here to avoid compile warning
+    return n_;
 }
 
 void node::add_child_node(const node child)

@@ -176,6 +176,10 @@ double node::get_distance_vertex_weighted(const double scale_factor, const doubl
     double r_ = linear_function(scale_factor,
                                 sqrt(box_distance(p, xmin, xmax, ymin, ymax)),
                                 weight);
+
+    // estimated minimum distance_function is larger than d
+    // this means we can reject this node and return
+    // if the estimate is not larger, we go down the tree
     if (r_ > d) return d;
 
     double d_ = d;

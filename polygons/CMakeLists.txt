@@ -15,7 +15,12 @@ add_library(
     point.h
     polygons.cpp
     polygons.h
-    custom_functions.cpp # FIXME move to own shared lib
+    )
+
+add_library(
+    custom_functions
+    SHARED
+    custom_functions.cpp
     custom_functions.h
     )
 
@@ -23,6 +28,7 @@ add_library(
 target_link_libraries(
     polygons
     stdc++
+    custom_functions
     )
 
 install(TARGETS polygons LIBRARY DESTINATION "lib")

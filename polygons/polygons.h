@@ -14,7 +14,7 @@
 class polygons_context
 {
   public:
-    polygons_context();
+    polygons_context(const int num_coefficients);
     ~polygons_context();
 
     void add_polygon(const int num_points,
@@ -51,6 +51,7 @@ class polygons_context
     std::vector<std::vector<edge>> polygons;
 
     void check_that_context_is_initialized() const;
+    int num_coefficients_per_point;
     bool is_initialized = false;
 };
 #endif
@@ -65,7 +66,7 @@ typedef struct polygons_context_s polygons_context;
 #endif
 
 POLYGONS_API
-polygons_context *polygons_new_context();
+polygons_context *polygons_new_context(const int num_coefficients);
 
 POLYGONS_API
 void polygons_free_context(polygons_context *context);

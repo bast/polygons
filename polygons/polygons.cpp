@@ -24,11 +24,15 @@ void polygons_context::check_that_context_is_initialized() const
 }
 
 POLYGONS_API
-polygons_context *polygons_new_context()
+polygons_context *polygons_new_context(const int num_coefficients)
 {
-    return AS_TYPE(polygons_context, new polygons_context());
+    return AS_TYPE(polygons_context, new polygons_context(num_coefficients));
 }
-polygons_context::polygons_context() { is_initialized = true; }
+polygons_context::polygons_context(const int num_coefficients)
+{
+    num_coefficients_per_point = num_coefficients;
+    is_initialized = true;
+}
 
 POLYGONS_API
 void polygons_free_context(polygons_context *context)

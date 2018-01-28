@@ -7,7 +7,7 @@ import math
 def test_contains():
     num_points = 1000
 
-    context = poly.new_context()
+    context = poly.new_context(0)
 
     poly.add_polygon(context, [(2.0, 1.0), (3.0, 1.5), (2.5, 2.0), (2.0, 1.0)], list(range(0, 4)), [1.0]*4)
     poly.add_polygon(context, [(0.0, 0.0), (1.0, 0.5), (0.5, 1.0), (0.0, 0.0)], list(range(4, 8)), [1.0]*4)
@@ -133,7 +133,8 @@ def test_distances():
     num_points = 1000
     num_polygons = 5
 
-    context = poly.new_context()
+    num_coefficients = 2  # so far no-op
+    context = poly.new_context(0)
 
     random.seed(0)
 

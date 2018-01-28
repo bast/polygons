@@ -2,6 +2,7 @@ import random
 import polygons as poly
 import sys
 import math
+from pytest import approx
 
 
 def test_contains():
@@ -160,14 +161,12 @@ def test_distances():
     distances = poly.get_distances_edge(context, points)
     distances_naive = vdsegment(points, polygons)
     for i, point in enumerate(points):
-        diff = abs(distances[i] - distances_naive[i])
-        assert diff < 1.0e-7
+        assert distances[i] == approx(distances_naive[i])
 
     distances = poly.get_distances_vertex(context, points)
     closest_indices_naive, distances_naive = get_distances_vertex_naive(points, polygons)
     for i, point in enumerate(points):
-        diff = abs(distances[i] - distances_naive[i])
-        assert diff < 1.0e-7
+        assert distances[i] == approx(distances_naive[i])
 
     closest_indices = poly.get_closest_vertices(context, points)
     assert closest_indices_naive == closest_indices
@@ -175,7 +174,6 @@ def test_distances():
     distances = poly.get_distances_vertex_custom(context, points)
     distances_naive = get_distances_vertex_custom_naive(points, polygons, coefficients)
     for i, point in enumerate(points):
-        diff = abs(distances[i] - distances_naive[i])
-        assert diff < 1.0e-7
+        assert distances[i] == approx(distances_naive[i])
 
     poly.free_context(context)

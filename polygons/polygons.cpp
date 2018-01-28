@@ -102,11 +102,15 @@ void polygons_context::add_polygon(const int num_points,
     std::vector<edge> temp;
     for (int i = 0; i < num_points - 1; i++)
     {
-        point p1 = {indices[i], x[i], y[i], h_function(coefficients[i])};
-        point p2 = {indices[i + 1],
-                    x[i + 1],
-                    y[i + 1],
-                    h_function(coefficients[i + 1])};
+        point p1 = {indices[i],
+                    x[i],
+                    y[i],
+                    h_function(&coefficients[num_coefficients_per_point*i])};
+        int j = i + 1;
+        point p2 = {indices[j],
+                    x[j],
+                    y[j],
+                    h_function(&coefficients[num_coefficients_per_point*j])};
         edge e = {p1, p2};
 
         temp.push_back(e);

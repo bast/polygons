@@ -1,6 +1,9 @@
 #include "custom_functions.h"
 
-double h_function(const double a) { return a; }
+double h_function(const double coefficients[])
+{
+    return coefficients[0] + coefficients[1];
+}
 
 double g_function(const double distance)
 {

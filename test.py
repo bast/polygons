@@ -111,20 +111,25 @@ def generate_random_points(num_points, bounds):
     return points
 
 
-def linear_function(distance, w):
-    scale_factor = 0.995792  # FIXME hardcoded
-    return scale_factor * distance + w
+def g_function(distance):
+    scale_factor = 0.995792
+    return scale_factor * distance
 
 
-def get_distances_vertex_custom_naive(points, polygons, coefficients):
+def h_function(coefficients):
+    return coefficients[0] + coefficients[1]
+
+
+def get_distances_vertex_custom_naive(points, polygons, coefficients, num_coefficients_per_point):
     huge = sys.float_info.max
     distances = []
     for k, point in enumerate(points):
         r = huge
         for i, polygon in enumerate(polygons):
             for j, vertex in enumerate(polygon):
-                _d = length_squared(point[0] - vertex[0], point[1] - vertex[1])
-                _r = linear_function(math.sqrt(_d), coefficients[i][j])
+                _d = math.sqrt(length_squared(point[0] - vertex[0], point[1] - vertex[1]))
+                h_coefficients = coefficients[i][j*num_coefficients_per_point:j*num_coefficients_per_point + num_coefficients_per_point]
+                _r = g_function(_d) + h_function(h_coefficients)
                 r = min(r, _r)
         distances.append(r)
     return distances
@@ -134,22 +139,24 @@ def test_distances():
     num_points = 1000
     num_polygons = 5
 
-    num_coefficients = 2  # so far no-op
-    context = poly.new_context(0)
+    num_coefficients_per_point = 2
+    context = poly.new_context(num_coefficients_per_point)
 
     random.seed(0)
 
     polygons = []
-    coefficients = []
+    polygons_coefficients = []
     index_offset = 0
     for i in range(num_polygons):
         vertices = read_polygon('data/polygon.txt', xshift=float(i) * 5.0, yshift=float(i) * 5.0)
         polygons.append(vertices)
-        ws = [random.uniform(0.0, 5.0)/6.0 for _ in range(len(vertices))]
-        coefficients.append(ws)
+
+        coefficients = [random.uniform(0.0, 1.0) for _ in range(num_coefficients_per_point*len(vertices))]
+
         indices = list(range(index_offset, index_offset + len(vertices)))
         index_offset += len(vertices)
-        poly.add_polygon(context, vertices, indices, ws)
+        poly.add_polygon(context, vertices, indices, coefficients)
+        polygons_coefficients.append(coefficients)
 
     bounds = init_bounds()
     for polygon in polygons:
@@ -172,7 +179,7 @@ def test_distances():
     assert closest_indices_naive == closest_indices
 
     distances = poly.get_distances_vertex_custom(context, points)
-    distances_naive = get_distances_vertex_custom_naive(points, polygons, coefficients)
+    distances_naive = get_distances_vertex_custom_naive(points, polygons, polygons_coefficients, num_coefficients_per_point)
     for i, point in enumerate(points):
         assert distances[i] == approx(distances_naive[i])
 

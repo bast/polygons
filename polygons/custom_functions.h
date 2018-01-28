@@ -1,6 +1,5 @@
 #pragma once
 
-// FIXME generalize to an array of parameters
-double h_function(const double a);
+double h_function(const double coefficients[]);
 
 double g_function(const double distance);

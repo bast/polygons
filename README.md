@@ -16,7 +16,6 @@ $ pip install git+https://github.com/bast/polygons.git
 - check whether points are inside or outside polygons
 - nearest distances to edges
 - nearest distances to vertices
-- nearest weighted distances to vertices (see below for explanation)
 
 
 ### Example
@@ -34,9 +33,6 @@ $ pip install git+https://github.com/bast/polygons.git
 [0.5, 0.5]
 >>> polygons.get_distances_vertex(context, points)
 [0.7071067811865476, 0.7071067811865476]
->>> scale_factors = [1.0]*2
->>> polygons.get_distances_vertex_weighted(context, points, scale_factors)
-[1.7071067811865475, 1.7071067811865475]
 >>> polygons.free_context(context)
 ```
 

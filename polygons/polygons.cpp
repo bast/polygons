@@ -225,26 +225,26 @@ void polygons_context::get_closest_vertices(const int num_points,
 }
 
 POLYGONS_API
-void polygons_get_distances_vertex_weighted(const polygons_context *context,
-                                            const int num_points,
-                                            const double x[],
-                                            const double y[],
-                                            double distances[])
+void polygons_get_distances_vertex_custom(const polygons_context *context,
+                                          const int num_points,
+                                          const double x[],
+                                          const double y[],
+                                          double distances[])
 {
     AS_CTYPE(polygons_context, context)
-        ->get_distances_vertex_weighted(num_points, x, y, distances);
+        ->get_distances_vertex_custom(num_points, x, y, distances);
 }
-void polygons_context::get_distances_vertex_weighted(const int num_points,
-                                                     const double x[],
-                                                     const double y[],
-                                                     double distances[]) const
+void polygons_context::get_distances_vertex_custom(const int num_points,
+                                                   const double x[],
+                                                   const double y[],
+                                                   double distances[]) const
 {
     double large_number = std::numeric_limits<double>::max();
 
     for (int i = 0; i < num_points; i++)
     {
         point p = {-1, x[i], y[i], 0.0};
-        distances[i] = nodes[0].get_distance_vertex_weighted(large_number, p);
+        distances[i] = nodes[0].get_distance_vertex_custom(large_number, p);
     }
 }
 

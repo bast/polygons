@@ -186,7 +186,7 @@ node::get_distance_vertex(const int index, const double d, const point p) const
     return std::make_tuple(index, d);
 }
 
-double node::get_distance_vertex_weighted(const double d, const point p) const
+double node::get_distance_vertex_custom(const double d, const point p) const
 {
     double f;
     f = g_function(sqrt(box_distance(p, xmin, xmax, ymin, ymax))) + h_min;
@@ -203,8 +203,8 @@ double node::get_distance_vertex_weighted(const double d, const point p) const
     {
         for (size_t i = 0; i < children_nodes.size(); i++)
         {
-            d_ = std::min(
-                d_, children_nodes[i].get_distance_vertex_weighted(d_, p));
+            d_ = std::min(d_,
+                          children_nodes[i].get_distance_vertex_custom(d_, p));
         }
         return d_;
     }

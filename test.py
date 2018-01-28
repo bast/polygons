@@ -115,7 +115,7 @@ def linear_function(distance, w):
     return scale_factor * distance + w
 
 
-def get_distances_vertex_weighted_naive(points, polygons, coefficients):
+def get_distances_vertex_custom_naive(points, polygons, coefficients):
     huge = sys.float_info.max
     distances = []
     for k, point in enumerate(points):
@@ -171,8 +171,8 @@ def test_distances():
     closest_indices = poly.get_closest_vertices(context, points)
     assert closest_indices_naive == closest_indices
 
-    distances = poly.get_distances_vertex_weighted(context, points)
-    distances_naive = get_distances_vertex_weighted_naive(points, polygons, coefficients)
+    distances = poly.get_distances_vertex_custom(context, points)
+    distances_naive = get_distances_vertex_custom_naive(points, polygons, coefficients)
     for i, point in enumerate(points):
         diff = abs(distances[i] - distances_naive[i])
         assert diff < 1.0e-7

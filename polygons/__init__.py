@@ -119,7 +119,7 @@ def get_closest_vertices(context, points):
     return indices_np.tolist()
 
 
-def get_distances_vertex_weighted(context, points):
+def get_distances_vertex_custom(context, points):
 
     num_points = len(points)
 
@@ -131,7 +131,7 @@ def get_distances_vertex_weighted(context, points):
     distances_np = np.zeros(num_points, dtype=np.float64)
     distances_p = _ffi.cast("double *", distances_np.ctypes.data)
 
-    _lib.polygons_get_distances_vertex_weighted(context,
+    _lib.polygons_get_distances_vertex_custom(context,
                                                 num_points,
                                                 x_coordinates_p,
                                                 y_coordinates_p,

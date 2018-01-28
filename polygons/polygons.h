@@ -34,10 +34,10 @@ class polygons_context
                               const double x[],
                               const double y[],
                               int indices[]) const;
-    void get_distances_vertex_weighted(const int num_points,
-                                       const double x[],
-                                       const double y[],
-                                       double distances[]) const;
+    void get_distances_vertex_custom(const int num_points,
+                                     const double x[],
+                                     const double y[],
+                                     double distances[]) const;
     void contains_points(const int num_points,
                          const double x[],
                          const double y[],
@@ -100,11 +100,11 @@ void polygons_get_closest_vertices(const polygons_context *context,
                                    int indices[]);
 
 POLYGONS_API
-void polygons_get_distances_vertex_weighted(const polygons_context *context,
-                                            const int num_points,
-                                            const double x[],
-                                            const double y[],
-                                            double distances[]);
+void polygons_get_distances_vertex_custom(const polygons_context *context,
+                                          const int num_points,
+                                          const double x[],
+                                          const double y[],
+                                          double distances[]);
 
 POLYGONS_API
 void polygons_contains_points(const polygons_context *context,

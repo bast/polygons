@@ -37,20 +37,11 @@ $ pip install git+https://github.com/bast/polygons.git
 ```
 
 
-### Weighted distances to vertices
+### Custom distances to vertices
 
-OK these are a bit weird but I needed these for [another project](https://github.com/bast/smeshing).
+This needs to be documented.
 
-Instead of finding r by minimizing
-```
-f(r0, r) = distance(r0, r)
-```
-it is possible to minimize
-```
-f(r0, r) = scale_factor * distance(r0, r) + weight(r)
-```
-
-Polygon coefficients have no effect for non-weighted distance functions.
+Polygon coefficients have no effect for other distance functions.
 
 
 ### References which were used during coding

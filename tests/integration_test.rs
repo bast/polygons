@@ -6,7 +6,7 @@ use polygons::stuff;
 fn check_whole_thing() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
-    let (xs, ys) = io::read_polygon("src/polygon.txt".to_string());
+    let (xs, ys) = io::read_polygon("tests/polygon.txt".to_string());
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, &ys, 0);
     let polygon2 = stuff::create_polygon(num_points, &xs, &ys, 0);

@@ -49,25 +49,17 @@ fn rectangle() {
 }
 
 #[test]
-fn check_whole_thing() {
+fn polygon() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
     let (xs, ys) = io::read_polygon("tests/polygon.txt".to_string());
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, &ys, 0);
-    let polygon2 = stuff::create_polygon(num_points, &xs, &ys, 0);
     polygons.push(polygon);
-    polygons.push(polygon2);
+    // polygons.push(polygon);
 
     let mut nodes = Vec::new();
     for p in polygons.iter() {
-        //      println!("polygon starts");
-        for edge in p.iter() {
-            println!(
-                "p1:({},{},{}) p2:({},{},{})",
-                edge.p1.index, edge.p1.x, edge.p1.y, edge.p2.index, edge.p2.x, edge.p2.y
-            );
-        }
         // group edges to nodes, 4 at the time
         nodes.append(&mut stuff::group_edges(4, p.clone()));
     }
@@ -82,27 +74,25 @@ fn check_whole_thing() {
 
     let mut distances: [f64; 5] = [0.0; 5];
     stuff::get_distances_edge(&nodes, 5, &pxs, &pys, &mut distances);
-    for d in distances.iter() {
-        println!("distance edge: {}", d);
-    }
+    assert!(floats_are_same(distances[0], 0.1848953575038567));
+    assert!(floats_are_same(distances[1], 0.13000361865815685));
+    assert!(floats_are_same(distances[2], 2.1731177869167606));
+    assert!(floats_are_same(distances[3], 3.2750519267930196));
+    assert!(floats_are_same(distances[4], 0.028928961600324855));
 
     distances = [0.0; 5];
     stuff::get_distances_vertex(&nodes, 5, &pxs, &pys, &mut distances);
-    for d in distances.iter() {
-        println!("distance vertex: {}", d);
-    }
+    assert!(floats_are_same(distances[0], 0.1848953575038567));
+    assert!(floats_are_same(distances[1], 0.13127646943315613));
+    assert!(floats_are_same(distances[2], 2.1731177869167606));
+    assert!(floats_are_same(distances[3], 3.2750519267930196));
+    assert!(floats_are_same(distances[4], 0.029435910544000285));
 
     let mut indices: [usize; 5] = [0; 5];
     stuff::get_closest_vertices(&nodes, 5, &pxs, &pys, &mut indices);
-    for i in indices.iter() {
-        println!("closest indices: {}", i);
-    }
+    assert_eq!(indices, [41, 159, 33, 0, 156]);
 
     let mut contains: [bool; 5] = [false; 5];
-    stuff::contains_points(&nodes, 5, &pxs, &pys, &mut contains);
-    for c in contains.iter() {
-        println!("contains: {}", c);
-    }
-
-    assert_eq!(1, 1);
+    stuff::contains_points(&nodes, 2, &pxs, &pys, &mut contains);
+    assert_eq!(contains, [true, false, false, false, false]);
 }

@@ -20,10 +20,14 @@ fn is_left(p0x: f64, p0y: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
 }
 
 pub fn crosses(px: f64, py: f64, e: &Edge) -> bool {
+    // point is above the edge so a horizontal line to the point
+    // cannot crosse the edge
     if py > e.p1.y.max(e.p2.y) {
         return false;
     }
 
+    // point is below the edge so a horizontal line to the point
+    // cannot crosse the edge
     if py < e.p1.y.min(e.p2.y) {
         return false;
     }

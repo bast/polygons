@@ -1,4 +1,3 @@
-mod distance;
 mod intersection;
 mod node;
 

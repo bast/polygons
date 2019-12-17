@@ -1,4 +1,3 @@
-use crate::distance;
 use crate::intersection;
 use crate::structures::Node;
 use crate::structures::Point;
@@ -20,7 +19,7 @@ fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
         0.0
     };
 
-    return distance::distance_squared(difx, dify);
+    return distance_squared(difx, dify);
 }
 
 pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
@@ -40,7 +39,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
 
     if node.edges.len() > 0 {
         for edge in node.edges.iter() {
-            d_ = d_.min(distance::dsegment(
+            d_ = d_.min(dsegment(
                 p.x, p.y, edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y,
             ));
         }
@@ -110,7 +109,7 @@ pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usi
 
     if node.edges.len() > 0 {
         for edge in node.edges.iter() {
-            let t = distance::distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
+            let t = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
             if t < d_ {
                 d_ = t;
                 index_ = edge.p1.index;
@@ -118,7 +117,7 @@ pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usi
         }
 
         let i = node.edges.len() - 1;
-        let d_temp = distance::distance_squared(node.edges[i].p2.x - p.x, node.edges[i].p2.y - p.y);
+        let d_temp = distance_squared(node.edges[i].p2.x - p.x, node.edges[i].p2.y - p.y);
         if d_temp < d_ {
             d_ = d_temp;
             index_ = node.edges[i].p2.index;
@@ -127,4 +126,30 @@ pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usi
     }
 
     return (index_, d_);
+}
+
+// we compute the sqrt at the very end to save time
+fn distance_squared(x: f64, y: f64) -> f64 {
+    return x * x + y * y;
+}
+
+// this is derived from a C/C++ code
+// Copyright (C) 2004-2012 Per-Olof Persson
+fn dsegment(x0: f64, y0: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
+    let v = (p2x - p1x, p2y - p1y);
+    let w = (x0 - p1x, y0 - p1y);
+
+    let c1 = v.0 * w.0 + v.1 * w.1;
+
+    if c1 <= 0.0 {
+        return distance_squared(x0 - p1x, y0 - p1y);
+    }
+
+    let c2 = v.0 * v.0 + v.1 * v.1;
+
+    if c1 >= c2 {
+        return distance_squared(x0 - p2x, y0 - p2y);
+    } else {
+        return distance_squared(x0 - (p1x + c1 / c2 * v.0), y0 - (p1y + c1 / c2 * v.1));
+    }
 }

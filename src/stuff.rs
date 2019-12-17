@@ -1,6 +1,4 @@
-use crate::node::get_distance_edge;
-use crate::node::get_distance_vertex;
-use crate::node::num_intersections;
+use crate::node;
 use crate::structures::Edge;
 use crate::structures::Node;
 use crate::structures::Point;
@@ -23,7 +21,7 @@ pub fn contains_points(
             y: y[i],
         };
         // FIXME clarify why we use tree[0]
-        contains[i] = (num_intersections(&tree[0], 0, &p) % 2) != 0;
+        contains[i] = (node::num_intersections(&tree[0], 0, &p) % 2) != 0;
     }
 }
 
@@ -42,7 +40,7 @@ pub fn get_distances_edge(
             x: x[i],
             y: y[i],
         };
-        distances[i] = get_distance_edge(&tree[0], large_number, &p).sqrt();
+        distances[i] = node::get_distance_edge(&tree[0], large_number, &p).sqrt();
     }
 }
 
@@ -61,7 +59,7 @@ pub fn get_distances_vertex(
             x: x[i],
             y: y[i],
         };
-        let (_, d) = get_distance_vertex(&tree[0], 0, large_number, &p);
+        let (_, d) = node::get_distance_vertex(&tree[0], 0, large_number, &p);
         distances[i] = d.sqrt();
     }
 }
@@ -81,7 +79,7 @@ pub fn get_closest_vertices(
             x: x[i],
             y: y[i],
         };
-        let (iv, _) = get_distance_vertex(&tree[0], 0, large_number, &p);
+        let (iv, _) = node::get_distance_vertex(&tree[0], 0, large_number, &p);
         indices[i] = iv;
     }
 }

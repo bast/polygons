@@ -1,6 +1,5 @@
-use crate::distance::distance_squared;
-use crate::distance::dsegment;
-use crate::intersection::crosses;
+use crate::distance;
+use crate::intersection;
 use crate::structures::Node;
 use crate::structures::Point;
 
@@ -21,7 +20,7 @@ fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
         0.0
     };
 
-    return distance_squared(difx, dify);
+    return distance::distance_squared(difx, dify);
 }
 
 pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
@@ -41,7 +40,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
 
     if node.edges.len() > 0 {
         for edge in node.edges.iter() {
-            d_ = d_.min(dsegment(
+            d_ = d_.min(distance::dsegment(
                 p.x, p.y, edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y,
             ));
         }
@@ -67,7 +66,7 @@ pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
 
     if node.edges.len() > 0 {
         for edge in node.edges.iter() {
-            if crosses(p.x, p.y, &edge) {
+            if intersection::crosses(p.x, p.y, &edge) {
                 n_ += 1;
             }
         }
@@ -111,7 +110,7 @@ pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usi
 
     if node.edges.len() > 0 {
         for edge in node.edges.iter() {
-            let t = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
+            let t = distance::distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
             if t < d_ {
                 d_ = t;
                 index_ = edge.p1.index;
@@ -119,7 +118,7 @@ pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usi
         }
 
         let i = node.edges.len() - 1;
-        let d_temp = distance_squared(node.edges[i].p2.x - p.x, node.edges[i].p2.y - p.y);
+        let d_temp = distance::distance_squared(node.edges[i].p2.x - p.x, node.edges[i].p2.y - p.y);
         if d_temp < d_ {
             d_ = d_temp;
             index_ = node.edges[i].p2.index;

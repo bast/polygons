@@ -83,28 +83,28 @@ fn polygon() {
     let mut distances: [f64; NUM_REFERENCE_POINTS] = [0.0; NUM_REFERENCE_POINTS];
     stuff::get_distances_edge(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
     let reference_distances = io::read_vector("tests/reference/distances_edge.txt");
-    for (i, &reference_distance) in reference_distances.iter().enumerate() {
-        assert!(floats_are_same(distances[i], reference_distance));
+    for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
+        assert!(floats_are_same(x, rx));
     }
 
     let mut distances = [0.0; NUM_REFERENCE_POINTS];
     stuff::get_distances_vertex(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
     let reference_distances = io::read_vector("tests/reference/distances_vertex.txt");
-    for (i, &reference_distance) in reference_distances.iter().enumerate() {
-        assert!(floats_are_same(distances[i], reference_distance));
+    for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
+        assert!(floats_are_same(x, rx));
     }
 
     let mut indices: [usize; NUM_REFERENCE_POINTS] = [0; NUM_REFERENCE_POINTS];
     stuff::get_closest_vertices(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut indices);
     let reference_indices = io::read_vector("tests/reference/closest_indices.txt");
-    for (i, &reference_index) in reference_indices.iter().enumerate() {
-        assert_eq!(indices[i], reference_index);
+    for (&x, &rx) in indices.iter().zip(reference_indices.iter()) {
+        assert_eq!(x, rx);
     }
 
     let mut contains: [bool; NUM_REFERENCE_POINTS] = [false; NUM_REFERENCE_POINTS];
     stuff::contains_points(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut contains);
     let reference_bools = io::read_vector("tests/reference/contains_points.txt");
-    for (i, &reference_bool) in reference_bools.iter().enumerate() {
-        assert_eq!(contains[i], reference_bool);
+    for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
+        assert_eq!(x, rx);
     }
 }

@@ -10,13 +10,16 @@ use crate::structures::Edge;
 // liable for any real or imagined damage resulting from its use.
 // Users of this code must verify correctness for their application.
 
-// tests if a point is left|on|right of an infinite line
-// input:  three points p0, p1, and p2
-// return: > 0 for p2 left of the line through p0 and p1
-//         = 0 for p2 on the line
-//         < 0 for p2 right of the line
-fn is_left(p0x: f64, p0y: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
-    return (p1x - p0x) * (p2y - p0y) - (p2x - p0x) * (p1y - p0y);
+// a_z is one component of the vector cross product
+// a_z < 0 for r right of the (upward) line p0-p2
+// a_z > 0 for r left of the (upward) line p0-p2
+// a_z = 0 if r lies on the line p0-p2
+fn a_z(p1x: f64, p1y: f64, p2x: f64, p2y: f64, rx: f64, ry: f64) -> f64 {
+    let b_x = p2x - p1x;
+    let b_y = p2y - p1y;
+    let c_x = rx - p1x;
+    let c_y = ry - p1y;
+    return b_x * c_y - b_y * c_x;
 }
 
 pub fn crosses(px: f64, py: f64, e: &Edge) -> bool {
@@ -34,9 +37,9 @@ pub fn crosses(px: f64, py: f64, e: &Edge) -> bool {
 
     if e.p1.y < e.p2.y {
         // upward edge
-        return is_left(e.p1.x, e.p1.y, e.p2.x, e.p2.y, px, py) > 0.0;
+        return a_z(e.p1.x, e.p1.y, e.p2.x, e.p2.y, px, py) > 0.0;
     } else {
         // downward edge
-        return is_left(e.p1.x, e.p1.y, e.p2.x, e.p2.y, px, py) < 0.0;
+        return a_z(e.p1.x, e.p1.y, e.p2.x, e.p2.y, px, py) < 0.0;
     }
 }

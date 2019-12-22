@@ -11,7 +11,7 @@ fn floats_are_same(f1: f64, f2: f64) -> bool {
 fn rectangle() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
-    let (xs, ys) = io::read_polygon("tests/rectangle.txt");
+    let (xs, ys) = io::read_points("tests/rectangle.txt");
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);
@@ -52,7 +52,7 @@ fn rectangle() {
 fn polygon() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
-    let (xs, ys) = io::read_polygon("tests/polygon.txt");
+    let (xs, ys) = io::read_points("tests/polygon.txt");
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);

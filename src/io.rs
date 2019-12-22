@@ -1,6 +1,6 @@
 use std::fs;
 
-pub fn read_polygon(file_name: &str) -> (Vec<f64>, Vec<f64>) {
+pub fn read_points(file_name: &str) -> (Vec<f64>, Vec<f64>) {
     let error_message = format!("something went wrong reading file {}", file_name);
     let contents = fs::read_to_string(file_name).expect(&error_message);
 

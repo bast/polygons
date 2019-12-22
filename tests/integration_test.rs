@@ -13,7 +13,7 @@ fn rectangle() {
 
     let (xs, ys) = io::read_polygon("tests/rectangle.txt");
     let num_points = xs.len();
-    let polygon = stuff::create_polygon(num_points, &xs, &ys, 0);
+    let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);
 
     let mut nodes = Vec::new();
@@ -54,7 +54,7 @@ fn polygon() {
 
     let (xs, ys) = io::read_polygon("tests/polygon.txt");
     let num_points = xs.len();
-    let polygon = stuff::create_polygon(num_points, &xs, &ys, 0);
+    let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);
     // polygons.push(polygon);
 

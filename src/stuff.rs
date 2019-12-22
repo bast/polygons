@@ -87,20 +87,22 @@ pub fn get_closest_vertices(
 pub fn create_polygon(
     num_points: usize,
     xs: &Vec<f64>,
+    x_offset: f64,
     ys: &Vec<f64>,
+    y_offset: f64,
     start_index: usize,
 ) -> Vec<Edge> {
     let mut edges: Vec<Edge> = Vec::new();
     for i in 0..(num_points - 1) {
         let p1 = Point {
             index: start_index + i,
-            x: xs[i],
-            y: ys[i],
+            x: xs[i] + x_offset,
+            y: ys[i] + y_offset,
         };
         let p2 = Point {
             index: start_index + i + 1,
-            x: xs[i + 1],
-            y: ys[i + 1],
+            x: xs[i + 1] + x_offset,
+            y: ys[i + 1] + y_offset,
         };
         let e = Edge { p1: p1, p2: p2 };
         edges.push(e);

@@ -56,7 +56,14 @@ fn polygon() {
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);
-    // polygons.push(polygon);
+    let polygon = stuff::create_polygon(num_points, &xs, 5.0, &ys, 0.0, num_points);
+    polygons.push(polygon);
+    let polygon = stuff::create_polygon(num_points, &xs, 10.0, &ys, 0.0, 2 * num_points);
+    polygons.push(polygon);
+    let polygon = stuff::create_polygon(num_points, &xs, 15.0, &ys, 0.0, 3 * num_points);
+    polygons.push(polygon);
+    let polygon = stuff::create_polygon(num_points, &xs, 20.0, &ys, 0.0, 4 * num_points);
+    polygons.push(polygon);
 
     let mut nodes = Vec::new();
     for p in polygons.iter() {
@@ -69,32 +76,35 @@ fn polygon() {
         nodes = stuff::group_nodes(4, nodes);
     }
 
-    const NUM_REFERENCE_POINTS: usize = 5;
+    const NUM_REFERENCE_POINTS: usize = 5000;
 
-    let pxs: [f64; NUM_REFERENCE_POINTS] = [0.0, -0.7, -2.0, -3.0, -0.6];
-    let pys: [f64; NUM_REFERENCE_POINTS] = [0.0, 0.8, -2.0, 3.0, 0.7];
+    let (pxs, pys) = io::read_points("tests/reference/reference_points.txt");
 
     let mut distances: [f64; NUM_REFERENCE_POINTS] = [0.0; NUM_REFERENCE_POINTS];
     stuff::get_distances_edge(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
-    assert!(floats_are_same(distances[0], 0.1848953575038567));
-    assert!(floats_are_same(distances[1], 0.13000361865815685));
-    assert!(floats_are_same(distances[2], 2.1731177869167606));
-    assert!(floats_are_same(distances[3], 3.2750519267930196));
-    assert!(floats_are_same(distances[4], 0.028928961600324855));
+    let reference_distances = io::read_vector("tests/reference/distances_edge.txt");
+    for (i, &reference_distance) in reference_distances.iter().enumerate() {
+        assert!(floats_are_same(distances[i], reference_distance));
+    }
 
-    distances = [0.0; NUM_REFERENCE_POINTS];
+    let mut distances = [0.0; NUM_REFERENCE_POINTS];
     stuff::get_distances_vertex(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
-    assert!(floats_are_same(distances[0], 0.1848953575038567));
-    assert!(floats_are_same(distances[1], 0.13127646943315613));
-    assert!(floats_are_same(distances[2], 2.1731177869167606));
-    assert!(floats_are_same(distances[3], 3.2750519267930196));
-    assert!(floats_are_same(distances[4], 0.029435910544000285));
+    let reference_distances = io::read_vector("tests/reference/distances_vertex.txt");
+    for (i, &reference_distance) in reference_distances.iter().enumerate() {
+        assert!(floats_are_same(distances[i], reference_distance));
+    }
 
     let mut indices: [usize; NUM_REFERENCE_POINTS] = [0; NUM_REFERENCE_POINTS];
     stuff::get_closest_vertices(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut indices);
-    assert_eq!(indices, [41, 159, 33, 0, 156]);
+    let reference_indices = io::read_vector("tests/reference/closest_indices.txt");
+    for (i, &reference_index) in reference_indices.iter().enumerate() {
+        assert_eq!(indices[i], reference_index);
+    }
 
     let mut contains: [bool; NUM_REFERENCE_POINTS] = [false; NUM_REFERENCE_POINTS];
-    stuff::contains_points(&nodes, 2, &pxs, &pys, &mut contains);
-    assert_eq!(contains, [true, false, false, false, false]);
+    stuff::contains_points(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut contains);
+    let reference_bools = io::read_vector("tests/reference/contains_points.txt");
+    for (i, &reference_bool) in reference_bools.iter().enumerate() {
+        assert_eq!(contains[i], reference_bool);
+    }
 }

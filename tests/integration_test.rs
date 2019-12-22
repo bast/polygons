@@ -69,30 +69,32 @@ fn polygon() {
         nodes = stuff::group_nodes(4, nodes);
     }
 
-    let pxs: [f64; 5] = [0.0, -0.7, -2.0, -3.0, -0.6];
-    let pys: [f64; 5] = [0.0, 0.8, -2.0, 3.0, 0.7];
+    const NUM_REFERENCE_POINTS: usize = 5;
 
-    let mut distances: [f64; 5] = [0.0; 5];
-    stuff::get_distances_edge(&nodes, 5, &pxs, &pys, &mut distances);
+    let pxs: [f64; NUM_REFERENCE_POINTS] = [0.0, -0.7, -2.0, -3.0, -0.6];
+    let pys: [f64; NUM_REFERENCE_POINTS] = [0.0, 0.8, -2.0, 3.0, 0.7];
+
+    let mut distances: [f64; NUM_REFERENCE_POINTS] = [0.0; NUM_REFERENCE_POINTS];
+    stuff::get_distances_edge(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
     assert!(floats_are_same(distances[0], 0.1848953575038567));
     assert!(floats_are_same(distances[1], 0.13000361865815685));
     assert!(floats_are_same(distances[2], 2.1731177869167606));
     assert!(floats_are_same(distances[3], 3.2750519267930196));
     assert!(floats_are_same(distances[4], 0.028928961600324855));
 
-    distances = [0.0; 5];
-    stuff::get_distances_vertex(&nodes, 5, &pxs, &pys, &mut distances);
+    distances = [0.0; NUM_REFERENCE_POINTS];
+    stuff::get_distances_vertex(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
     assert!(floats_are_same(distances[0], 0.1848953575038567));
     assert!(floats_are_same(distances[1], 0.13127646943315613));
     assert!(floats_are_same(distances[2], 2.1731177869167606));
     assert!(floats_are_same(distances[3], 3.2750519267930196));
     assert!(floats_are_same(distances[4], 0.029435910544000285));
 
-    let mut indices: [usize; 5] = [0; 5];
-    stuff::get_closest_vertices(&nodes, 5, &pxs, &pys, &mut indices);
+    let mut indices: [usize; NUM_REFERENCE_POINTS] = [0; NUM_REFERENCE_POINTS];
+    stuff::get_closest_vertices(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut indices);
     assert_eq!(indices, [41, 159, 33, 0, 156]);
 
-    let mut contains: [bool; 5] = [false; 5];
+    let mut contains: [bool; NUM_REFERENCE_POINTS] = [false; NUM_REFERENCE_POINTS];
     stuff::contains_points(&nodes, 2, &pxs, &pys, &mut contains);
     assert_eq!(contains, [true, false, false, false, false]);
 }

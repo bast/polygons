@@ -1,7 +1,7 @@
 use crate::node;
 use crate::structures::Edge;
 use crate::structures::Node;
-use crate::structures::Point;
+use crate::structures::IndexPoint;
 
 pub fn contains_points(
     tree: &Vec<Node>,
@@ -15,7 +15,7 @@ pub fn contains_points(
     }
 
     for i in 0..num_points {
-        let p = Point {
+        let p = IndexPoint {
             index: 0,
             x: x[i],
             y: y[i],
@@ -35,7 +35,7 @@ pub fn get_distances_edge(
     let large_number = std::f64::MAX;
 
     for i in 0..num_points {
-        let p = Point {
+        let p = IndexPoint {
             index: 0,
             x: x[i],
             y: y[i],
@@ -54,7 +54,7 @@ pub fn get_distances_vertex(
     let large_number = std::f64::MAX;
 
     for i in 0..num_points {
-        let p = Point {
+        let p = IndexPoint {
             index: 0,
             x: x[i],
             y: y[i],
@@ -74,7 +74,7 @@ pub fn get_closest_vertices(
     let large_number = std::f64::MAX;
 
     for i in 0..num_points {
-        let p = Point {
+        let p = IndexPoint {
             index: 0,
             x: x[i],
             y: y[i],
@@ -94,12 +94,12 @@ pub fn create_polygon(
 ) -> Vec<Edge> {
     let mut edges: Vec<Edge> = Vec::new();
     for i in 0..(num_points - 1) {
-        let p1 = Point {
+        let p1 = IndexPoint {
             index: start_index + i,
             x: xs[i] + x_offset,
             y: ys[i] + y_offset,
         };
-        let p2 = Point {
+        let p2 = IndexPoint {
             index: start_index + i + 1,
             x: xs[i + 1] + x_offset,
             y: ys[i + 1] + y_offset,

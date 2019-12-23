@@ -1,6 +1,6 @@
 // a point in space
 #[derive(Clone)]
-pub struct Point {
+pub struct IndexPoint {
     pub index: usize,
     pub x: f64,
     pub y: f64,
@@ -9,8 +9,8 @@ pub struct Point {
 // edge connects two points
 #[derive(Clone)]
 pub struct Edge {
-    pub p1: Point,
-    pub p2: Point,
+    pub p1: IndexPoint,
+    pub p2: IndexPoint,
 }
 
 // node is a box which has dimensions

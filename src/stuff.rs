@@ -2,6 +2,8 @@ use crate::node;
 use crate::structures::{Edge, IndexPoint, Node, Point};
 
 pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
+    // point is inside some polygon if the number of intersections to reach
+    // the point "from left" is impair
     // FIXME clarify why we use tree[0]
     return points
         .iter()

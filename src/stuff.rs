@@ -1,7 +1,7 @@
 use crate::node;
 use crate::structures::Edge;
-use crate::structures::Node;
 use crate::structures::IndexPoint;
+use crate::structures::Node;
 
 pub fn contains_points(
     tree: &Vec<Node>,

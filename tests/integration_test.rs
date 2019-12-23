@@ -1,5 +1,6 @@
 use polygons::io;
 use polygons::structures::Edge;
+use polygons::structures::Point;
 use polygons::stuff;
 
 fn floats_are_same(f1: f64, f2: f64) -> bool {
@@ -11,7 +12,14 @@ fn floats_are_same(f1: f64, f2: f64) -> bool {
 fn rectangle() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
-    let (xs, ys) = io::read_points("tests/rectangle.txt");
+    let points: Vec<Point> = io::read_vector("tests/rectangle.txt");
+    let mut xs = Vec::new();
+    let mut ys = Vec::new();
+    for p in points.iter() {
+        xs.push(p.x);
+        ys.push(p.y);
+    }
+
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);
@@ -52,7 +60,14 @@ fn rectangle() {
 fn polygon() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
-    let (xs, ys) = io::read_points("tests/polygon.txt");
+    let points: Vec<Point> = io::read_vector("tests/polygon.txt");
+    let mut xs = Vec::new();
+    let mut ys = Vec::new();
+    for p in points.iter() {
+        xs.push(p.x);
+        ys.push(p.y);
+    }
+
     let num_points = xs.len();
     let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
     polygons.push(polygon);
@@ -78,7 +93,13 @@ fn polygon() {
 
     const NUM_REFERENCE_POINTS: usize = 5000;
 
-    let (pxs, pys) = io::read_points("tests/reference/reference_points.txt");
+    let reference_points: Vec<Point> = io::read_vector("tests/reference/reference_points.txt");
+    let mut pxs = Vec::new();
+    let mut pys = Vec::new();
+    for p in reference_points.iter() {
+        pxs.push(p.x);
+        pys.push(p.y);
+    }
 
     let mut distances: [f64; NUM_REFERENCE_POINTS] = [0.0; NUM_REFERENCE_POINTS];
     stuff::get_distances_edge(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);

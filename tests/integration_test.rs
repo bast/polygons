@@ -23,54 +23,6 @@ fn floats_are_same(f1: f64, f2: f64) -> bool {
 }
 
 #[test]
-fn rectangle() {
-    let mut polygons: Vec<Vec<Edge>> = Vec::new();
-
-    let points: Vec<Point> = read_vector("tests/rectangle.txt");
-    let mut xs = Vec::new();
-    let mut ys = Vec::new();
-    for p in points.iter() {
-        xs.push(p.x);
-        ys.push(p.y);
-    }
-
-    let num_points = xs.len();
-    let polygon = stuff::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
-    polygons.push(polygon);
-
-    let mut nodes = Vec::new();
-    for p in polygons.iter() {
-        // group edges to nodes, 4 at the time
-        nodes.append(&mut stuff::group_edges(4, p.clone()));
-    }
-
-    // we group nodes into a tree
-    while nodes.len() > 1 {
-        nodes = stuff::group_nodes(4, nodes);
-    }
-
-    let pxs: [f64; 2] = [0.6, 0.5];
-    let pys: [f64; 2] = [0.6, -0.5];
-
-    let mut distances: [f64; 2] = [0.0; 2];
-    stuff::get_distances_edge(&nodes, 2, &pxs, &pys, &mut distances);
-    assert_eq!(distances, [0.4, 0.5]);
-
-    distances = [0.0; 2];
-    stuff::get_distances_vertex(&nodes, 2, &pxs, &pys, &mut distances);
-    assert!(floats_are_same(distances[0], 0.5656854249492381));
-    assert!(floats_are_same(distances[1], 0.7071067811865476));
-
-    let mut indices: [usize; 2] = [0; 2];
-    stuff::get_closest_vertices(&nodes, 2, &pxs, &pys, &mut indices);
-    assert_eq!(indices, [2, 0]);
-
-    let mut contains: [bool; 2] = [false; 2];
-    stuff::contains_points(&nodes, 2, &pxs, &pys, &mut contains);
-    assert_eq!(contains, [true, false]);
-}
-
-#[test]
 fn polygon() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
@@ -136,8 +88,7 @@ fn polygon() {
         assert_eq!(x, rx);
     }
 
-    let mut contains: [bool; NUM_REFERENCE_POINTS] = [false; NUM_REFERENCE_POINTS];
-    stuff::contains_points(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut contains);
+    let contains = stuff::contains_points(&nodes, &reference_points);
     let reference_bools = read_vector("tests/reference/contains_points.txt");
     for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
         assert_eq!(x, rx);

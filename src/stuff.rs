@@ -1,22 +1,12 @@
 use crate::node;
 use crate::structures::{Edge, IndexPoint, Node, Point};
 
-pub fn contains_points(
-    tree: &Vec<Node>,
-    num_points: usize,
-    x: &[f64],
-    y: &[f64],
-    contains: &mut [bool],
-) {
-    for elem in contains.iter_mut() {
-        *elem = false;
-    }
-
-    for i in 0..num_points {
-        let p = Point { x: x[i], y: y[i] };
-        // FIXME clarify why we use tree[0]
-        contains[i] = (node::num_intersections(&tree[0], 0, &p) % 2) != 0;
-    }
+pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
+    // FIXME clarify why we use tree[0]
+    return points
+        .iter()
+        .map(|p| (node::num_intersections(&tree[0], 0, &p) % 2) != 0)
+        .collect();
 }
 
 pub fn get_distances_edge(

@@ -1,4 +1,4 @@
-use crate::structures::Edge;
+use crate::structures::{Edge, IndexPoint, Point};
 
 // This code is based on http://geomalgorithms.com/a03-_inclusion.html
 // which is distributed under the following license:
@@ -11,35 +11,35 @@ use crate::structures::Edge;
 // Users of this code must verify correctness for their application.
 
 // a_z is one component of the vector cross product
-// a_z < 0 for r right of the (upward) line p0-p2
-// a_z > 0 for r left of the (upward) line p0-p2
-// a_z = 0 if r lies on the line p0-p2
-fn a_z(p1x: f64, p1y: f64, p2x: f64, p2y: f64, rx: f64, ry: f64) -> f64 {
-    let b_x = p2x - p1x;
-    let b_y = p2y - p1y;
-    let c_x = rx - p1x;
-    let c_y = ry - p1y;
+// a_z < 0 for r right of the (upward) line p1-p2
+// a_z > 0 for r left of the (upward) line p1-p2
+// a_z = 0 if r lies on the line p1-p2
+fn a_z(r: &Point, p1: &IndexPoint, p2: &IndexPoint) -> f64 {
+    let b_x = p2.x - p1.x;
+    let b_y = p2.y - p1.y;
+    let c_x = r.x - p1.x;
+    let c_y = r.y - p1.y;
     return b_x * c_y - b_y * c_x;
 }
 
-pub fn crosses(px: f64, py: f64, e: &Edge) -> bool {
-    // point is above the edge so a horizontal line to the point
+pub fn crosses(r: &Point, e: &Edge) -> bool {
+    // reference point is above the edge so a horizontal line to the point
     // cannot crosse the edge
-    if py > e.p1.y.max(e.p2.y) {
+    if r.y > e.p1.y.max(e.p2.y) {
         return false;
     }
 
-    // point is below the edge so a horizontal line to the point
+    // reference point is below the edge so a horizontal line to the point
     // cannot crosse the edge
-    if py < e.p1.y.min(e.p2.y) {
+    if r.y < e.p1.y.min(e.p2.y) {
         return false;
     }
 
     if e.p1.y < e.p2.y {
         // upward edge
-        return a_z(e.p1.x, e.p1.y, e.p2.x, e.p2.y, px, py) > 0.0;
+        return a_z(&r, &e.p1, &e.p2) > 0.0;
     } else {
         // downward edge
-        return a_z(e.p1.x, e.p1.y, e.p2.x, e.p2.y, px, py) < 0.0;
+        return a_z(&r, &e.p1, &e.p2) < 0.0;
     }
 }

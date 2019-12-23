@@ -1,7 +1,5 @@
 use crate::node;
-use crate::structures::Edge;
-use crate::structures::IndexPoint;
-use crate::structures::Node;
+use crate::structures::{Edge, IndexPoint, Node, Point};
 
 pub fn contains_points(
     tree: &Vec<Node>,
@@ -15,11 +13,7 @@ pub fn contains_points(
     }
 
     for i in 0..num_points {
-        let p = IndexPoint {
-            index: 0,
-            x: x[i],
-            y: y[i],
-        };
+        let p = Point { x: x[i], y: y[i] };
         // FIXME clarify why we use tree[0]
         contains[i] = (node::num_intersections(&tree[0], 0, &p) % 2) != 0;
     }

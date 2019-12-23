@@ -1,6 +1,5 @@
 use crate::intersection;
-use crate::structures::IndexPoint;
-use crate::structures::Node;
+use crate::structures::{IndexPoint, Node, Point};
 
 fn box_distance(p: &IndexPoint, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
     let difx = if p.x < xmin {
@@ -49,7 +48,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: &IndexPoint) -> f64 {
     return d;
 }
 
-pub fn num_intersections(node: &Node, n: i32, p: &IndexPoint) -> i32 {
+pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
     if skip_box_intersection(p, node.xmax, node.ymin, node.ymax) {
         return n;
     }
@@ -65,7 +64,7 @@ pub fn num_intersections(node: &Node, n: i32, p: &IndexPoint) -> i32 {
 
     if node.edges.len() > 0 {
         for edge in node.edges.iter() {
-            if intersection::crosses(p.x, p.y, &edge) {
+            if intersection::crosses(&p, &edge) {
                 n_ += 1;
             }
         }
@@ -75,7 +74,7 @@ pub fn num_intersections(node: &Node, n: i32, p: &IndexPoint) -> i32 {
     return n;
 }
 
-fn skip_box_intersection(p: &IndexPoint, xmax: f64, ymin: f64, ymax: f64) -> bool {
+fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     if p.x > xmax {
         return true;
     }

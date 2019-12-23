@@ -57,8 +57,6 @@ fn polygon() {
         nodes = stuff::group_nodes(4, nodes);
     }
 
-    const NUM_REFERENCE_POINTS: usize = 5000;
-
     let reference_points: Vec<Point> = read_vector("tests/reference/reference_points.txt");
     let mut pxs = Vec::new();
     let mut pys = Vec::new();
@@ -67,22 +65,19 @@ fn polygon() {
         pys.push(p.y);
     }
 
-    let mut distances: [f64; NUM_REFERENCE_POINTS] = [0.0; NUM_REFERENCE_POINTS];
-    stuff::get_distances_edge(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
+    let distances = stuff::get_distances_edge(&nodes, &reference_points);
     let reference_distances = read_vector("tests/reference/distances_edge.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
-    let mut distances = [0.0; NUM_REFERENCE_POINTS];
-    stuff::get_distances_vertex(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut distances);
+    let (indices, distances) = stuff::get_distances_vertex(&nodes, &reference_points);
+
     let reference_distances = read_vector("tests/reference/distances_vertex.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
-    let mut indices: [usize; NUM_REFERENCE_POINTS] = [0; NUM_REFERENCE_POINTS];
-    stuff::get_closest_vertices(&nodes, NUM_REFERENCE_POINTS, &pxs, &pys, &mut indices);
     let reference_indices = read_vector("tests/reference/closest_indices.txt");
     for (&x, &rx) in indices.iter().zip(reference_indices.iter()) {
         assert_eq!(x, rx);

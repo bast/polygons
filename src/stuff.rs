@@ -11,63 +11,27 @@ pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
         .collect();
 }
 
-pub fn get_distances_edge(
-    tree: &Vec<Node>,
-    num_points: usize,
-    x: &[f64],
-    y: &[f64],
-    distances: &mut [f64],
-) {
+pub fn get_distances_edge(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
-    for i in 0..num_points {
-        let p = IndexPoint {
-            index: 0,
-            x: x[i],
-            y: y[i],
-        };
-        distances[i] = node::get_distance_edge(&tree[0], large_number, &p).sqrt();
-    }
+    return points
+        .iter()
+        .map(|p| node::get_distance_edge(&tree[0], large_number, &p).sqrt())
+        .collect();
 }
 
-pub fn get_distances_vertex(
-    tree: &Vec<Node>,
-    num_points: usize,
-    x: &[f64],
-    y: &[f64],
-    distances: &mut [f64],
-) {
+pub fn get_distances_vertex(tree: &Vec<Node>, points: &Vec<Point>) -> (Vec<usize>, Vec<f64>) {
     let large_number = std::f64::MAX;
 
-    for i in 0..num_points {
-        let p = IndexPoint {
-            index: 0,
-            x: x[i],
-            y: y[i],
-        };
-        let (_, d) = node::get_distance_vertex(&tree[0], 0, large_number, &p);
-        distances[i] = d.sqrt();
-    }
-}
+    let v: Vec<(usize, f64)> = points
+        .iter()
+        .map(|p| node::get_distance_vertex(&tree[0], 0, large_number, &p))
+        .collect();
 
-pub fn get_closest_vertices(
-    tree: &Vec<Node>,
-    num_points: usize,
-    x: &[f64],
-    y: &[f64],
-    indices: &mut [usize],
-) {
-    let large_number = std::f64::MAX;
+    let (indices, _distances): (Vec<usize>, Vec<f64>) = v.iter().cloned().unzip();
+    let distances = _distances.iter().map(|x| x.sqrt()).collect();
 
-    for i in 0..num_points {
-        let p = IndexPoint {
-            index: 0,
-            x: x[i],
-            y: y[i],
-        };
-        let (iv, _) = node::get_distance_vertex(&tree[0], 0, large_number, &p);
-        indices[i] = iv;
-    }
+    return (indices, distances);
 }
 
 pub fn create_polygon(

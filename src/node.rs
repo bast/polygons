@@ -1,7 +1,7 @@
 use crate::intersection;
-use crate::structures::{IndexPoint, Node, Point};
+use crate::structures::{Node, Point};
 
-fn box_distance(p: &IndexPoint, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
+fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
     let difx = if p.x < xmin {
         p.x - xmin
     } else if p.x > xmax {
@@ -21,7 +21,7 @@ fn box_distance(p: &IndexPoint, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f
     return distance_squared(difx, dify);
 }
 
-pub fn get_distance_edge(node: &Node, d: f64, p: &IndexPoint) -> f64 {
+pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
     if box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax) > d {
         return d;
     }
@@ -87,7 +87,7 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     return false;
 }
 
-pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &IndexPoint) -> (usize, f64) {
+pub fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usize, f64) {
     if box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax) > d {
         return (index, d);
     }

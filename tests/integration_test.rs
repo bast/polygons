@@ -44,12 +44,6 @@ fn polygon() {
     }
 
     let reference_points: Vec<Point> = io::read_vector("tests/reference/reference_points.txt");
-    let mut pxs = Vec::new();
-    let mut pys = Vec::new();
-    for p in reference_points.iter() {
-        pxs.push(p.x);
-        pys.push(p.y);
-    }
 
     let distances = stuff::get_distances_edge(&nodes, &reference_points);
     let reference_distances = io::read_vector("tests/reference/distances_edge.txt");

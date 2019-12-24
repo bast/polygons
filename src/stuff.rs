@@ -1,12 +1,13 @@
 use crate::node;
 use crate::structures::{Edge, IndexPoint, Node, Point};
+use rayon::prelude::*;
 
 pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
     // point is inside some polygon if the number of intersections to reach
     // the point "from left" is impair
     // FIXME clarify why we use tree[0]
     return points
-        .iter()
+        .par_iter()
         .map(|p| (node::num_intersections(&tree[0], 0, &p) % 2) != 0)
         .collect();
 }
@@ -15,7 +16,7 @@ pub fn get_distances_edge(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
     return points
-        .iter()
+        .par_iter()
         .map(|p| node::get_distance_edge(&tree[0], large_number, &p).sqrt())
         .collect();
 }
@@ -24,7 +25,7 @@ pub fn get_distances_vertex(tree: &Vec<Node>, points: &Vec<Point>) -> (Vec<usize
     let large_number = std::f64::MAX;
 
     let v: Vec<(usize, f64)> = points
-        .iter()
+        .par_iter()
         .map(|p| node::get_distance_vertex(&tree[0], 0, large_number, &p))
         .collect();
 

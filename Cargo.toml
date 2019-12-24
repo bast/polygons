@@ -5,3 +5,5 @@ authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.7.2"
+rayon = "1.1"

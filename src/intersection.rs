@@ -1,4 +1,4 @@
-use crate::structures::{Edge, IndexPoint, Point};
+use crate::structures::{Edge, Point};
 
 // This code is based on http://geomalgorithms.com/a03-_inclusion.html
 // which is distributed under the following license:
@@ -14,11 +14,11 @@ use crate::structures::{Edge, IndexPoint, Point};
 // a_z < 0 for r right of the (upward) line p1-p2
 // a_z > 0 for r left of the (upward) line p1-p2
 // a_z = 0 if r lies on the line p1-p2
-fn a_z(r: &Point, p1: &IndexPoint, p2: &IndexPoint) -> f64 {
-    let b_x = p2.x - p1.x;
-    let b_y = p2.y - p1.y;
-    let c_x = r.x - p1.x;
-    let c_y = r.y - p1.y;
+fn a_z(r: &Point, e: &Edge) -> f64 {
+    let b_x = e.p2.x - e.p1.x;
+    let b_y = e.p2.y - e.p1.y;
+    let c_x = r.x - e.p1.x;
+    let c_y = r.y - e.p1.y;
     return b_x * c_y - b_y * c_x;
 }
 
@@ -37,9 +37,9 @@ pub fn crosses(r: &Point, e: &Edge) -> bool {
 
     if e.p1.y < e.p2.y {
         // upward edge
-        return a_z(&r, &e.p1, &e.p2) > 0.0;
+        return a_z(&r, &e) > 0.0;
     } else {
         // downward edge
-        return a_z(&r, &e.p1, &e.p2) < 0.0;
+        return a_z(&r, &e) < 0.0;
     }
 }

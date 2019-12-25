@@ -44,7 +44,7 @@ fn main() {
     let (x_min, x_max) = (-1.0, (num_blocks - 1) as f64 * offset + 2.0);
     let (y_min, y_max) = (-1.0, 2.0);
 
-    let num_reference_points = 5_000_000;
+    let num_reference_points = 50_000; // increase again after refactor
     let mut rng = rand::thread_rng();
     let mut reference_points = Vec::new();
 

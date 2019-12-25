@@ -30,16 +30,7 @@ fn main() {
         polygons.push(polygon);
     }
 
-    let mut nodes = Vec::new();
-    for p in polygons.iter() {
-        // group edges to nodes, 4 at the time
-        nodes.append(&mut stuff::group_edges(4, p.clone()));
-    }
-
-    // we group nodes into a tree
-    while nodes.len() > 1 {
-        nodes = stuff::group_nodes(4, nodes);
-    }
+    let tree = stuff::get_tree(&polygons);
 
     let (x_min, x_max) = (-1.0, (num_blocks - 1) as f64 * offset + 2.0);
     let (y_min, y_max) = (-1.0, 2.0);
@@ -56,9 +47,9 @@ fn main() {
     }
 
     let start = Instant::now();
-    let _distances = stuff::get_distances_edge(&nodes, &reference_points);
-    let (_indices, _distances) = stuff::get_distances_vertex(&nodes, &reference_points);
-    let _contains = stuff::contains_points(&nodes, &reference_points);
+    let _distances = stuff::get_distances_edge(&tree, &reference_points);
+    let (_indices, _distances) = stuff::get_distances_vertex(&tree, &reference_points);
+    let _contains = stuff::contains_points(&tree, &reference_points);
     let duration = start.elapsed();
 
     println!("time elapsed in benchmark: {:?}", duration);

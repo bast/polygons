@@ -61,7 +61,7 @@ pub fn create_polygon(
     return edges;
 }
 
-pub fn group_nodes(num_per_node: usize, input: Vec<Node>) -> Vec<Node> {
+fn group_nodes(num_per_node: usize, input: Vec<Node>) -> Vec<Node> {
     let num_input = input.len();
     let n = num_input / num_per_node;
     let num_parents = match num_input % num_per_node {
@@ -101,7 +101,7 @@ pub fn group_nodes(num_per_node: usize, input: Vec<Node>) -> Vec<Node> {
     return parents;
 }
 
-pub fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
+fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
     let num_input = input.len();
     let n = num_input / num_per_node;
     let num_parents = match num_input % num_per_node {
@@ -145,4 +145,20 @@ pub fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
     }
 
     return parents;
+}
+
+pub fn get_tree(polygons: &Vec<Vec<Edge>>) -> Vec<Node> {
+    let mut nodes = Vec::new();
+
+    for p in polygons.iter() {
+        // group edges to nodes, 4 at the time
+        nodes.append(&mut group_edges(4, p.clone()));
+    }
+
+    // we group nodes into a tree
+    while nodes.len() > 1 {
+        nodes = group_nodes(4, nodes);
+    }
+
+    return nodes;
 }

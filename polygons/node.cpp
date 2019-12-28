@@ -96,7 +96,7 @@ double node::get_distance_edge(const double d, const point p) const
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             d_ = std::min(d_, children_nodes[i].get_distance_edge(d_, p));
         }
@@ -105,7 +105,7 @@ double node::get_distance_edge(const double d, const point p) const
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
             d_ = std::min(d_,
                           dsegment(p.x,
@@ -117,6 +117,8 @@ double node::get_distance_edge(const double d, const point p) const
         }
         return d_;
     }
+
+    throw std::runtime_error("cannot compute distance on empty set");
 }
 
 std::tuple<int, double> node::get_distance_vertex(const int index, const double d, const point p) const
@@ -131,7 +133,7 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             auto t = children_nodes[i].get_distance_vertex(index_, d_, p);
             double d_temp = std::get<1>(t);
@@ -146,7 +148,7 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
             double d_temp = distance_squared(children_edges[i].p1.x - p.x, children_edges[i].p1.y - p.y);
             if (d_temp < d_)
@@ -163,6 +165,8 @@ std::tuple<int, double> node::get_distance_vertex(const int index, const double 
         }
         return std::make_tuple(index_, d_);
     }
+
+    throw std::runtime_error("cannot compute distance on empty set");
 }
 
 int node::num_intersections(const int n, const point p) const
@@ -174,7 +178,7 @@ int node::num_intersections(const int n, const point p) const
 
     if (children_nodes.size() > 0)
     {
-        for (int i = 0; i < children_nodes.size(); i++)
+        for (size_t i = 0; i < children_nodes.size(); i++)
         {
             n_ = children_nodes[i].num_intersections(n_, p);
         }
@@ -183,13 +187,15 @@ int node::num_intersections(const int n, const point p) const
 
     if (children_edges.size() > 0)
     {
-        for (int i = 0; i < children_edges.size(); i++)
+        for (size_t i = 0; i < children_edges.size(); i++)
         {
             if (crosses(p.x, p.y, children_edges[i]))
                 n_++;
         }
         return n_;
     }
+
+    return 0;
 }
 
 void node::add_child_node(const node child)

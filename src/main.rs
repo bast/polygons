@@ -2,9 +2,9 @@ use std::time::Instant;
 extern crate rand;
 use rand::Rng;
 
+use polygons::edge::Edge;
 use polygons::io;
 use polygons::point::Point;
-use polygons::structures::Edge;
 use polygons::stuff;
 
 fn run_benchmark() {

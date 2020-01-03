@@ -1,6 +1,6 @@
 use polygons::io;
 use polygons::point::Point;
-use polygons::structures::Edge;
+use polygons::edge::Edge;
 use polygons::stuff;
 
 fn floats_are_same(f1: f64, f2: f64) -> bool {

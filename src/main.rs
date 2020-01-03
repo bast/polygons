@@ -7,7 +7,7 @@ use polygons::point::Point;
 use polygons::structures::Edge;
 use polygons::stuff;
 
-fn main() {
+fn run_benchmark() {
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
 
     let points: Vec<Point> = io::read_vector("tests/polygon.txt");
@@ -53,4 +53,8 @@ fn main() {
     let duration = start.elapsed();
 
     println!("time elapsed in benchmark: {:?}", duration);
+}
+
+fn main() {
+    run_benchmark();
 }

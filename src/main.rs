@@ -3,8 +3,8 @@ extern crate rand;
 use rand::Rng;
 
 use polygons::io;
+use polygons::point::Point;
 use polygons::structures::Edge;
-use polygons::structures::Point;
 use polygons::stuff;
 
 fn main() {

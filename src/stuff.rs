@@ -1,5 +1,6 @@
 use crate::node;
-use crate::structures::{Edge, IndexPoint, Node, Point};
+use crate::point::Point;
+use crate::structures::{Edge, IndexPoint, Node};
 use rayon::prelude::*;
 
 pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {

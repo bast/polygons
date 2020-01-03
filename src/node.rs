@@ -1,5 +1,6 @@
 use crate::intersection;
-use crate::structures::{Node, Point};
+use crate::point::Point;
+use crate::structures::Node;
 
 fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
     let difx = if p.x < xmin {

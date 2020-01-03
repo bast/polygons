@@ -1,4 +1,5 @@
-use crate::structures::{Edge, Point};
+use crate::point::Point;
+use crate::structures::Edge;
 
 // This code is based on http://geomalgorithms.com/a03-_inclusion.html
 // which is distributed under the following license:

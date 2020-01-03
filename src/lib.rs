@@ -1,4 +1,3 @@
-mod intersection;
 mod io;
 mod point;
 mod tree;

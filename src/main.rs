@@ -6,8 +6,6 @@ extern crate polygons;
 use polygons::{Edge, Point};
 
 fn run_benchmark() {
-    let mut polygons: Vec<Vec<Edge>> = Vec::new();
-
     let points: Vec<Point> = polygons::read_vector("tests/polygon.txt");
     let mut xs = Vec::new();
     let mut ys = Vec::new();
@@ -22,6 +20,7 @@ fn run_benchmark() {
 
     let num_blocks = 5;
 
+    let mut polygons: Vec<Vec<Edge>> = Vec::new();
     for i in 0..num_blocks {
         let polygon =
             polygons::create_polygon(num_points, &xs, i as f64 * offset, &ys, 0.0, i * num_points);

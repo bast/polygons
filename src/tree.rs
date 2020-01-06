@@ -178,6 +178,7 @@ fn distance_squared(x: f64, y: f64) -> f64 {
 
 // this is derived from a C/C++ code
 // Copyright (C) 2004-2012 Per-Olof Persson
+// which was shared under GPL
 fn dsegment(x0: f64, y0: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
     let v = (p2x - p1x, p2y - p1y);
     let w = (x0 - p1x, y0 - p1y);

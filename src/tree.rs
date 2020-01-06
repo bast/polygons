@@ -342,7 +342,7 @@ fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
     return parents;
 }
 
-pub fn get_tree(polygons: &Vec<Vec<Edge>>) -> Vec<Node> {
+pub fn build_tree(polygons: &Vec<Vec<Edge>>) -> Vec<Node> {
     let mut nodes = Vec::new();
 
     for p in polygons.iter() {

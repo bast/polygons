@@ -1,5 +1,5 @@
-
 [![Build Status](https://travis-ci.org/bast/polygons-rs.svg?branch=master)](https://travis-ci.org/bast/polygons-rs/builds)
+[![License](https://img.shields.io/badge/license-%20GPL-blue.svg)](LICENSE)
 
 
 # polygons-rs

@@ -55,8 +55,8 @@ fn run_benchmark() {
     println!("time elapsed in building tree: {:?}", start.elapsed());
 
     let start = Instant::now();
-    let _distances = polygons::get_distances_edge(&tree, &reference_points);
-    let (_indices, _distances) = polygons::get_distances_vertex(&tree, &reference_points);
+    let _distances = polygons::distances_to_nearest_edge(&tree, &reference_points);
+    let (_indices, _distances) = polygons::distances_to_nearest_vertex(&tree, &reference_points);
     let _contains = polygons::contains_points(&tree, &reference_points);
     println!("time elapsed in benchmark: {:?}", start.elapsed());
 }

@@ -35,13 +35,13 @@ fn polygon() {
     let reference_points: Vec<Point> =
         polygons::read_vector("tests/reference/reference_points.txt");
 
-    let distances = polygons::distances_to_nearest_edge(&tree, &reference_points);
+    let distances = polygons::distances_nearest_edges(&tree, &reference_points);
     let reference_distances = polygons::read_vector("tests/reference/distances_edge.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
-    let (indices, distances) = polygons::distances_to_nearest_vertex(&tree, &reference_points);
+    let (indices, distances) = polygons::nearest_vertices(&tree, &reference_points);
 
     let reference_distances = polygons::read_vector("tests/reference/distances_vertex.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {

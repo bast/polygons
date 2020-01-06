@@ -207,7 +207,7 @@ pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
         .collect();
 }
 
-pub fn distances_to_nearest_edge(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f64> {
+pub fn distances_nearest_edges(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
     return points
@@ -216,10 +216,7 @@ pub fn distances_to_nearest_edge(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f
         .collect();
 }
 
-pub fn distances_to_nearest_vertex(
-    tree: &Vec<Node>,
-    points: &Vec<Point>,
-) -> (Vec<usize>, Vec<f64>) {
+pub fn nearest_vertices(tree: &Vec<Node>, points: &Vec<Point>) -> (Vec<usize>, Vec<f64>) {
     let large_number = std::f64::MAX;
 
     let v: Vec<(usize, f64)> = points

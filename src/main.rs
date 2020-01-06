@@ -27,7 +27,7 @@ fn run_benchmark() {
         polygons.push(polygon);
     }
 
-    let tree = polygons::build_tree(&polygons);
+    let tree = polygons::build_tree(&polygons, 4, 4);
 
     let (x_min, x_max) = (-1.0, (num_blocks - 1) as f64 * offset + 2.0);
     let (y_min, y_max) = (-1.0, 2.0);

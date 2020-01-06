@@ -30,7 +30,7 @@ fn polygon() {
     let polygon = polygons::create_polygon(num_points, &xs, 20.0, &ys, 0.0, 4 * num_points);
     polygons.push(polygon);
 
-    let tree = polygons::build_tree(&polygons);
+    let tree = polygons::build_tree(&polygons, 4, 4);
 
     let reference_points: Vec<Point> =
         polygons::read_vector("tests/reference/reference_points.txt");

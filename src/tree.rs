@@ -256,10 +256,10 @@ pub fn create_polygon(
     return edges;
 }
 
-fn group_nodes(num_per_node: usize, input: Vec<Node>) -> Vec<Node> {
+fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
     let num_input = input.len();
-    let n = num_input / num_per_node;
-    let num_parents = match num_input % num_per_node {
+    let n = num_input / num_nodes_children;
+    let num_parents = match num_input % num_nodes_children {
         0 => n,
         _ => n + 1,
     };
@@ -278,7 +278,7 @@ fn group_nodes(num_per_node: usize, input: Vec<Node>) -> Vec<Node> {
             edges: Vec::new(),
             children_nodes: Vec::new(),
         };
-        for _l in 0..num_per_node {
+        for _l in 0..num_nodes_children {
             if i < input.len() {
                 new_parent.adjust_bounds(
                     input[i].xmin,
@@ -296,10 +296,10 @@ fn group_nodes(num_per_node: usize, input: Vec<Node>) -> Vec<Node> {
     return parents;
 }
 
-fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
+fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
     let num_input = input.len();
-    let n = num_input / num_per_node;
-    let num_parents = match num_input % num_per_node {
+    let n = num_input / num_edges_children;
+    let num_parents = match num_input % num_edges_children {
         0 => n,
         _ => n + 1,
     };
@@ -318,7 +318,7 @@ fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
             edges: Vec::new(),
             children_nodes: Vec::new(),
         };
-        for _l in 0..num_per_node {
+        for _l in 0..num_edges_children {
             if i < input.len() {
                 new_parent.adjust_bounds(
                     input[i].p1.x,
@@ -342,17 +342,21 @@ fn group_edges(num_per_node: usize, input: Vec<Edge>) -> Vec<Node> {
     return parents;
 }
 
-pub fn build_tree(polygons: &Vec<Vec<Edge>>) -> Vec<Node> {
+pub fn build_tree(
+    polygons: &Vec<Vec<Edge>>,
+    num_edges_children: usize,
+    num_nodes_children: usize,
+) -> Vec<Node> {
     let mut nodes = Vec::new();
 
     for p in polygons.iter() {
         // group edges to nodes, 4 at the time
-        nodes.append(&mut group_edges(4, p.clone()));
+        nodes.append(&mut group_edges(num_edges_children, p.clone()));
     }
 
     // we group nodes into a tree
     while nodes.len() > 1 {
-        nodes = group_nodes(4, nodes);
+        nodes = group_nodes(num_nodes_children, nodes);
     }
 
     return nodes;

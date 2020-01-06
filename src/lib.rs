@@ -1,3 +1,5 @@
+//! Computes distances to polygon edges and vertices and can check whether points are inside/outside.
+
 mod io;
 mod point;
 mod tree;

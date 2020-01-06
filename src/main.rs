@@ -5,6 +5,25 @@ use rand::Rng;
 extern crate polygons;
 use polygons::{Edge, Point};
 
+fn get_reference_points(
+    num_points: usize,
+    x_min: f64,
+    x_max: f64,
+    y_min: f64,
+    y_max: f64,
+) -> Vec<Point> {
+    let mut rng = rand::thread_rng();
+    let mut reference_points = Vec::new();
+
+    for _ in 0..num_points {
+        reference_points.push(Point {
+            x: rng.gen_range(x_min, x_max),
+            y: rng.gen_range(y_min, y_max),
+        });
+    }
+    return reference_points;
+}
+
 fn run_benchmark() {
     let points: Vec<Point> = polygons::read_vector("tests/polygon.txt");
     let mut xs = Vec::new();
@@ -29,17 +48,7 @@ fn run_benchmark() {
 
     let (x_min, x_max) = (-1.0, (num_blocks - 1) as f64 * offset + 2.0);
     let (y_min, y_max) = (-1.0, 2.0);
-
-    let num_reference_points = 50_000; // increase again after refactor
-    let mut rng = rand::thread_rng();
-    let mut reference_points = Vec::new();
-
-    for _ in 0..num_reference_points {
-        reference_points.push(Point {
-            x: rng.gen_range(x_min, x_max),
-            y: rng.gen_range(y_min, y_max),
-        });
-    }
+    let reference_points = get_reference_points(50_000, x_min, x_max, y_min, y_max);
 
     let start = Instant::now();
     let tree = polygons::build_tree(&polygons, 16, 16);

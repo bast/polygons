@@ -4,6 +4,8 @@
 
 # polygons-rs
 
+Computes distances to polygon edges and vertices and can check whether points are inside/outside.
+
 Rewriting https://github.com/bast/polygons to Rust - work in progress.
 
 So far not beautiful and not stable. Will improve while learning.

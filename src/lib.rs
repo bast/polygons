@@ -12,3 +12,4 @@ pub use crate::tree::create_polygon;
 pub use crate::tree::distances_nearest_edges;
 pub use crate::tree::nearest_vertices;
 pub use crate::tree::Edge;
+pub use crate::tree::Node;

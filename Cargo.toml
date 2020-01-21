@@ -1,6 +1,6 @@
 [package]
 name = "polygons"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 description = "Computes distances to polygon edges and vertices and can check whether points are inside/outside."
 license = "GPL-3.0-only"

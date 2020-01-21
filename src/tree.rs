@@ -3,7 +3,7 @@ use rayon::prelude::*;
 
 // a point in space, with an index
 #[derive(Clone)]
-struct IndexPoint {
+pub struct IndexPoint {
     index: usize,
     x: f64,
     y: f64,

@@ -4,16 +4,16 @@ use rayon::prelude::*;
 // a point in space, with an index
 #[derive(Clone)]
 pub struct IndexPoint {
-    index: usize,
-    x: f64,
-    y: f64,
+    pub index: usize,
+    pub x: f64,
+    pub y: f64,
 }
 
 // edge connects two points
 #[derive(Clone)]
 pub struct Edge {
-    p1: IndexPoint,
-    p2: IndexPoint,
+    pub p1: IndexPoint,
+    pub p2: IndexPoint,
 }
 
 // node is a box which has dimensions

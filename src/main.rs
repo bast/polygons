@@ -40,6 +40,7 @@ fn run_benchmark() {
     let num_points = xs.len();
 
     let num_blocks = 10;
+    let num_reference_points = 100_000;
 
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
     for i in 0..num_blocks {
@@ -50,7 +51,7 @@ fn run_benchmark() {
 
     let (x_min, x_max) = (-1.0, (num_blocks - 1) as f64 * offset + 2.0);
     let (y_min, y_max) = (-1.0, 2.0);
-    let reference_points = get_reference_points(50_000, x_min, x_max, y_min, y_max);
+    let reference_points = get_reference_points(num_reference_points, x_min, x_max, y_min, y_max);
 
     let start = Instant::now();
     let tree = polygons::build_tree(&polygons, 16, 16);

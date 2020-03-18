@@ -1,3 +1,5 @@
+#![allow(clippy::needless_return)]
+
 use crate::point::Point;
 use rayon::prelude::*;
 
@@ -72,7 +74,7 @@ fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
 
     let mut d_ = d;
 
-    if node.children_nodes.len() > 0 {
+    if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
             let temp = get_distance_edge(&child_node, d_, &p);
             d_ = d_.min(temp);
@@ -80,7 +82,7 @@ fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
         return d_;
     }
 
-    if node.edges.len() > 0 {
+    if !node.edges.is_empty() {
         for edge in node.edges.iter() {
             d_ = d_.min(dsegment(
                 p.x, p.y, edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y,
@@ -99,14 +101,14 @@ fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
 
     let mut n_ = n;
 
-    if node.children_nodes.len() > 0 {
+    if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
             n_ = num_intersections(&child_node, n_, &p);
         }
         return n_;
     }
 
-    if node.edges.len() > 0 {
+    if !node.edges.is_empty() {
         for edge in node.edges.iter() {
             if crosses(&p, &edge) {
                 n_ += 1;
@@ -139,7 +141,7 @@ fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usize, 
     let mut d_ = d;
     let mut index_ = index;
 
-    if node.children_nodes.len() > 0 {
+    if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
             let (it, dt) = get_distance_vertex(&child_node, index_, d_, p);
             if dt < d_ {
@@ -150,7 +152,7 @@ fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usize, 
         return (index_, d_);
     }
 
-    if node.edges.len() > 0 {
+    if !node.edges.is_empty() {
         for edge in node.edges.iter() {
             let t = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
             if t < d_ {
@@ -198,7 +200,7 @@ fn dsegment(x0: f64, y0: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
     }
 }
 
-pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
+pub fn contains_points(tree: &[Node], points: &[Point]) -> Vec<bool> {
     // point is inside some polygon if the number of intersections to reach
     // the point "from left" is impair
     // FIXME clarify why we use tree[0]
@@ -208,7 +210,7 @@ pub fn contains_points(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<bool> {
         .collect();
 }
 
-pub fn distances_nearest_edges(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f64> {
+pub fn distances_nearest_edges(tree: &[Node], points: &[Point]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
     return points
@@ -217,7 +219,7 @@ pub fn distances_nearest_edges(tree: &Vec<Node>, points: &Vec<Point>) -> Vec<f64
         .collect();
 }
 
-pub fn nearest_vertices(tree: &Vec<Node>, points: &Vec<Point>) -> (Vec<usize>, Vec<f64>) {
+pub fn nearest_vertices(tree: &[Node], points: &[Point]) -> (Vec<usize>, Vec<f64>) {
     let large_number = std::f64::MAX;
 
     let v: Vec<(usize, f64)> = points
@@ -233,9 +235,9 @@ pub fn nearest_vertices(tree: &Vec<Node>, points: &Vec<Point>) -> (Vec<usize>, V
 
 pub fn create_polygon(
     num_points: usize,
-    xs: &Vec<f64>,
+    xs: &[f64],
     x_offset: f64,
-    ys: &Vec<f64>,
+    ys: &[f64],
     y_offset: f64,
     start_index: usize,
 ) -> Vec<Edge> {
@@ -251,7 +253,7 @@ pub fn create_polygon(
             x: xs[i + 1] + x_offset,
             y: ys[i + 1] + y_offset,
         };
-        let e = Edge { p1: p1, p2: p2 };
+        let e = Edge { p1, p2 };
         edges.push(e);
     }
     return edges;
@@ -344,7 +346,7 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
 }
 
 pub fn build_tree(
-    polygons: &Vec<Vec<Edge>>,
+    polygons: &[Vec<Edge>],
     num_edges_children: usize,
     num_nodes_children: usize,
 ) -> Vec<Node> {

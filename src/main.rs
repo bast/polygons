@@ -1,3 +1,5 @@
+#![allow(clippy::needless_return)]
+
 use std::time::Instant;
 extern crate rand;
 use rand::Rng;

@@ -1,3 +1,5 @@
+#![allow(clippy::needless_return)]
+
 use std::fmt::Debug;
 use std::fs;
 use std::str::FromStr;

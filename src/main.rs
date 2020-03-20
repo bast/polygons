@@ -39,8 +39,8 @@ fn run_benchmark() {
 
     let num_points = xs.len();
 
-    let num_blocks = 10;
-    let num_reference_points = 100_000;
+    let num_blocks = 50;
+    let num_reference_points = 500_000;
 
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
     for i in 0..num_blocks {
@@ -59,9 +59,18 @@ fn run_benchmark() {
 
     let start = Instant::now();
     let _distances = polygons::distances_nearest_edges(&tree, &reference_points);
+    println!(
+        "time elapsed in distances_nearest_edges: {:?}",
+        start.elapsed()
+    );
+
+    let start = Instant::now();
     let (_indices, _distances) = polygons::nearest_vertices(&tree, &reference_points);
+    println!("time elapsed in nearest_vertices: {:?}", start.elapsed());
+
+    let start = Instant::now();
     let _contains = polygons::contains_points(&tree, &reference_points);
-    println!("time elapsed in benchmark: {:?}", start.elapsed());
+    println!("time elapsed in contains_points: {:?}", start.elapsed());
 }
 
 fn main() {

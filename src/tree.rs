@@ -5,23 +5,27 @@ use rayon::prelude::*;
 
 // edge connects two points
 #[derive(Clone)]
-pub struct Edge {
-    pub p1: Point,
-    pub p2: Point,
+struct Edge {
+    p1: Point,
+    p2: Point,
 }
+
+//pub type Tree = Node;
 
 // node is a box which has dimensions
 // it contains either other nodes
 // or it contains edges
 #[derive(Clone)]
 pub struct Node {
-    pub xmin: f64,
-    pub xmax: f64,
-    pub ymin: f64,
-    pub ymax: f64,
-    pub children_nodes: Vec<Box<Node>>,
-    pub edges: Vec<Edge>,
+    xmin: f64,
+    xmax: f64,
+    ymin: f64,
+    ymax: f64,
+    children_nodes: Vec<Box<Node>>,
+    edges: Vec<Edge>,
 }
+
+pub type Tree = Vec<Node>;
 
 impl Node {
     fn adjust_bounds(&mut self, xmin: f64, xmax: f64, ymin: f64, ymax: f64) {

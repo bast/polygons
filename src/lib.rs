@@ -5,7 +5,7 @@ mod point;
 mod tree;
 
 pub use crate::point::Point;
-pub use crate::tree::Node;
+pub use crate::tree::Tree;
 
 pub use crate::tree::build_tree;
 

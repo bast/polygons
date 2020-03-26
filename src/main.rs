@@ -44,8 +44,7 @@ fn run_benchmark() {
 
     let mut polygons: Vec<Vec<Edge>> = Vec::new();
     for i in 0..num_blocks {
-        let polygon =
-            polygons::create_polygon(num_points, &xs, i as f64 * offset, &ys, 0.0, i * num_points);
+        let polygon = polygons::create_polygon(num_points, &xs, i as f64 * offset, &ys, 0.0);
         polygons.push(polygon);
     }
 
@@ -65,8 +64,11 @@ fn run_benchmark() {
     );
 
     let start = Instant::now();
-    let (_indices, _distances) = polygons::nearest_vertices(&tree, &reference_points);
-    println!("time elapsed in nearest_vertices: {:?}", start.elapsed());
+    let _distances = polygons::distances_nearest_vertices(&tree, &reference_points);
+    println!(
+        "time elapsed in distances_nearest_vertices: {:?}",
+        start.elapsed()
+    );
 
     let start = Instant::now();
     let _contains = polygons::contains_points(&tree, &reference_points);

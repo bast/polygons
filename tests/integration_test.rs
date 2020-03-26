@@ -19,15 +19,15 @@ fn polygon() {
     }
 
     let num_points = points.len();
-    let polygon = polygons::create_polygon(num_points, &xs, 0.0, &ys, 0.0, 0);
+    let polygon = polygons::create_polygon(num_points, &xs, 0.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 5.0, &ys, 0.0, num_points);
+    let polygon = polygons::create_polygon(num_points, &xs, 5.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 10.0, &ys, 0.0, 2 * num_points);
+    let polygon = polygons::create_polygon(num_points, &xs, 10.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 15.0, &ys, 0.0, 3 * num_points);
+    let polygon = polygons::create_polygon(num_points, &xs, 15.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 20.0, &ys, 0.0, 4 * num_points);
+    let polygon = polygons::create_polygon(num_points, &xs, 20.0, &ys, 0.0);
     polygons.push(polygon);
 
     let tree = polygons::build_tree(&polygons, 4, 4);
@@ -41,16 +41,10 @@ fn polygon() {
         assert!(floats_are_same(x, rx));
     }
 
-    let (indices, distances) = polygons::nearest_vertices(&tree, &reference_points);
-
+    let distances = polygons::distances_nearest_vertices(&tree, &reference_points);
     let reference_distances = polygons::read_vector("tests/reference/distances_vertex.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
-    }
-
-    let reference_indices = polygons::read_vector("tests/reference/closest_indices.txt");
-    for (&x, &rx) in indices.iter().zip(reference_indices.iter()) {
-        assert_eq!(x, rx);
     }
 
     let contains = polygons::contains_points(&tree, &reference_points);

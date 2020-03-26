@@ -3,19 +3,11 @@
 use crate::point::Point;
 use rayon::prelude::*;
 
-// a point in space, with an index
-#[derive(Clone)]
-pub struct IndexPoint {
-    pub index: usize,
-    pub x: f64,
-    pub y: f64,
-}
-
 // edge connects two points
 #[derive(Clone)]
 pub struct Edge {
-    pub p1: IndexPoint,
-    pub p2: IndexPoint,
+    pub p1: Point,
+    pub p2: Point,
 }
 
 // node is a box which has dimensions
@@ -133,23 +125,21 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     return false;
 }
 
-fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usize, f64) {
+fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
     if box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax) > d {
-        return (index, d);
+        return d;
     }
 
     let mut d_ = d;
-    let mut index_ = index;
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let (it, dt) = get_distance_vertex(&child_node, index_, d_, p);
+            let dt = get_distance_vertex(&child_node, d_, p);
             if dt < d_ {
                 d_ = dt;
-                index_ = it;
             }
         }
-        return (index_, d_);
+        return d_;
     }
 
     if !node.edges.is_empty() {
@@ -157,7 +147,6 @@ fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usize, 
             let t = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
             if t < d_ {
                 d_ = t;
-                index_ = edge.p1.index;
             }
         }
 
@@ -165,12 +154,11 @@ fn get_distance_vertex(node: &Node, index: usize, d: f64, p: &Point) -> (usize, 
         let d_temp = distance_squared(node.edges[i].p2.x - p.x, node.edges[i].p2.y - p.y);
         if d_temp < d_ {
             d_ = d_temp;
-            index_ = node.edges[i].p2.index;
         }
-        return (index_, d_);
+        return d_;
     }
 
-    return (index_, d_);
+    return d_;
 }
 
 // we compute the sqrt at the very end to save time
@@ -219,18 +207,17 @@ pub fn distances_nearest_edges(tree: &[Node], points: &[Point]) -> Vec<f64> {
         .collect();
 }
 
-pub fn nearest_vertices(tree: &[Node], points: &[Point]) -> (Vec<usize>, Vec<f64>) {
+pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
-    let v: Vec<(usize, f64)> = points
+    let _distances: Vec<f64> = points
         .par_iter()
-        .map(|p| get_distance_vertex(&tree[0], 0, large_number, &p))
+        .map(|p| get_distance_vertex(&tree[0], large_number, &p))
         .collect();
 
-    let (indices, _distances): (Vec<usize>, Vec<f64>) = v.iter().cloned().unzip();
     let distances = _distances.iter().map(|x| x.sqrt()).collect();
 
-    return (indices, distances);
+    return distances;
 }
 
 pub fn create_polygon(
@@ -239,17 +226,14 @@ pub fn create_polygon(
     x_offset: f64,
     ys: &[f64],
     y_offset: f64,
-    start_index: usize,
 ) -> Vec<Edge> {
     let mut edges: Vec<Edge> = Vec::new();
     for i in 0..(num_points - 1) {
-        let p1 = IndexPoint {
-            index: start_index + i,
+        let p1 = Point {
             x: xs[i] + x_offset,
             y: ys[i] + y_offset,
         };
-        let p2 = IndexPoint {
-            index: start_index + i + 1,
+        let p2 = Point {
             x: xs[i + 1] + x_offset,
             y: ys[i + 1] + y_offset,
         };

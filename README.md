@@ -10,3 +10,10 @@ Computes distances to polygon edges and vertices and can check whether points ar
 Rewriting https://github.com/bast/polygons to Rust - work in progress.
 
 So far not beautiful and not stable. Will improve while learning.
+
+
+## Running the benchmark
+
+```
+$ cargo test --release -- --ignored --nocapture
+```

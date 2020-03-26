@@ -1,10 +1,7 @@
 //! Computes distances to polygon edges and vertices and can check whether points are inside/outside.
 
-mod io;
 mod point;
 mod tree;
-
-pub use crate::io::read_vector;
 
 pub use crate::point::Point;
 pub use crate::tree::Edge;

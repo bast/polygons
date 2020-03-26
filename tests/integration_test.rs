@@ -1,5 +1,5 @@
 extern crate polygons;
-use polygons::{Edge, Point};
+use polygons::Point;
 
 use std::time::Instant;
 extern crate rand;
@@ -44,10 +44,27 @@ fn floats_are_same(f1: f64, f2: f64) -> bool {
     return d.abs() < std::f64::EPSILON;
 }
 
+fn create_polygon(
+    num_points: usize,
+    xs: &[f64],
+    x_offset: f64,
+    ys: &[f64],
+    y_offset: f64,
+) -> Vec<Point> {
+    let mut points = Vec::new();
+
+    for i in 0..num_points {
+        points.push(Point {
+            x: xs[i] + x_offset,
+            y: ys[i] + y_offset,
+        });
+    }
+
+    return points;
+}
+
 #[test]
 fn basic() {
-    let mut polygons: Vec<Vec<Edge>> = Vec::new();
-
     let points: Vec<Point> = read_vector("tests/polygon.txt");
     let mut xs = Vec::new();
     let mut ys = Vec::new();
@@ -56,16 +73,18 @@ fn basic() {
         ys.push(p.y);
     }
 
+    let mut polygons: Vec<Vec<Point>> = Vec::new();
+
     let num_points = points.len();
-    let polygon = polygons::create_polygon(num_points, &xs, 0.0, &ys, 0.0);
+    let polygon = create_polygon(num_points, &xs, 0.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 5.0, &ys, 0.0);
+    let polygon = create_polygon(num_points, &xs, 5.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 10.0, &ys, 0.0);
+    let polygon = create_polygon(num_points, &xs, 10.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 15.0, &ys, 0.0);
+    let polygon = create_polygon(num_points, &xs, 15.0, &ys, 0.0);
     polygons.push(polygon);
-    let polygon = polygons::create_polygon(num_points, &xs, 20.0, &ys, 0.0);
+    let polygon = create_polygon(num_points, &xs, 20.0, &ys, 0.0);
     polygons.push(polygon);
 
     let tree = polygons::build_tree(&polygons, 4, 4);
@@ -109,9 +128,9 @@ fn benchmark() {
     let num_blocks = 50;
     let num_reference_points = 500_000;
 
-    let mut polygons: Vec<Vec<Edge>> = Vec::new();
+    let mut polygons: Vec<Vec<Point>> = Vec::new();
     for i in 0..num_blocks {
-        let polygon = polygons::create_polygon(num_points, &xs, i as f64 * offset, &ys, 0.0);
+        let polygon = create_polygon(num_points, &xs, i as f64 * offset, &ys, 0.0);
         polygons.push(polygon);
     }
 

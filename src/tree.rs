@@ -220,29 +220,6 @@ pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
     return distances;
 }
 
-pub fn create_polygon(
-    num_points: usize,
-    xs: &[f64],
-    x_offset: f64,
-    ys: &[f64],
-    y_offset: f64,
-) -> Vec<Edge> {
-    let mut edges: Vec<Edge> = Vec::new();
-    for i in 0..(num_points - 1) {
-        let p1 = Point {
-            x: xs[i] + x_offset,
-            y: ys[i] + y_offset,
-        };
-        let p2 = Point {
-            x: xs[i + 1] + x_offset,
-            y: ys[i + 1] + y_offset,
-        };
-        let e = Edge { p1, p2 };
-        edges.push(e);
-    }
-    return edges;
-}
-
 fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
     let num_input = input.len();
     let n = num_input / num_nodes_children;
@@ -329,16 +306,32 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
     return parents;
 }
 
+fn points_to_edges(points: &[Point]) -> Vec<Edge> {
+    let mut edges = Vec::new();
+
+    for (p1, p2) in points.iter().zip(points[1..].iter()) {
+        edges.push(Edge {
+            p1: p1.clone(),
+            p2: p2.clone(),
+        });
+    }
+
+    return edges;
+}
+
 pub fn build_tree(
-    polygons: &[Vec<Edge>],
+    polygons: &[Vec<Point>],
     num_edges_children: usize,
     num_nodes_children: usize,
 ) -> Vec<Node> {
     let mut nodes = Vec::new();
 
-    for p in polygons.iter() {
+    for polygon in polygons.iter() {
         // group edges to nodes, 4 at the time
-        nodes.append(&mut group_edges(num_edges_children, p.clone()));
+        nodes.append(&mut group_edges(
+            num_edges_children,
+            points_to_edges(polygon),
+        ));
     }
 
     // we group nodes into a tree

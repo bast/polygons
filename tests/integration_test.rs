@@ -92,19 +92,19 @@ fn basic() {
     let reference_points: Vec<Point> = read_vector("tests/reference/reference_points.txt");
 
     let distances = polygons::distances_nearest_edges(&tree, &reference_points);
-    let reference_distances = read_vector("tests/reference/distances_edge.txt");
+    let reference_distances = read_vector("tests/reference/distances_nearest_edges.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
     let distances = polygons::distances_nearest_vertices(&tree, &reference_points);
-    let reference_distances = read_vector("tests/reference/distances_vertex.txt");
+    let reference_distances = read_vector("tests/reference/distances_nearest_vertices.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
-    let contains = polygons::contains_points(&tree, &reference_points);
-    let reference_bools = read_vector("tests/reference/contains_points.txt");
+    let contains = polygons::points_are_inside(&tree, &reference_points);
+    let reference_bools = read_vector("tests/reference/points_are_inside.txt");
     for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
         assert_eq!(x, rx);
     }
@@ -157,6 +157,6 @@ fn benchmark() {
     );
 
     let start = Instant::now();
-    let _contains = polygons::contains_points(&tree, &reference_points);
-    println!("time elapsed in contains_points: {:?}", start.elapsed());
+    let _contains = polygons::points_are_inside(&tree, &reference_points);
+    println!("time elapsed in points_are_inside: {:?}", start.elapsed());
 }

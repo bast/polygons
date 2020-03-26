@@ -188,7 +188,7 @@ fn dsegment(x0: f64, y0: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
     }
 }
 
-pub fn contains_points(tree: &[Node], points: &[Point]) -> Vec<bool> {
+pub fn points_are_inside(tree: &[Node], points: &[Point]) -> Vec<bool> {
     // point is inside some polygon if the number of intersections to reach
     // the point "from left" is impair
     // FIXME clarify why we use tree[0]

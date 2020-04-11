@@ -34,6 +34,7 @@ fn get_reference_points(
         reference_points.push(Point {
             x: rng.gen_range(x_min, x_max),
             y: rng.gen_range(y_min, y_max),
+            coeff: 0.0,
         });
     }
     return reference_points;
@@ -82,7 +83,7 @@ fn read_polygons(file_name: &str) -> Vec<Vec<Point>> {
             let words: Vec<&str> = line.split_whitespace().collect();
             let x = words[0].parse().unwrap();
             let y = words[1].parse().unwrap();
-            polygon.push(Point { x, y });
+            polygon.push(Point { x, y, coeff: 0.0 });
         }
         i -= 1;
     }

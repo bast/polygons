@@ -6,6 +6,7 @@ use std::str::FromStr;
 pub struct Point {
     pub x: f64,
     pub y: f64,
+    pub coeff: f64,
 }
 
 impl FromStr for Point {
@@ -20,6 +21,7 @@ impl FromStr for Point {
         Ok(Point {
             x: x_fromstr,
             y: y_fromstr,
+            coeff: 0.0,
         })
     }
 }

@@ -31,11 +31,10 @@ fn get_reference_points(
     let mut reference_points = Vec::new();
 
     for _ in 0..num_points {
-        reference_points.push(Point {
-            x: rng.gen_range(x_min, x_max),
-            y: rng.gen_range(y_min, y_max),
-            coeff: 0.0,
-        });
+        reference_points.push(Point::new(
+            rng.gen_range(x_min, x_max),
+            rng.gen_range(y_min, y_max),
+        ));
     }
     return reference_points;
 }
@@ -83,7 +82,7 @@ fn read_polygons(file_name: &str) -> Vec<Vec<Point>> {
             let words: Vec<&str> = line.split_whitespace().collect();
             let x = words[0].parse().unwrap();
             let y = words[1].parse().unwrap();
-            polygon.push(Point { x, y, coeff: 0.0 });
+            polygon.push(Point::new(x, y));
         }
         i -= 1;
     }

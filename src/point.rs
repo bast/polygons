@@ -9,19 +9,25 @@ pub struct Point {
     pub coeff: f64,
 }
 
+impl Point {
+    pub fn new(x: f64, y: f64) -> Point {
+        Point {
+            x: x,
+            y: y,
+            coeff: 0.0,
+        }
+    }
+}
+
 impl FromStr for Point {
     type Err = ParseFloatError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let coords: Vec<&str> = s.split_whitespace().collect();
 
-        let x_fromstr = coords[0].parse::<f64>()?;
-        let y_fromstr = coords[1].parse::<f64>()?;
+        let x = coords[0].parse::<f64>()?;
+        let y = coords[1].parse::<f64>()?;
 
-        Ok(Point {
-            x: x_fromstr,
-            y: y_fromstr,
-            coeff: 0.0,
-        })
+        Ok(Point::new(x, y))
     }
 }

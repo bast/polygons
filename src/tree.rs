@@ -130,39 +130,46 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
 }
 
 fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
-    if box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax) > d {
+    let d_box = box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax);
+
+    // let f = g(d_box) + node.h_min;
+    let f = d_box;
+
+    if f > d {
         return d;
     }
 
-    let mut d_ = d;
+    let mut d_min = d;
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let dt = get_distance_vertex(&child_node, d_, p);
-            if dt < d_ {
-                d_ = dt;
-            }
+            let t = get_distance_vertex(&child_node, d_min, p);
+            d_min = d_min.min(t);
         }
-        return d_;
+        return d_min;
     }
 
     if !node.edges.is_empty() {
         for edge in node.edges.iter() {
-            let t = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
-            if t < d_ {
-                d_ = t;
-            }
+            let d_edge = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
+
+            // let f = g(d_edge) + edge.p1.h;
+            let f = d_edge;
+
+            d_min = d_min.min(f);
         }
 
-        let i = node.edges.len() - 1;
-        let d_temp = distance_squared(node.edges[i].p2.x - p.x, node.edges[i].p2.y - p.y);
-        if d_temp < d_ {
-            d_ = d_temp;
-        }
-        return d_;
+        let edge = node.edges.last().unwrap();
+        let d_edge = distance_squared(edge.p2.x - p.x, edge.p2.y - p.y);
+
+        // let f = g(d_edge) + edge.p2.h;
+        let f = d_edge;
+
+        d_min = d_min.min(f);
+        return d_min;
     }
 
-    return d_;
+    return d_min;
 }
 
 // we compute the sqrt at the very end to save time

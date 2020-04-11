@@ -44,48 +44,62 @@ fn floats_are_same(f1: f64, f2: f64) -> bool {
     return d.abs() < std::f64::EPSILON;
 }
 
-fn create_polygon(
-    num_points: usize,
-    xs: &[f64],
-    x_offset: f64,
-    ys: &[f64],
-    y_offset: f64,
-) -> Vec<Point> {
-    let mut points = Vec::new();
+fn polygon_is_closed(polygon: &[Point]) -> bool {
+    let first_point = polygon.first().unwrap();
+    let last_point = polygon.last().unwrap();
 
-    for i in 0..num_points {
-        points.push(Point {
-            x: xs[i] + x_offset,
-            y: ys[i] + y_offset,
-        });
+    if !floats_are_same(first_point.x, last_point.x) {
+        return false;
     }
 
-    return points;
+    if !floats_are_same(first_point.y, last_point.y) {
+        return false;
+    }
+
+    return true;
+}
+
+fn read_polygons(file_name: &str) -> Vec<Vec<Point>> {
+    let error_message = format!("something went wrong reading file {}", file_name);
+    let contents = fs::read_to_string(file_name).expect(&error_message);
+
+    let mut polygons = Vec::new();
+    let mut polygon = Vec::new();
+
+    let mut i = 0;
+    for line in contents.lines() {
+        if i == 0 {
+            let num_points: usize = line.parse().unwrap();
+            i += num_points + 1;
+            if !polygon.is_empty() {
+                if !polygon_is_closed(&polygon) {
+                    polygon.push(polygon.first().unwrap().clone());
+                }
+                polygons.push(polygon.clone());
+            }
+            polygon.clear();
+        } else {
+            let words: Vec<&str> = line.split_whitespace().collect();
+            let x = words[0].parse().unwrap();
+            let y = words[1].parse().unwrap();
+            polygon.push(Point { x, y });
+        }
+        i -= 1;
+    }
+
+    if !polygon.is_empty() {
+        if !polygon_is_closed(&polygon) {
+            polygon.push(polygon.first().unwrap().clone());
+        }
+        polygons.push(polygon);
+    }
+
+    return polygons;
 }
 
 #[test]
 fn basic() {
-    let points: Vec<Point> = read_vector("tests/polygon.txt");
-    let mut xs = Vec::new();
-    let mut ys = Vec::new();
-    for p in points.iter() {
-        xs.push(p.x);
-        ys.push(p.y);
-    }
-
-    let mut polygons: Vec<Vec<Point>> = Vec::new();
-
-    let num_points = points.len();
-    let polygon = create_polygon(num_points, &xs, 0.0, &ys, 0.0);
-    polygons.push(polygon);
-    let polygon = create_polygon(num_points, &xs, 5.0, &ys, 0.0);
-    polygons.push(polygon);
-    let polygon = create_polygon(num_points, &xs, 10.0, &ys, 0.0);
-    polygons.push(polygon);
-    let polygon = create_polygon(num_points, &xs, 15.0, &ys, 0.0);
-    polygons.push(polygon);
-    let polygon = create_polygon(num_points, &xs, 20.0, &ys, 0.0);
-    polygons.push(polygon);
+    let polygons = read_polygons("tests/islands.txt");
 
     let tree = polygons::build_tree(&polygons, 4, 4);
 
@@ -113,29 +127,25 @@ fn basic() {
 #[ignore]
 #[test]
 fn benchmark() {
-    let points: Vec<Point> = read_vector("tests/polygon.txt");
-    let mut xs = Vec::new();
-    let mut ys = Vec::new();
-    for p in points.iter() {
-        xs.push(p.x);
-        ys.push(p.y);
+    let polygons = read_polygons("tests/islands.txt");
+
+    let large_number = std::f64::MAX;
+
+    let mut x_min = large_number;
+    let mut x_max = -large_number;
+    let mut y_min = large_number;
+    let mut y_max = -large_number;
+
+    for polygon in polygons.iter() {
+        for point in polygon.iter() {
+            x_min = x_min.min(point.x);
+            x_max = x_max.max(point.x);
+            y_min = y_min.min(point.y);
+            y_max = y_max.max(point.y);
+        }
     }
 
-    let offset = 5.0;
-
-    let num_points = xs.len();
-
-    let num_blocks = 50;
-    let num_reference_points = 500_000;
-
-    let mut polygons: Vec<Vec<Point>> = Vec::new();
-    for i in 0..num_blocks {
-        let polygon = create_polygon(num_points, &xs, i as f64 * offset, &ys, 0.0);
-        polygons.push(polygon);
-    }
-
-    let (x_min, x_max) = (-1.0, (num_blocks - 1) as f64 * offset + 2.0);
-    let (y_min, y_max) = (-1.0, 2.0);
+    let num_reference_points = 1_000_000;
     let reference_points = get_reference_points(num_reference_points, x_min, x_max, y_min, y_max);
 
     let start = Instant::now();

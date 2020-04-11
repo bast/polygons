@@ -21,6 +21,7 @@ pub struct Node {
     xmax: f64,
     ymin: f64,
     ymax: f64,
+    hmin: f64,
     children_nodes: Vec<Box<Node>>,
     edges: Vec<Edge>,
 }
@@ -28,11 +29,12 @@ pub struct Node {
 pub type Tree = Vec<Node>;
 
 impl Node {
-    fn adjust_bounds(&mut self, xmin: f64, xmax: f64, ymin: f64, ymax: f64) {
+    fn adjust_bounds(&mut self, xmin: f64, xmax: f64, ymin: f64, ymax: f64, hmin: f64) {
         self.xmin = self.xmin.min(xmin);
         self.xmax = self.xmax.max(xmax);
         self.ymin = self.ymin.min(ymin);
         self.ymax = self.ymax.max(ymax);
+        self.hmin = self.hmin.min(hmin);
     }
     fn insert_node(&mut self, new_node: Node) {
         let boxed_node = Box::new(new_node);
@@ -60,7 +62,7 @@ fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
         0.0
     };
 
-    return distance_squared(difx, dify);
+    return distance(difx, dify);
 }
 
 fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
@@ -129,11 +131,10 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     return false;
 }
 
-fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
+fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: fn(f64) -> f64) -> f64 {
     let d_box = box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax);
 
-    // let f = g(d_box) + node.h_min;
-    let f = d_box;
+    let f = g(d_box) + node.hmin;
 
     if f > d {
         return d;
@@ -143,7 +144,7 @@ fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let t = get_distance_vertex(&child_node, d_min, p);
+            let t = get_distance_vertex(&child_node, d_min, p, g);
             d_min = d_min.min(t);
         }
         return d_min;
@@ -151,30 +152,24 @@ fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
 
     if !node.edges.is_empty() {
         for edge in node.edges.iter() {
-            let d_edge = distance_squared(edge.p1.x - p.x, edge.p1.y - p.y);
-
-            // let f = g(d_edge) + edge.p1.h;
-            let f = d_edge;
-
+            let d_edge = distance(edge.p1.x - p.x, edge.p1.y - p.y);
+            let f = g(d_edge) + edge.p1.coeff;
             d_min = d_min.min(f);
         }
 
         let edge = node.edges.last().unwrap();
-        let d_edge = distance_squared(edge.p2.x - p.x, edge.p2.y - p.y);
-
-        // let f = g(d_edge) + edge.p2.h;
-        let f = d_edge;
-
+        let d_edge = distance(edge.p2.x - p.x, edge.p2.y - p.y);
+        let f = g(d_edge) + edge.p2.coeff;
         d_min = d_min.min(f);
+
         return d_min;
     }
 
     return d_min;
 }
 
-// we compute the sqrt at the very end to save time
-fn distance_squared(x: f64, y: f64) -> f64 {
-    return x * x + y * y;
+fn distance(x: f64, y: f64) -> f64 {
+    return (x * x + y * y).sqrt();
 }
 
 // this is derived from a C/C++ code
@@ -187,15 +182,15 @@ fn dsegment(x0: f64, y0: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
     let c1 = v.0 * w.0 + v.1 * w.1;
 
     if c1 <= 0.0 {
-        return distance_squared(x0 - p1x, y0 - p1y);
+        return distance(x0 - p1x, y0 - p1y);
     }
 
     let c2 = v.0 * v.0 + v.1 * v.1;
 
     if c1 >= c2 {
-        return distance_squared(x0 - p2x, y0 - p2y);
+        return distance(x0 - p2x, y0 - p2y);
     } else {
-        return distance_squared(x0 - (p1x + c1 / c2 * v.0), y0 - (p1y + c1 / c2 * v.1));
+        return distance(x0 - (p1x + c1 / c2 * v.0), y0 - (p1y + c1 / c2 * v.1));
     }
 }
 
@@ -214,19 +209,36 @@ pub fn distances_nearest_edges(tree: &[Node], points: &[Point]) -> Vec<f64> {
 
     return points
         .par_iter()
-        .map(|p| get_distance_edge(&tree[0], large_number, &p).sqrt())
+        .map(|p| get_distance_edge(&tree[0], large_number, &p))
         .collect();
 }
 
 pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
-    let _distances: Vec<f64> = points
+    // FIXME this introduces quite an overhead for the non-custom version we should probably skip
+    // these calls
+    let g = |x| x;
+
+    let distances = points
         .par_iter()
-        .map(|p| get_distance_vertex(&tree[0], large_number, &p))
+        .map(|p| get_distance_vertex(&tree[0], large_number, &p, g))
         .collect();
 
-    let distances = _distances.iter().map(|x| x.sqrt()).collect();
+    return distances;
+}
+
+pub fn distances_nearest_vertices_custom(
+    tree: &[Node],
+    points: &[Point],
+    g: fn(f64) -> f64,
+) -> Vec<f64> {
+    let large_number = std::f64::MAX;
+
+    let distances = points
+        .par_iter()
+        .map(|p| get_distance_vertex(&tree[0], large_number, &p, g))
+        .collect();
 
     return distances;
 }
@@ -250,6 +262,7 @@ fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
             xmax: -large_number,
             ymin: large_number,
             ymax: -large_number,
+            hmin: large_number,
             edges: Vec::new(),
             children_nodes: Vec::new(),
         };
@@ -260,6 +273,7 @@ fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
                     input[i].xmax,
                     input[i].ymin,
                     input[i].ymax,
+                    input[i].hmin,
                 );
                 new_parent.insert_node(input[i].clone());
                 i += 1;
@@ -290,6 +304,7 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
             xmax: -large_number,
             ymin: large_number,
             ymax: -large_number,
+            hmin: large_number,
             edges: Vec::new(),
             children_nodes: Vec::new(),
         };
@@ -300,12 +315,14 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
                     input[i].p1.x,
                     input[i].p1.y,
                     input[i].p1.y,
+                    input[i].p1.coeff,
                 );
                 new_parent.adjust_bounds(
                     input[i].p2.x,
                     input[i].p2.x,
                     input[i].p2.y,
                     input[i].p2.y,
+                    input[i].p2.coeff,
                 );
                 new_parent.insert_edge(input[i].clone());
                 i += 1;

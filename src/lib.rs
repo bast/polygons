@@ -11,4 +11,5 @@ pub use crate::tree::build_tree;
 
 pub use crate::tree::distances_nearest_edges;
 pub use crate::tree::distances_nearest_vertices;
+pub use crate::tree::distances_nearest_vertices_custom;
 pub use crate::tree::points_are_inside;

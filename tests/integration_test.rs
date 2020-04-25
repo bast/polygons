@@ -20,7 +20,7 @@ where
     return v;
 }
 
-fn get_reference_points(
+fn get_random_points(
     num_points: usize,
     x_min: f64,
     x_max: f64,
@@ -59,7 +59,7 @@ fn polygon_is_closed(polygon: &[Point]) -> bool {
     return true;
 }
 
-fn read_polygons(file_name: &str) -> Vec<Vec<Point>> {
+fn read_polygons(file_name: &str, with_coeffs: bool) -> Vec<Vec<Point>> {
     let error_message = format!("something went wrong reading file {}", file_name);
     let contents = fs::read_to_string(file_name).expect(&error_message);
 
@@ -82,7 +82,16 @@ fn read_polygons(file_name: &str) -> Vec<Vec<Point>> {
             let words: Vec<&str> = line.split_whitespace().collect();
             let x = words[0].parse().unwrap();
             let y = words[1].parse().unwrap();
-            polygon.push(Point::new(x, y));
+            if with_coeffs {
+                let coeff = words[2].parse().unwrap();
+                polygon.push(Point { x, y, coeff });
+            } else {
+                polygon.push(Point {
+                    x: x,
+                    y: y,
+                    coeff: 0.0,
+                });
+            }
         }
         i -= 1;
     }
@@ -97,9 +106,59 @@ fn read_polygons(file_name: &str) -> Vec<Vec<Point>> {
     return polygons;
 }
 
+fn get_bounds(polygons: &[Vec<Point>]) -> (f64, f64, f64, f64) {
+    let large_number = std::f64::MAX;
+
+    let mut x_min = large_number;
+    let mut x_max = -large_number;
+    let mut y_min = large_number;
+    let mut y_max = -large_number;
+
+    for polygon in polygons.iter() {
+        for point in polygon.iter() {
+            x_min = x_min.min(point.x);
+            x_max = x_max.max(point.x);
+            y_min = y_min.min(point.y);
+            y_max = y_max.max(point.y);
+        }
+    }
+
+    return (x_min, x_max, y_min, y_max);
+}
+
+fn get_distance(p1: &Point, p2: &Point) -> f64 {
+    let dx = p2.x - p1.x;
+    let dy = p2.y - p1.y;
+    return (dx * dx + dy * dy).sqrt();
+}
+
+fn distances_nearest_vertices_custom_naive(
+    polygons: &[Vec<Point>],
+    reference_points: &[Point],
+) -> Vec<f64> {
+    let large_number = std::f64::MAX;
+    let mut distances = Vec::new();
+
+    for reference_point in reference_points.iter() {
+        let mut distance = large_number;
+
+        for polygon in polygons.iter() {
+            for polygon_point in polygon.iter() {
+                let d = get_distance(&reference_point, &polygon_point) + polygon_point.coeff;
+
+                distance = distance.min(d);
+            }
+        }
+
+        distances.push(distance);
+    }
+
+    return distances;
+}
+
 #[test]
 fn basic() {
-    let polygons = read_polygons("tests/islands.txt");
+    let polygons = read_polygons("tests/islands.txt", false);
 
     let tree = polygons::build_tree(&polygons, 4, 4);
 
@@ -124,29 +183,32 @@ fn basic() {
     }
 }
 
+#[test]
+fn custom_distance() {
+    let polygons = read_polygons("tests/islands.txt", true);
+    let tree = polygons::build_tree(&polygons, 4, 4);
+
+    let num_reference_points = 10_000;
+    let (x_min, x_max, y_min, y_max) = get_bounds(&polygons);
+    let reference_points = get_random_points(num_reference_points, x_min, x_max, y_min, y_max);
+
+    let g = |x| x;
+    let distances = polygons::distances_nearest_vertices_custom(&tree, &reference_points, g);
+    let distances_naive = distances_nearest_vertices_custom_naive(&polygons, &reference_points);
+
+    for (&x, &rx) in distances.iter().zip(distances_naive.iter()) {
+        assert!(floats_are_same(x, rx));
+    }
+}
+
 #[ignore]
 #[test]
 fn benchmark() {
-    let polygons = read_polygons("tests/islands.txt");
-
-    let large_number = std::f64::MAX;
-
-    let mut x_min = large_number;
-    let mut x_max = -large_number;
-    let mut y_min = large_number;
-    let mut y_max = -large_number;
-
-    for polygon in polygons.iter() {
-        for point in polygon.iter() {
-            x_min = x_min.min(point.x);
-            x_max = x_max.max(point.x);
-            y_min = y_min.min(point.y);
-            y_max = y_max.max(point.y);
-        }
-    }
+    let polygons = read_polygons("tests/islands.txt", false);
 
     let num_reference_points = 1_000_000;
-    let reference_points = get_reference_points(num_reference_points, x_min, x_max, y_min, y_max);
+    let (x_min, x_max, y_min, y_max) = get_bounds(&polygons);
+    let reference_points = get_random_points(num_reference_points, x_min, x_max, y_min, y_max);
 
     let start = Instant::now();
     let tree = polygons::build_tree(&polygons, 16, 16);

@@ -11,11 +11,7 @@ pub struct Point {
 
 impl Point {
     pub fn new(x: f64, y: f64) -> Point {
-        Point {
-            x: x,
-            y: y,
-            coeff: 0.0,
-        }
+        Point { x, y, coeff: 0.0 }
     }
 }
 

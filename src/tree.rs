@@ -131,7 +131,7 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     return false;
 }
 
-fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: fn(f64) -> f64) -> f64 {
+fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: impl Fn(f64) -> f64 + Copy) -> f64 {
     let d_box = box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax);
 
     let f = g(d_box) + node.hmin;
@@ -231,7 +231,7 @@ pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
 pub fn distances_nearest_vertices_custom(
     tree: &[Node],
     points: &[Point],
-    g: fn(f64) -> f64,
+    g: impl Fn(f64) -> f64 + Copy + Sync,
 ) -> Vec<f64> {
     let large_number = std::f64::MAX;
 

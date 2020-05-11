@@ -6,6 +6,14 @@ description = "Computes distances to polygon edges and vertices and can check wh
 license = "GPL-3.0-only"
 edition = "2018"
 
+[package.metadata.maturin]
+requires-python = ">=3.6"
+classifier = ["Programming Language :: Python"]
+
 [dependencies]
 rand = "0.7.2"
 rayon = "1.3.0"
+pyo3 = { version = "0.8.0", features = ["extension-module"], optional = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

@@ -1,4 +1,4 @@
-extern crate polygons;
+use polygons;
 use polygons::Point;
 
 use std::time::Instant;

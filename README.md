@@ -18,3 +18,13 @@ So far not beautiful and not stable. Will improve while learning.
 ```
 $ cargo test --release -- --ignored --nocapture
 ```
+
+
+## Python interface
+
+Inspired by https://github.com/dev-cafe/rustafarian.
+
+```
+$ cargo build --release --features pyo3
+$ maturin develop --release --cargo-extra-args="--features pyo3"
+```

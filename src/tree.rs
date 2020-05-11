@@ -1,5 +1,8 @@
 #![allow(clippy::needless_return)]
 
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
+
 use crate::point::Point;
 use rayon::prelude::*;
 
@@ -13,6 +16,7 @@ struct Edge {
 // node is a box which has dimensions
 // it contains either other nodes
 // or it contains edges
+#[cfg_attr(feature = "pyo3", pyclass)]
 #[derive(Clone)]
 pub struct Node {
     xmin: f64,

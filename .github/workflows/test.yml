@@ -1,0 +1,37 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        os: [ubuntu-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Build crate
+      run: cargo build --verbose
+    - name: Test crate
+      run: cargo test --verbose
+    - name: Use nightly Rust
+      run: rustup override set nightly
+    - name: Build and test the Python interface
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+        maturin develop --cargo-extra-args="--features pyo3"
+        pytest tests/test.py

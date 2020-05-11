@@ -36,13 +36,20 @@ $ maturin develop --release --cargo-extra-args="--features pyo3"
 import polygons
 
 # polygon_points is a list of lists
+# the library has been developed to perform
+# with very many polygons
+# this is just an example
 polygon_points = [
     [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)],
     [(0.0, 2.0), (1.0, 2.0), (1.0, 3.0), (0.0, 3.0), (0.0, 2.0)],
 ]
 
+# the more points you compute in one go, the better
 points = [(0.5, 0.5), (0.5, -0.5)]
 
+# parameters for the tree construction
+# you can try different parameters and check the timing
+# they (should) have no effect on the results apart from timing
 num_edges_children = 4
 num_nodes_children = 4
 tree = polygons.build_tree(polygon_points, num_edges_children, num_nodes_children)

@@ -37,17 +37,21 @@ import polygons
 
 # polygon_points is a list of lists
 # the library has been developed to perform
-# with very many polygons
-# this is just an example
+# with very many polygons - this is just to have a simple example
 polygon_points = [
     [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)],
     [(0.0, 2.0), (1.0, 2.0), (1.0, 3.0), (0.0, 3.0), (0.0, 2.0)],
 ]
 
 # the more points you compute in one go, the better
+# this is just to make a simple example but if you have many points
+# then compute a thousand or a million in one go
+# so that the library can parallelize over the points
 points = [(0.5, 0.5), (0.5, -0.5)]
 
-# parameters for the tree construction
+# parameters for the tree construction:
+#  - each tree node has 4 children nodes
+#  - each leaf collects 4 edges
 # you can try different parameters and check the timing
 # they (should) have no effect on the results apart from timing
 num_edges_children = 4

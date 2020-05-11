@@ -1,4 +1,4 @@
-![](https://github.com/bast/polygons-rs/workflows/Test/badge.svg)
+[![Build status](https://github.com/bast/polygons-rs/workflows/Test/badge.svg)](https://github.com/bast/polygons-rs/actions)
 [![License](https://img.shields.io/badge/license-%20GPL-blue.svg)](LICENSE)
 [![polygons crate](https://img.shields.io/crates/v/polygons.svg)](https://crates.io/crates/polygons)
 

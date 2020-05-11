@@ -4,6 +4,8 @@
    :target: LICENSE
 .. image:: https://img.shields.io/crates/v/polygons.svg
    :target: https://crates.io/crates/polygons
+.. image:: https://badge.fury.io/py/polygons.svg
+   :target: https://badge.fury.io/py/polygons
 
 
 Polygons: Fast points-in-polygon test and distances to polygons

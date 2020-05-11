@@ -23,8 +23,8 @@ Installation using pip
 Supported versions
 ------------------
 
-Python: 3.6, 3.7, 3.8
-Operating systems: Linux, macOS, and Windows
+- Python: 3.6, 3.7, 3.8
+- Operating systems: Linux, macOS, and Windows
 
 
 Capabilities

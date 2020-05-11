@@ -9,6 +9,9 @@
 Polygons: Fast points-in-polygon test and distances to polygons
 ===============================================================
 
+.. contents:: Table of contents
+
+
 Installation using pip
 ----------------------
 

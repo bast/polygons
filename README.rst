@@ -51,7 +51,7 @@ Python example
   ]
 
   # the more points you compute in one go, the better
-  # this is just to make a simple example but if you have many points
+  # here using two points to make a simple example but if you have many points
   # then compute a thousand or a million in one go
   # so that the library can parallelize over the points
   points = [(0.5, 0.5), (0.5, -0.5)]

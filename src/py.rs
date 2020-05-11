@@ -9,7 +9,7 @@ mod py {
 
     #[pyfunction]
     fn build_tree(
-        polygons_in: Vec<Vec<(f64, f64, f64)>>,
+        polygons_in: Vec<Vec<(f64, f64)>>,
         num_edges_children: usize,
         num_nodes_children: usize,
     ) -> Tree {
@@ -17,7 +17,7 @@ mod py {
 
         for polygon_in in polygons_in.iter() {
             let mut polygon = Vec::new();
-            for &(x, y, _) in polygon_in.iter() {
+            for &(x, y) in polygon_in.iter() {
                 polygon.push(Point { x, y, coeff: 0.0 });
             }
             polygons.push(polygon);

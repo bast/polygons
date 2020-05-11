@@ -9,8 +9,8 @@ def floats_are_same(f1, f2):
 
 
 def points_are_same(p1, p2):
-    (x1, y1, _) = p1
-    (x2, y2, _) = p2
+    (x1, y1) = p1
+    (x2, y2) = p2
     if not floats_are_same(x1, x2):
         return False
     if not floats_are_same(y1, y2):
@@ -32,7 +32,7 @@ def read_polygons(file_name):
             for _ in range(num_points):
                 line = next(f)
                 t = tuple(map(float, line.split()))
-                polygon.append(t)
+                polygon.append((t[0], t[1]))
             if not points_are_same(polygon[0], polygon[-1]):
                 polygon.append(polygon[0])
             polygons.append(polygon)

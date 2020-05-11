@@ -10,8 +10,6 @@ struct Edge {
     p2: Point,
 }
 
-//pub type Tree = Node;
-
 // node is a box which has dimensions
 // it contains either other nodes
 // or it contains edges

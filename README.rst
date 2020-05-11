@@ -20,6 +20,13 @@ Installation using pip
   $ pip install polygons
 
 
+Supported versions
+------------------
+
+Python: 3.6, 3.7, 3.8
+Operating systems: Linux, macOS, and Windows
+
+
 Capabilities
 ------------
 

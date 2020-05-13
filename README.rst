@@ -6,6 +6,8 @@
    :target: https://crates.io/crates/polygons
 .. image:: https://badge.fury.io/py/polygons.svg
    :target: https://badge.fury.io/py/polygons
+.. image:: https://zenodo.org/badge/88614389.svg
+   :target: https://zenodo.org/badge/latestdoi/88614389
 
 
 Polygons: Fast points-in-polygon test and distances to polygons

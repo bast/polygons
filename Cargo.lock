@@ -221,7 +221,7 @@ dependencies = [
 
 [[package]]
 name = "polygons"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "pyo3 0.8.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",

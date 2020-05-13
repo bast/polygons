@@ -44,8 +44,19 @@ Capabilities
 Recommended citation
 --------------------
 
-If you use this code in research, please contact me and remind me to add here a
-recommended citation.
+If you use this tool in a program or publication, please acknowledge its
+author(s)::
+
+  @misc{polygons,
+    author    = {Bast, Radovan},
+    title     = {Polygons: Fast points-in-polygon test and distances to polygons},
+    month     = {5},
+    year      = {2020},
+    publisher = {Zenodo},
+    version   = {v0.1.6},
+    doi       = {10.5281/zenodo.3825617},
+    url       = {https://doi.org/10.5281/zenodo.3825617}
+  }
 
 
 Python example

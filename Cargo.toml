@@ -2,7 +2,7 @@
 name = "polygons"
 version = "0.1.5"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
-description = "Computes distances to polygon edges and vertices and can check whether points are inside/outside."
+description = "Fast points-in-polygon test and distances to polygons."
 license = "GPL-3.0-only"
 edition = "2018"
 

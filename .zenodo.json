@@ -1,0 +1,11 @@
+{
+    "creators": [
+        {
+            "name": "Bast, Radovan"
+        }
+    ],
+    "license": {
+        "id": "GPL-3.0"
+    },
+    "title": "Polygons: Fast points-in-polygon test and distances to polygons"
+}

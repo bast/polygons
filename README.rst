@@ -11,6 +11,8 @@
 Polygons: Fast points-in-polygon test and distances to polygons
 ===============================================================
 
+Computes distances to polygon edges and vertices and can check whether points are inside/outside.
+
 .. contents:: Table of contents
 
 

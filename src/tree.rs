@@ -1,5 +1,3 @@
-#![allow(clippy::needless_return)]
-
 #[cfg(feature = "pyo3")]
 use pyo3::prelude::*;
 
@@ -64,7 +62,7 @@ fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
         0.0
     };
 
-    return distance(difx, dify);
+    distance(difx, dify)
 }
 
 fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
@@ -91,7 +89,7 @@ fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
         return d_;
     }
 
-    return d;
+    d
 }
 
 fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
@@ -117,7 +115,7 @@ fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
         return n_;
     }
 
-    return n;
+    n
 }
 
 fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
@@ -130,7 +128,7 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     if p.y < ymin {
         return true;
     }
-    return false;
+    false
 }
 
 fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: impl Fn(f64) -> f64 + Copy) -> f64 {
@@ -167,11 +165,11 @@ fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: impl Fn(f64) -> f64 + 
         return d_min;
     }
 
-    return d_min;
+    d_min
 }
 
 fn distance(x: f64, y: f64) -> f64 {
-    return (x * x + y * y).sqrt();
+    (x * x + y * y).sqrt()
 }
 
 // this is derived from a C/C++ code
@@ -200,19 +198,19 @@ pub fn points_are_inside(tree: &[Node], points: &[Point]) -> Vec<bool> {
     // point is inside some polygon if the number of intersections to reach
     // the point "from left" is impair
     // FIXME clarify why we use tree[0]
-    return points
+    points
         .par_iter()
         .map(|p| (num_intersections(&tree[0], 0, &p) % 2) != 0)
-        .collect();
+        .collect()
 }
 
 pub fn distances_nearest_edges(tree: &[Node], points: &[Point]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
-    return points
+    points
         .par_iter()
         .map(|p| get_distance_edge(&tree[0], large_number, &p))
-        .collect();
+        .collect()
 }
 
 pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
@@ -222,12 +220,10 @@ pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
     // these calls
     let g = |x| x;
 
-    let distances = points
+    points
         .par_iter()
         .map(|p| get_distance_vertex(&tree[0], large_number, &p, g))
-        .collect();
-
-    return distances;
+        .collect()
 }
 
 pub fn distances_nearest_vertices_custom(
@@ -237,12 +233,10 @@ pub fn distances_nearest_vertices_custom(
 ) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
-    let distances = points
+    points
         .par_iter()
         .map(|p| get_distance_vertex(&tree[0], large_number, &p, g))
-        .collect();
-
-    return distances;
+        .collect()
 }
 
 fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
@@ -284,7 +278,7 @@ fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
         parents.push(new_parent);
     }
 
-    return parents;
+    parents
 }
 
 fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
@@ -333,7 +327,7 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
         parents.push(new_parent);
     }
 
-    return parents;
+    parents
 }
 
 fn points_to_edges(points: &[Point]) -> Vec<Edge> {
@@ -346,7 +340,7 @@ fn points_to_edges(points: &[Point]) -> Vec<Edge> {
         });
     }
 
-    return edges;
+    edges
 }
 
 pub fn build_tree(
@@ -369,7 +363,7 @@ pub fn build_tree(
         nodes = group_nodes(num_nodes_children, nodes);
     }
 
-    return nodes;
+    nodes
 }
 
 // a_z is one component of the vector cross product
@@ -381,7 +375,8 @@ fn a_z(r: &Point, e: &Edge) -> f64 {
     let b_y = e.p2.y - e.p1.y;
     let c_x = r.x - e.p1.x;
     let c_y = r.y - e.p1.y;
-    return b_x * c_y - b_y * c_x;
+
+    b_x * c_y - b_y * c_x
 }
 
 // The function "crosses" is based on http://geomalgorithms.com/a03-_inclusion.html

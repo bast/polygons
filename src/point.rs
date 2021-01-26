@@ -21,8 +21,8 @@ impl FromStr for Point {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let coords: Vec<&str> = s.split_whitespace().collect();
 
-        let x = coords[0].parse::<f64>()?;
-        let y = coords[1].parse::<f64>()?;
+        let x = coords[0].parse()?;
+        let y = coords[1].parse()?;
 
         Ok(Point::new(x, y))
     }

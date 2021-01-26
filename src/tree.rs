@@ -323,13 +323,13 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
 }
 
 fn points_to_edges(points: &[Point]) -> Vec<Edge> {
-    let mut edges = Vec::new();
-
-    for (p1, p2) in points.iter().zip(points[1..].iter()) {
-        edges.push(Edge { p1: *p1, p2: *p2 });
-    }
-
-    edges
+    points
+        .windows(2)
+        .map(|pair| Edge {
+            p1: pair[0],
+            p2: pair[1],
+        })
+        .collect()
 }
 
 pub fn build_tree(
@@ -340,7 +340,7 @@ pub fn build_tree(
     let mut nodes = Vec::new();
 
     for polygon in polygons.iter() {
-        // group edges to nodes, 4 at the time
+        // group edges to nodes, num_edges_children at the time
         nodes.append(&mut group_edges(
             num_edges_children,
             points_to_edges(polygon),

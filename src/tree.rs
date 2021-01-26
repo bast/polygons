@@ -188,9 +188,9 @@ fn dsegment(x0: f64, y0: f64, p1x: f64, p1y: f64, p2x: f64, p2y: f64) -> f64 {
     let c2 = v.0 * v.0 + v.1 * v.1;
 
     if c1 >= c2 {
-        return distance(x0 - p2x, y0 - p2y);
+        distance(x0 - p2x, y0 - p2y)
     } else {
-        return distance(x0 - (p1x + c1 / c2 * v.0), y0 - (p1y + c1 / c2 * v.1));
+        distance(x0 - (p1x + c1 / c2 * v.0), y0 - (p1y + c1 / c2 * v.1))
     }
 }
 
@@ -326,10 +326,7 @@ fn points_to_edges(points: &[Point]) -> Vec<Edge> {
     let mut edges = Vec::new();
 
     for (p1, p2) in points.iter().zip(points[1..].iter()) {
-        edges.push(Edge {
-            p1: p1.clone(),
-            p2: p2.clone(),
-        });
+        edges.push(Edge { p1: *p1, p2: *p2 });
     }
 
     edges
@@ -395,9 +392,9 @@ fn crosses(r: &Point, e: &Edge) -> bool {
 
     if e.p1.y < e.p2.y {
         // upward edge
-        return a_z(&r, &e) > 0.0;
+        a_z(&r, &e) > 0.0
     } else {
         // downward edge
-        return a_z(&r, &e) < 0.0;
+        a_z(&r, &e) < 0.0
     }
 }

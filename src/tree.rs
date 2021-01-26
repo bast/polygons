@@ -222,15 +222,6 @@ pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
         .collect()
 }
 
-pub fn distances_nearest_vertices_custom(tree: &[Node], points: &[Point]) -> Vec<f64> {
-    let large_number = std::f64::MAX;
-
-    points
-        .par_iter()
-        .map(|p| get_distance_vertex(&tree[0], large_number, &p))
-        .collect()
-}
-
 fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
     let num_input = input.len();
     let n = num_input / num_nodes_children;

@@ -114,8 +114,8 @@ fn get_bounds(polygons: &[Vec<Point>]) -> (f64, f64, f64, f64) {
     let mut y_min = large_number;
     let mut y_max = -large_number;
 
-    for polygon in polygons.iter() {
-        for point in polygon.iter() {
+    for polygon in polygons {
+        for point in polygon {
             x_min = x_min.min(point.x);
             x_max = x_max.max(point.x);
             y_min = y_min.min(point.y);
@@ -124,6 +124,36 @@ fn get_bounds(polygons: &[Vec<Point>]) -> (f64, f64, f64, f64) {
     }
 
     return (x_min, x_max, y_min, y_max);
+}
+
+fn get_distance(p1: &Point, p2: &Point) -> f64 {
+    let dx = p2.x - p1.x;
+    let dy = p2.y - p1.y;
+    return (dx * dx + dy * dy).sqrt();
+}
+
+fn distances_nearest_vertices_custom_naive(
+    polygons: &[Vec<Point>],
+    reference_points: &[Point],
+) -> Vec<f64> {
+    let large_number = std::f64::MAX;
+    let mut distances = Vec::new();
+
+    for reference_point in reference_points {
+        let mut distance = large_number;
+
+        for polygon in polygons {
+            for polygon_point in polygon {
+                let d = get_distance(&reference_point, &polygon_point) + polygon_point.coeff;
+
+                distance = distance.min(d);
+            }
+        }
+
+        distances.push(distance);
+    }
+
+    return distances;
 }
 
 #[test]
@@ -150,6 +180,23 @@ fn basic() {
     let reference_bools = read_vector("tests/reference/points_are_inside.txt");
     for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
         assert_eq!(x, rx);
+    }
+}
+
+#[test]
+fn custom_distance() {
+    let polygons = read_polygons("tests/islands.txt", true);
+    let tree = polygons::build_tree(&polygons, 4, 4);
+
+    let num_reference_points = 10_000;
+    let (x_min, x_max, y_min, y_max) = get_bounds(&polygons);
+    let reference_points = get_random_points(num_reference_points, x_min, x_max, y_min, y_max);
+
+    let distances = polygons::distances_nearest_vertices(&tree, &reference_points);
+    let distances_naive = distances_nearest_vertices_custom_naive(&polygons, &reference_points);
+
+    for (&x, &rx) in distances.iter().zip(distances_naive.iter()) {
+        assert!(floats_are_same(x, rx));
     }
 }
 

@@ -192,8 +192,7 @@ fn custom_distance() {
     let (x_min, x_max, y_min, y_max) = get_bounds(&polygons);
     let reference_points = get_random_points(num_reference_points, x_min, x_max, y_min, y_max);
 
-    let g = |x| x;
-    let distances = polygons::distances_nearest_vertices_custom(&tree, &reference_points, g);
+    let distances = polygons::distances_nearest_vertices_custom(&tree, &reference_points);
     let distances_naive = distances_nearest_vertices_custom_naive(&polygons, &reference_points);
 
     for (&x, &rx) in distances.iter().zip(distances_naive.iter()) {

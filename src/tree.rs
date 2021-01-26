@@ -131,10 +131,10 @@ fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
     false
 }
 
-fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: impl Fn(f64) -> f64 + Copy) -> f64 {
+fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
     let d_box = box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax);
 
-    let f = g(d_box) + node.hmin;
+    let f = d_box + node.hmin;
 
     if f > d {
         return d;
@@ -144,7 +144,7 @@ fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: impl Fn(f64) -> f64 + 
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let t = get_distance_vertex(&child_node, d_min, p, g);
+            let t = get_distance_vertex(&child_node, d_min, p);
             d_min = d_min.min(t);
         }
         return d_min;
@@ -153,13 +153,13 @@ fn get_distance_vertex(node: &Node, d: f64, p: &Point, g: impl Fn(f64) -> f64 + 
     if !node.edges.is_empty() {
         for edge in node.edges.iter() {
             let d_edge = distance(edge.p1.x - p.x, edge.p1.y - p.y);
-            let f = g(d_edge) + edge.p1.coeff;
+            let f = d_edge + edge.p1.coeff;
             d_min = d_min.min(f);
         }
 
         let edge = node.edges.last().unwrap();
         let d_edge = distance(edge.p2.x - p.x, edge.p2.y - p.y);
-        let f = g(d_edge) + edge.p2.coeff;
+        let f = d_edge + edge.p2.coeff;
         d_min = d_min.min(f);
 
         return d_min;
@@ -216,26 +216,18 @@ pub fn distances_nearest_edges(tree: &[Node], points: &[Point]) -> Vec<f64> {
 pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
-    // FIXME this introduces quite an overhead for the non-custom version we should probably skip
-    // these calls
-    let g = |x| x;
-
     points
         .par_iter()
-        .map(|p| get_distance_vertex(&tree[0], large_number, &p, g))
+        .map(|p| get_distance_vertex(&tree[0], large_number, &p))
         .collect()
 }
 
-pub fn distances_nearest_vertices_custom(
-    tree: &[Node],
-    points: &[Point],
-    g: impl Fn(f64) -> f64 + Copy + Sync,
-) -> Vec<f64> {
+pub fn distances_nearest_vertices_custom(tree: &[Node], points: &[Point]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
     points
         .par_iter()
-        .map(|p| get_distance_vertex(&tree[0], large_number, &p, g))
+        .map(|p| get_distance_vertex(&tree[0], large_number, &p))
         .collect()
 }
 

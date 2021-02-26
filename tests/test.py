@@ -55,7 +55,7 @@ def test_interface():
     num_edges_children = 4
     num_nodes_children = 4
 
-    tree = polygons.build_tree(ps, num_edges_children, num_nodes_children)
+    tree = polygons.build_search_tree(ps, num_edges_children, num_nodes_children)
 
     points = read_data(
         os.path.join(here, "reference", "reference_points.txt"),

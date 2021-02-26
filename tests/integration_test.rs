@@ -32,8 +32,8 @@ fn get_random_points(
 
     for _ in 0..num_points {
         reference_points.push(Point::new(
-            rng.gen_range(x_min, x_max),
-            rng.gen_range(y_min, y_max),
+            rng.gen_range(x_min..x_max),
+            rng.gen_range(y_min..y_max),
         ));
     }
     return reference_points;

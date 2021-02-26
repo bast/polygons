@@ -116,6 +116,5 @@ Python interface inspired by https://github.com/dev-cafe/rustafarian.
 
 Building and testing the Python interface:
 ```
-$ cargo build --release --features pyo3
-$ maturin develop --release --cargo-extra-args="--features pyo3"
+$ maturin develop
 ```

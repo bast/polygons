@@ -28,8 +28,7 @@ pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
 }
 
 fn skip_box_intersection(p: &Point, node: &Node) -> bool {
-    // shouldn't this be p.x < node.xmin?
-    if p.x > node.xmax {
+    if p.x < node.xmin {
         return true;
     }
     if p.y > node.ymax {
@@ -79,9 +78,9 @@ fn crosses(r: &Point, e: &Edge) -> bool {
 
     if e.p1.y < e.p2.y {
         // upward edge
-        a_z(&r, &e) > 0.0
+        a_z(&r, &e) < 0.0
     } else {
         // downward edge
-        a_z(&r, &e) < 0.0
+        a_z(&r, &e) > 0.0
     }
 }

@@ -1,6 +1,7 @@
 //! Computes distances to polygon edges and vertices and can check whether points are
 //! inside/outside polygons.
 
+mod intersections;
 mod point;
 mod py;
 mod tree;

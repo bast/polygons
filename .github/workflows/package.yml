@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
@@ -22,19 +22,17 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Python dependencies
       run: |
-        which python
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Build crate
       run: cargo build --verbose
     - name: Test crate
       run: cargo test --verbose
-    - name: Use nightly Rust
-      run: rustup override set nightly
-    - name: Build crate with pyo3
-      run: cargo build --release --features pyo3
-    - name: Maturin publish
+    - name: Maturin build and publish
       run:
-        maturin publish --no-sdist -u __token__ -i python --cargo-extra-args="--features pyo3"
+        maturin publish --no-sdist -u __token__ -i python
       env:
         MATURIN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+
+# notes:
+# - for test-pypi: maturin publish --no-sdist -u __token__ -i python -r https://test.pypi.org/legacy/

@@ -1,4 +1,3 @@
-#[cfg(feature = "pyo3")]
 use pyo3::prelude::*;
 
 use crate::point::Point;
@@ -14,7 +13,7 @@ struct Edge {
 // node is a box which has dimensions
 // it contains either other nodes
 // or it contains edges
-#[cfg_attr(feature = "pyo3", pyclass)]
+#[pyclass]
 #[derive(Clone)]
 pub struct Node {
     xmin: f64,

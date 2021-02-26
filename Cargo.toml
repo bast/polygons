@@ -7,6 +7,9 @@ license = "GPL-3.0-only"
 edition = "2018"
 readme = "README.md"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [package.metadata.maturin]
 requires-python = ">=3.6"
 classifier = ["Programming Language :: Python"]
@@ -14,7 +17,4 @@ classifier = ["Programming Language :: Python"]
 [dependencies]
 rand = "0.8.3"
 rayon = "1.5.0"
-pyo3 = { version = "0.8.0", features = ["extension-module"], optional = true }
-
-[lib]
-crate-type = ["cdylib", "rlib"]
+pyo3 = { version = "0.13", features = ["extension-module"] }

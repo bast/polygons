@@ -2,7 +2,7 @@
 [![image](https://img.shields.io/badge/license-%20GPL-blue.svg)](LICENSE)
 [![image](https://img.shields.io/crates/v/polygons.svg)](https://crates.io/crates/polygons)
 [![image](https://badge.fury.io/py/polygons.svg)](https://badge.fury.io/py/polygons)
-[![image](https://zenodo.org/badge/88614389.svg)](https://zenodo.org/badge/latestdoi/88614389)
+[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.3825616.svg)](https://doi.org/10.5281/zenodo.3825616)
 
 
 # Polygons: Fast points-in-polygon test and distances to polygons
@@ -39,12 +39,12 @@ author(s):
 @misc{polygons,
   author    = {Bast, Radovan},
   title     = {Polygons: Fast points-in-polygon test and distances to polygons},
-  month     = {5},
-  year      = {2020},
+  month     = {2},
+  year      = {2021},
   publisher = {Zenodo},
-  version   = {v0.1.6},
-  doi       = {10.5281/zenodo.3825617},
-  url       = {https://doi.org/10.5281/zenodo.3825617}
+  version   = {v0.2.0},
+  doi       = {10.5281/zenodo.3825616},
+  url       = {https://doi.org/10.5281/zenodo.3825616}
 }
 ```
 

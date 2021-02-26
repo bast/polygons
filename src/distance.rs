@@ -47,35 +47,45 @@ pub fn get_distance_edge(node: &Node, d: f64, p: (f64, f64)) -> f64 {
     d_min
 }
 
-pub fn get_distance_vertex(node: &Node, d: f64, p: (f64, f64)) -> f64 {
+pub fn get_distance_vertex(node: &Node, i: usize, d: f64, p: (f64, f64)) -> (usize, f64) {
     if box_distance(p, &node) + node.hmin > d {
-        return d;
+        return (i, d);
     }
 
+    let mut i_min = i;
     let mut d_min = d;
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let t = get_distance_vertex(&child_node, d_min, p);
-            d_min = d_min.min(t);
+            let (i_t, d_t) = get_distance_vertex(&child_node, i_min, d_min, p);
+            if d_t < d_min {
+                d_min = d_t;
+                i_min = i_t;
+            }
         }
-        return d_min;
+        return (i_min, d_min);
     }
 
     if !node.edges.is_empty() {
         for edge in &node.edges {
-            let t = distance(edge.p1.x - p.0, edge.p1.y - p.1);
-            d_min = d_min.min(t + edge.p1.h);
+            let d_t = distance(edge.p1.x - p.0, edge.p1.y - p.1) + edge.p1.h;
+            if d_t < d_min {
+                d_min = d_t;
+                i_min = edge.p1.index;
+            }
         }
 
         let edge = node.edges.last().unwrap();
-        let t = distance(edge.p2.x - p.0, edge.p2.y - p.1);
-        d_min = d_min.min(t + edge.p2.h);
+        let d_t = distance(edge.p2.x - p.0, edge.p2.y - p.1) + edge.p2.h;
+        if d_t < d_min {
+            d_min = d_t;
+            i_min = edge.p2.index;
+        }
 
-        return d_min;
+        return (i_min, d_min);
     }
 
-    d_min
+    (i_min, d_min)
 }
 
 fn distance(x: f64, y: f64) -> f64 {

@@ -110,26 +110,35 @@ fn get_bounds(polygons: &[Vec<(f64, f64, f64)>]) -> (f64, f64, f64, f64) {
 fn distances_nearest_vertices_custom_naive(
     polygons: &[Vec<(f64, f64, f64)>],
     reference_points: &[(f64, f64)],
-) -> Vec<f64> {
+) -> (Vec<usize>, Vec<f64>) {
     let large_number = std::f64::MAX;
+
+    let mut indices = Vec::new();
     let mut distances = Vec::new();
 
     for (rx, ry) in reference_points {
+        let mut index = 0;
         let mut distance = large_number;
 
+        let mut i = 0;
         for polygon in polygons {
             for (x, y, h) in polygon {
                 let dx = x - rx;
                 let dy = y - ry;
                 let d = (dx * dx + dy * dy).sqrt();
-                distance = distance.min(d + h);
+                if d + h < distance {
+                    distance = d + h;
+                    index = i;
+                }
+                i += 1;
             }
         }
 
+        indices.push(index);
         distances.push(distance);
     }
 
-    distances
+    (indices, distances)
 }
 
 fn zero_out_h(polygons: Vec<Vec<(f64, f64, f64)>>) -> Vec<Vec<(f64, f64, f64)>> {
@@ -155,7 +164,7 @@ fn basic() {
         assert!(floats_are_same(x, rx));
     }
 
-    let distances = polygons::distances_nearest_vertices(&tree, &reference_points);
+    let (_, distances) = polygons::distances_nearest_vertices(&tree, &reference_points);
     let reference_distances = read_vector("tests/reference/distances_nearest_vertices.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
@@ -176,11 +185,13 @@ fn custom_distance() {
     let num_reference_points = 10_000;
     let reference_points = get_random_points(num_reference_points, x_min, x_max, y_min, y_max);
 
-    let distances_naive = distances_nearest_vertices_custom_naive(&polygons, &reference_points);
+    let (indices_naive, distances_naive) =
+        distances_nearest_vertices_custom_naive(&polygons, &reference_points);
 
     let tree = polygons::build_search_tree_h(polygons, 4, 4);
-    let distances = polygons::distances_nearest_vertices(&tree, &reference_points);
+    let (indices, distances) = polygons::distances_nearest_vertices(&tree, &reference_points);
 
+    assert_eq!(indices, indices_naive);
     for (&x, &rx) in distances.iter().zip(distances_naive.iter()) {
         assert!(floats_are_same(x, rx));
     }

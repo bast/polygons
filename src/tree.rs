@@ -3,7 +3,17 @@ use rayon::prelude::*;
 
 use crate::distance;
 use crate::intersections;
-use crate::point::Point;
+
+// a polygon point
+// x and y are coordinates
+// h is added to the distance to this point for custom distances
+#[derive(Debug, Clone, Copy)]
+pub struct Point {
+    pub x: f64,
+    pub y: f64,
+    pub h: f64,
+    pub index: usize,
+}
 
 // edge connects two points
 #[derive(Clone)]
@@ -64,6 +74,7 @@ pub fn build_search_tree_h(
 ) -> Vec<Node> {
     let mut nodes = Vec::new();
 
+    let mut offset = 0;
     for (i, polygon) in polygons.iter().enumerate() {
         if !polygon_is_closed(&polygon) {
             panic!("ERROR: polygon {} is not closed", i + 1);
@@ -72,8 +83,10 @@ pub fn build_search_tree_h(
         // group edges to nodes, num_edges_children at the time
         nodes.append(&mut group_edges(
             num_edges_children,
-            points_to_edges(&polygon),
+            points_to_edges(&polygon, offset),
         ));
+
+        offset += polygon.len();
     }
 
     // we group nodes into a tree
@@ -129,13 +142,23 @@ pub fn distances_nearest_edges(tree: &Tree, points: &[(f64, f64)]) -> Vec<f64> {
         .collect()
 }
 
-pub fn distances_nearest_vertices(tree: &Tree, points: &[(f64, f64)]) -> Vec<f64> {
+pub fn distances_nearest_vertices(tree: &Tree, points: &[(f64, f64)]) -> (Vec<usize>, Vec<f64>) {
     let large_number = std::f64::MAX;
 
-    points
+    let tuples: Vec<(usize, f64)> = points
         .par_iter()
-        .map(|p| distance::get_distance_vertex(&tree[0], large_number, *p))
-        .collect()
+        .map(|p| distance::get_distance_vertex(&tree[0], 0, large_number, *p))
+        .collect();
+
+    let mut indices = Vec::new();
+    let mut distances = Vec::new();
+
+    for (i, d) in tuples {
+        indices.push(i);
+        distances.push(d);
+    }
+
+    (indices, distances)
 }
 
 fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
@@ -229,19 +252,22 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Tree {
     parents
 }
 
-fn points_to_edges(points: &[(f64, f64, f64)]) -> Vec<Edge> {
+fn points_to_edges(points: &[(f64, f64, f64)], offset: usize) -> Vec<Edge> {
     points
         .windows(2)
-        .map(|pair| Edge {
+        .enumerate()
+        .map(|(i, t)| Edge {
             p1: Point {
-                x: pair[0].0,
-                y: pair[0].1,
-                h: pair[0].2,
+                x: t[0].0,
+                y: t[0].1,
+                h: t[0].2,
+                index: offset + i,
             },
             p2: Point {
-                x: pair[1].0,
-                y: pair[1].1,
-                h: pair[1].2,
+                x: t[1].0,
+                y: t[1].1,
+                h: t[1].2,
+                index: offset + i + 1,
             },
         })
         .collect()

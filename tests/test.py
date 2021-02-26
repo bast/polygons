@@ -4,8 +4,7 @@ import sys
 
 
 def floats_are_same(f1, f2):
-    d = f1 - f2
-    return abs(d) < sys.float_info.epsilon
+    return abs(f1 - f2) < sys.float_info.epsilon
 
 
 def points_are_same(p1, p2):
@@ -69,7 +68,7 @@ def test_interface():
     )
     assert inside == inside_reference
 
-    distances = polygons.distances_nearest_vertices(tree, points)
+    _, distances = polygons.distances_nearest_vertices(tree, points)
     distances_reference = read_data(
         os.path.join(here, "reference", "distances_nearest_vertices.txt"),
         lambda x: float(x),

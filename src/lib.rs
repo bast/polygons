@@ -3,7 +3,6 @@
 
 mod distance;
 mod intersections;
-mod point;
 mod python;
 mod tree;
 

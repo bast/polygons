@@ -28,11 +28,17 @@ tree = polygons.build_search_tree(
 inside = polygons.points_are_inside(tree, points)
 print(inside)  # [True, False]
 
-distances = polygons.distances_nearest_vertices(tree, points)
+# indices are the indices of the nearest polygon vertices (counted
+# consecutively)
+indices, distances = polygons.distances_nearest_vertices(tree, points)
+print(indices)  # [0, 0]
 print(distances)  # [0.7071067811865476, 0.7071067811865476]
 
 distances = polygons.distances_nearest_edges(tree, points)
 print(distances)  # [0.5, 0.5]
 
-distances = polygons.distances_nearest_vertices(tree, [(0.6, 0.6), (0.5, -0.5)])
+indices, distances = polygons.distances_nearest_vertices(
+    tree, [(0.6, 0.6), (0.5, -0.5)]
+)
+print(indices)  # [2, 0]
 print(distances)  # [0.5656854249492381, 0.7071067811865476]

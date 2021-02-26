@@ -12,7 +12,7 @@ fn points_are_inside(tree: Tree, points: Vec<(f64, f64)>) -> Vec<bool> {
 }
 
 #[pyfunction]
-fn distances_nearest_vertices(tree: Tree, points: Vec<(f64, f64)>) -> Vec<f64> {
+fn distances_nearest_vertices(tree: Tree, points: Vec<(f64, f64)>) -> (Vec<usize>, Vec<f64>) {
     tree::distances_nearest_vertices(&tree, &points)
 }
 

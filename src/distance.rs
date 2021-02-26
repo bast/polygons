@@ -66,12 +66,12 @@ pub fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
     if !node.edges.is_empty() {
         for edge in &node.edges {
             let t = distance(edge.p1.x - p.x, edge.p1.y - p.y);
-            d_min = d_min.min(t + edge.p1.coeff);
+            d_min = d_min.min(t + edge.p1.h);
         }
 
         let edge = node.edges.last().unwrap();
         let t = distance(edge.p2.x - p.x, edge.p2.y - p.y);
-        d_min = d_min.min(t + edge.p2.coeff);
+        d_min = d_min.min(t + edge.p2.h);
 
         return d_min;
     }

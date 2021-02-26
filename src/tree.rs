@@ -146,14 +146,14 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
                     input[i].p1.x,
                     input[i].p1.y,
                     input[i].p1.y,
-                    input[i].p1.coeff,
+                    input[i].p1.h,
                 );
                 new_parent.adjust_bounds(
                     input[i].p2.x,
                     input[i].p2.x,
                     input[i].p2.y,
                     input[i].p2.y,
-                    input[i].p2.coeff,
+                    input[i].p2.h,
                 );
                 new_parent.insert_edge(input[i].clone());
                 i += 1;

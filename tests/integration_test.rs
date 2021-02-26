@@ -59,7 +59,7 @@ fn polygon_is_closed(polygon: &[Point]) -> bool {
     return true;
 }
 
-fn read_polygons(file_name: &str, with_coeffs: bool) -> Vec<Vec<Point>> {
+fn read_polygons(file_name: &str, with_h: bool) -> Vec<Vec<Point>> {
     let error_message = format!("something went wrong reading file {}", file_name);
     let contents = fs::read_to_string(file_name).expect(&error_message);
 
@@ -82,15 +82,11 @@ fn read_polygons(file_name: &str, with_coeffs: bool) -> Vec<Vec<Point>> {
             let words: Vec<&str> = line.split_whitespace().collect();
             let x = words[0].parse().unwrap();
             let y = words[1].parse().unwrap();
-            if with_coeffs {
-                let coeff = words[2].parse().unwrap();
-                polygon.push(Point { x, y, coeff });
+            if with_h {
+                let h = words[2].parse().unwrap();
+                polygon.push(Point { x, y, h });
             } else {
-                polygon.push(Point {
-                    x: x,
-                    y: y,
-                    coeff: 0.0,
-                });
+                polygon.push(Point { x: x, y: y, h: 0.0 });
             }
         }
         i -= 1;
@@ -144,7 +140,7 @@ fn distances_nearest_vertices_custom_naive(
 
         for polygon in polygons {
             for polygon_point in polygon {
-                let d = get_distance(&reference_point, &polygon_point) + polygon_point.coeff;
+                let d = get_distance(&reference_point, &polygon_point) + polygon_point.h;
 
                 distance = distance.min(d);
             }

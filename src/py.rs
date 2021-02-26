@@ -16,7 +16,7 @@ fn build_tree(
     for polygon_in in polygons_in.iter() {
         let mut polygon = Vec::new();
         for &(x, y) in polygon_in.iter() {
-            polygon.push(Point { x, y, coeff: 0.0 });
+            polygon.push(Point { x, y, h: 0.0 });
         }
         polygons.push(polygon);
     }

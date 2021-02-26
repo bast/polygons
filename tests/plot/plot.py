@@ -16,6 +16,14 @@ def read_polygons(file_name):
                 x = float(xy.split()[0])
                 y = float(xy.split()[1])
                 points.append((x, y))
+            x_first = points[0][0]
+            x_last = points[-1][0]
+            y_first = points[0][1]
+            y_last = points[-1][1]
+            if (abs(x_last - x_first) > sys.float_info.epsilon) or (
+                abs(y_last - y_first) > sys.float_info.epsilon
+            ):
+                points.append((x_first, y_first))
             polygons.append(points)
             points = []
     return polygons
@@ -70,7 +78,7 @@ def main(polygons_file, figure):
     plt.scatter(xs_inside, ys_inside, s=0.01, color="red")
     plt.scatter(xs_outside, ys_outside, s=0.01, color="blue")
 
-    plt.savefig(figure, dpi=1200)
+    plt.savefig(figure, dpi=600)
 
 
 if __name__ == "__main__":

@@ -51,23 +51,7 @@ fn get_random_points(
 }
 
 fn floats_are_same(f1: f64, f2: f64) -> bool {
-    let d = f1 - f2;
-    return d.abs() < std::f64::EPSILON;
-}
-
-fn polygon_is_closed(polygon: &[(f64, f64, f64)]) -> bool {
-    let first_point = polygon.first().unwrap();
-    let last_point = polygon.last().unwrap();
-
-    if !floats_are_same(first_point.0, last_point.0) {
-        return false;
-    }
-
-    if !floats_are_same(first_point.1, last_point.1) {
-        return false;
-    }
-
-    true
+    return (f1 - f2).abs() < std::f64::EPSILON;
 }
 
 fn read_polygons(file_name: &str) -> Vec<Vec<(f64, f64, f64)>> {
@@ -83,9 +67,6 @@ fn read_polygons(file_name: &str) -> Vec<Vec<(f64, f64, f64)>> {
             let num_points: usize = line.parse().unwrap();
             i += num_points + 1;
             if !polygon.is_empty() {
-                if !polygon_is_closed(&polygon) {
-                    polygon.push(polygon.first().unwrap().clone());
-                }
                 polygons.push(polygon.clone());
             }
             polygon.clear();
@@ -100,9 +81,6 @@ fn read_polygons(file_name: &str) -> Vec<Vec<(f64, f64, f64)>> {
     }
 
     if !polygon.is_empty() {
-        if !polygon_is_closed(&polygon) {
-            polygon.push(polygon.first().unwrap().clone());
-        }
         polygons.push(polygon);
     }
 

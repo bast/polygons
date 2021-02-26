@@ -46,31 +46,72 @@ impl Node {
     }
 }
 
-pub fn points_are_inside(tree: &[Node], points: &[Point]) -> Vec<bool> {
+#[pyfunction]
+pub fn build_search_tree(
+    polygons: Vec<Vec<(f64, f64)>>,
+    num_edges_children: usize,
+    num_nodes_children: usize,
+) -> Vec<Node> {
+    let polygons_h = pad(polygons);
+    build_search_tree_h(polygons_h, num_edges_children, num_nodes_children)
+}
+
+#[pyfunction]
+pub fn build_search_tree_h(
+    polygons: Vec<Vec<(f64, f64, f64)>>,
+    num_edges_children: usize,
+    num_nodes_children: usize,
+) -> Vec<Node> {
+    let mut nodes = Vec::new();
+
+    for polygon in polygons.iter() {
+        // group edges to nodes, num_edges_children at the time
+        nodes.append(&mut group_edges(
+            num_edges_children,
+            points_to_edges(polygon),
+        ));
+    }
+
+    // we group nodes into a tree
+    while nodes.len() > 1 {
+        nodes = group_nodes(num_nodes_children, nodes);
+    }
+
+    nodes
+}
+
+fn pad(input: Vec<Vec<(f64, f64)>>) -> Vec<Vec<(f64, f64, f64)>> {
+    let mut output = Vec::new();
+    for v in input {
+        output.push(v.iter().map(|(x, y)| (*x, *y, 0.0)).collect());
+    }
+    output
+}
+
+pub fn points_are_inside(tree: &Tree, points: &[(f64, f64)]) -> Vec<bool> {
     // point is inside some polygon if the number of intersections to reach
     // the point "from left" is impair
-    // FIXME clarify why we use tree[0]
     points
         .par_iter()
-        .map(|p| (intersections::num_intersections(&tree[0], 0, &p) % 2) != 0)
+        .map(|p| (intersections::num_intersections(&tree[0], 0, *p) % 2) != 0)
         .collect()
 }
 
-pub fn distances_nearest_edges(tree: &[Node], points: &[Point]) -> Vec<f64> {
+pub fn distances_nearest_edges(tree: &Tree, points: &[(f64, f64)]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
     points
         .par_iter()
-        .map(|p| distance::get_distance_edge(&tree[0], large_number, &p))
+        .map(|p| distance::get_distance_edge(&tree[0], large_number, *p))
         .collect()
 }
 
-pub fn distances_nearest_vertices(tree: &[Node], points: &[Point]) -> Vec<f64> {
+pub fn distances_nearest_vertices(tree: &Tree, points: &[(f64, f64)]) -> Vec<f64> {
     let large_number = std::f64::MAX;
 
     points
         .par_iter()
-        .map(|p| distance::get_distance_vertex(&tree[0], large_number, &p))
+        .map(|p| distance::get_distance_vertex(&tree[0], large_number, *p))
         .collect()
 }
 
@@ -116,7 +157,7 @@ fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
     parents
 }
 
-fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
+fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Tree {
     let num_input = input.len();
     let n = num_input / num_edges_children;
     let num_parents = match num_input % num_edges_children {
@@ -126,7 +167,7 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
 
     let large_number = std::f64::MAX;
 
-    let mut parents: Vec<Node> = Vec::new();
+    let mut parents = Vec::new();
 
     let mut i = 0;
     for _k in 0..num_parents {
@@ -165,35 +206,20 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Vec<Node> {
     parents
 }
 
-fn points_to_edges(points: &[Point]) -> Vec<Edge> {
+fn points_to_edges(points: &[(f64, f64, f64)]) -> Vec<Edge> {
     points
         .windows(2)
         .map(|pair| Edge {
-            p1: pair[0],
-            p2: pair[1],
+            p1: Point {
+                x: pair[0].0,
+                y: pair[0].1,
+                h: pair[0].2,
+            },
+            p2: Point {
+                x: pair[1].0,
+                y: pair[1].1,
+                h: pair[1].2,
+            },
         })
         .collect()
-}
-
-pub fn build_tree(
-    polygons: &[Vec<Point>],
-    num_edges_children: usize,
-    num_nodes_children: usize,
-) -> Vec<Node> {
-    let mut nodes = Vec::new();
-
-    for polygon in polygons.iter() {
-        // group edges to nodes, num_edges_children at the time
-        nodes.append(&mut group_edges(
-            num_edges_children,
-            points_to_edges(polygon),
-        ));
-    }
-
-    // we group nodes into a tree
-    while nodes.len() > 1 {
-        nodes = group_nodes(num_nodes_children, nodes);
-    }
-
-    nodes
 }

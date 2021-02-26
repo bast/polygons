@@ -1,19 +1,18 @@
-use crate::point::Point;
 use crate::tree::Node;
 
-fn box_distance(p: &Point, node: &Node) -> f64 {
-    let difx = if p.x < node.xmin {
-        p.x - node.xmin
-    } else if p.x > node.xmax {
-        p.x - node.xmax
+fn box_distance(p: (f64, f64), node: &Node) -> f64 {
+    let difx = if p.0 < node.xmin {
+        p.0 - node.xmin
+    } else if p.0 > node.xmax {
+        p.0 - node.xmax
     } else {
         0.0
     };
 
-    let dify = if p.y < node.ymin {
-        p.y - node.ymin
-    } else if p.y > node.ymax {
-        p.y - node.ymax
+    let dify = if p.1 < node.ymin {
+        p.1 - node.ymin
+    } else if p.1 > node.ymax {
+        p.1 - node.ymax
     } else {
         0.0
     };
@@ -21,8 +20,8 @@ fn box_distance(p: &Point, node: &Node) -> f64 {
     distance(difx, dify)
 }
 
-pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
-    if box_distance(&p, &node) > d {
+pub fn get_distance_edge(node: &Node, d: f64, p: (f64, f64)) -> f64 {
+    if box_distance(p, &node) > d {
         return d;
     }
 
@@ -30,7 +29,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let temp = get_distance_edge(&child_node, d_min, &p);
+            let temp = get_distance_edge(&child_node, d_min, p);
             d_min = d_min.min(temp);
         }
         return d_min;
@@ -39,7 +38,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
     if !node.edges.is_empty() {
         for edge in &node.edges {
             d_min = d_min.min(dsegment(
-                p.x, p.y, edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y,
+                p.0, p.1, edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y,
             ));
         }
         return d_min;
@@ -48,8 +47,8 @@ pub fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
     d_min
 }
 
-pub fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
-    if box_distance(&p, &node) + node.hmin > d {
+pub fn get_distance_vertex(node: &Node, d: f64, p: (f64, f64)) -> f64 {
+    if box_distance(p, &node) + node.hmin > d {
         return d;
     }
 
@@ -57,7 +56,7 @@ pub fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let t = get_distance_vertex(&child_node, d_min, &p);
+            let t = get_distance_vertex(&child_node, d_min, p);
             d_min = d_min.min(t);
         }
         return d_min;
@@ -65,12 +64,12 @@ pub fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
 
     if !node.edges.is_empty() {
         for edge in &node.edges {
-            let t = distance(edge.p1.x - p.x, edge.p1.y - p.y);
+            let t = distance(edge.p1.x - p.0, edge.p1.y - p.1);
             d_min = d_min.min(t + edge.p1.h);
         }
 
         let edge = node.edges.last().unwrap();
-        let t = distance(edge.p2.x - p.x, edge.p2.y - p.y);
+        let t = distance(edge.p2.x - p.0, edge.p2.y - p.1);
         d_min = d_min.min(t + edge.p2.h);
 
         return d_min;

@@ -1,8 +1,7 @@
-use crate::point::Point;
 use crate::tree::{Edge, Node};
 
-pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
-    if skip_box_intersection(&p, &node) {
+pub fn num_intersections(node: &Node, n: i32, p: (f64, f64)) -> i32 {
+    if skip_box_intersection(p, &node) {
         return n;
     }
 
@@ -10,14 +9,14 @@ pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
 
     if !node.children_nodes.is_empty() {
         for child_node in &node.children_nodes {
-            n_ = num_intersections(&child_node, n_, &p);
+            n_ = num_intersections(&child_node, n_, p);
         }
         return n_;
     }
 
     if !node.edges.is_empty() {
         for edge in &node.edges {
-            if crosses(&p, &edge) {
+            if crosses(p, &edge) {
                 n_ += 1;
             }
         }
@@ -27,14 +26,14 @@ pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
     n
 }
 
-fn skip_box_intersection(p: &Point, node: &Node) -> bool {
-    if p.x < node.xmin {
+fn skip_box_intersection(p: (f64, f64), node: &Node) -> bool {
+    if p.0 < node.xmin {
         return true;
     }
-    if p.y > node.ymax {
+    if p.1 > node.ymax {
         return true;
     }
-    if p.y < node.ymin {
+    if p.1 < node.ymin {
         return true;
     }
     false
@@ -44,12 +43,12 @@ fn skip_box_intersection(p: &Point, node: &Node) -> bool {
 // a_z < 0 for r right of the (upward) line p1-p2
 // a_z > 0 for r left of the (upward) line p1-p2
 // a_z = 0 if r lies on the line p1-p2
-fn a_z(r: &Point, e: &Edge) -> f64 {
+fn a_z(r: (f64, f64), e: &Edge) -> f64 {
     let b_x = e.p2.x - e.p1.x;
     let b_y = e.p2.y - e.p1.y;
 
-    let c_x = r.x - e.p1.x;
-    let c_y = r.y - e.p1.y;
+    let c_x = r.0 - e.p1.x;
+    let c_y = r.1 - e.p1.y;
 
     b_x * c_y - b_y * c_x
 }
@@ -63,24 +62,24 @@ fn a_z(r: &Point, e: &Edge) -> f64 {
 // SoftSurfer makes no warranty for this code, and cannot be held
 // liable for any real or imagined damage resulting from its use.
 // Users of this code must verify correctness for their application.
-fn crosses(r: &Point, e: &Edge) -> bool {
+fn crosses(r: (f64, f64), e: &Edge) -> bool {
     // reference point is above the edge so a horizontal line to the point
     // cannot crosse the edge
-    if r.y > e.p1.y.max(e.p2.y) {
+    if r.1 > e.p1.y.max(e.p2.y) {
         return false;
     }
 
     // reference point is below the edge so a horizontal line to the point
     // cannot crosse the edge
-    if r.y < e.p1.y.min(e.p2.y) {
+    if r.1 < e.p1.y.min(e.p2.y) {
         return false;
     }
 
     if e.p1.y < e.p2.y {
         // upward edge
-        a_z(&r, &e) < 0.0
+        a_z(r, &e) < 0.0
     } else {
         // downward edge
-        a_z(&r, &e) > 0.0
+        a_z(r, &e) > 0.0
     }
 }

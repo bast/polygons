@@ -2,21 +2,21 @@ use crate::point::Point;
 use crate::tree::{Edge, Node};
 
 pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
-    if skip_box_intersection(p, node.xmax, node.ymin, node.ymax) {
+    if skip_box_intersection(&p, &node) {
         return n;
     }
 
     let mut n_ = n;
 
     if !node.children_nodes.is_empty() {
-        for child_node in node.children_nodes.iter() {
+        for child_node in &node.children_nodes {
             n_ = num_intersections(&child_node, n_, &p);
         }
         return n_;
     }
 
     if !node.edges.is_empty() {
-        for edge in node.edges.iter() {
+        for edge in &node.edges {
             if crosses(&p, &edge) {
                 n_ += 1;
             }
@@ -27,14 +27,15 @@ pub fn num_intersections(node: &Node, n: i32, p: &Point) -> i32 {
     n
 }
 
-fn skip_box_intersection(p: &Point, xmax: f64, ymin: f64, ymax: f64) -> bool {
-    if p.x > xmax {
+fn skip_box_intersection(p: &Point, node: &Node) -> bool {
+    // shouldn't this be p.x < node.xmin?
+    if p.x > node.xmax {
         return true;
     }
-    if p.y > ymax {
+    if p.y > node.ymax {
         return true;
     }
-    if p.y < ymin {
+    if p.y < node.ymin {
         return true;
     }
     false

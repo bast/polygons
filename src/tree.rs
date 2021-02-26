@@ -45,19 +45,19 @@ impl Node {
     }
 }
 
-fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
-    let difx = if p.x < xmin {
-        p.x - xmin
-    } else if p.x > xmax {
-        p.x - xmax
+fn box_distance(p: &Point, node: &Node) -> f64 {
+    let difx = if p.x < node.xmin {
+        p.x - node.xmin
+    } else if p.x > node.xmax {
+        p.x - node.xmax
     } else {
         0.0
     };
 
-    let dify = if p.y < ymin {
-        p.y - ymin
-    } else if p.y > ymax {
-        p.y - ymax
+    let dify = if p.y < node.ymin {
+        p.y - node.ymin
+    } else if p.y > node.ymax {
+        p.y - node.ymax
     } else {
         0.0
     };
@@ -66,7 +66,7 @@ fn box_distance(p: &Point, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> f64 {
 }
 
 fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
-    if box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax) > d {
+    if box_distance(&p, &node) > d {
         return d;
     }
 
@@ -93,7 +93,7 @@ fn get_distance_edge(node: &Node, d: f64, p: &Point) -> f64 {
 }
 
 fn get_distance_vertex(node: &Node, d: f64, p: &Point) -> f64 {
-    let d_box = box_distance(&p, node.xmin, node.xmax, node.ymin, node.ymax);
+    let d_box = box_distance(&p, &node);
 
     let f = d_box + node.hmin;
 

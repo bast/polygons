@@ -10,6 +10,14 @@
 Computes distances to polygon edges and vertices and can check whether
 points are inside/outside.
 
+This library is optimized to perform well with hundreds or thousands of
+polygons and thousands or millions of points.
+
+Example timings (190 polygons, 1 M reference points, run on i7-10710U):
+- distances to nearest edges: 0.7 s
+- distances to nearest vertices: 0.6 s
+- check whether points are inside or outside: 0.1 s
+
 
 ## Installation using pip
 
@@ -57,6 +65,8 @@ import polygons
 # polygon_points is a list of lists
 # the library has been developed to perform
 # with very many polygons - this is just to have a simple example
+# in this example the polygons have the same number of points but there
+# is no restriction like this, this is only an example
 polygon_points = [
     [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)],
     [(0.0, 2.0), (1.0, 2.0), (1.0, 3.0), (0.0, 3.0), (0.0, 2.0)],
@@ -100,9 +110,9 @@ print(distances)  # [0.5656854249492381, 0.7071067811865476]
 
 ## References which were used during coding
 
-- http://geomalgorithms.com/a03-_inclusion.html
-- https://en.wikipedia.org/wiki/Point_in_polygon
-- https://en.wikipedia.org/wiki/Binary_space_partitioning
+- <http://geomalgorithms.com/a03-_inclusion.html>
+- <https://en.wikipedia.org/wiki/Point_in_polygon>
+- <https://en.wikipedia.org/wiki/Binary_space_partitioning>
 
 
 ## Development notes
@@ -118,3 +128,8 @@ Building and testing the Python interface:
 ```
 $ maturin develop
 ```
+
+
+## Image
+
+Social media preview generated using https://github.com/qrohlf/trianglify.

@@ -3,6 +3,8 @@ import polygons
 # polygon_points is a list of lists
 # the library has been developed to perform
 # with very many polygons - this is just to have a simple example
+# in this example the polygons have the same number of points but there
+# is no restriction like this, this is only an example
 polygon_points = [
     [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)],
     [(0.0, 2.0), (1.0, 2.0), (1.0, 3.0), (0.0, 3.0), (0.0, 2.0)],

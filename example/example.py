@@ -6,8 +6,8 @@ import polygons
 # in this example the polygons have the same number of points but there
 # is no restriction like this, this is only an example
 polygon_points = [
-    [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (0.0, 0.0)],
-    [(0.0, 2.0), (1.0, 2.0), (1.0, 3.0), (0.0, 3.0), (0.0, 2.0)],
+    [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)],
+    [(0.0, 2.0), (1.0, 2.0), (1.0, 3.0), (0.0, 3.0)],
 ]
 
 # the more points you compute in one go, the better

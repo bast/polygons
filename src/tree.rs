@@ -75,11 +75,7 @@ pub fn build_search_tree_h(
     let mut nodes = Vec::new();
 
     let mut offset = 0;
-    for (i, polygon) in polygons.iter().enumerate() {
-        if !polygon_is_closed(&polygon) {
-            panic!("ERROR: polygon {} is not closed", i + 1);
-        }
-
+    for polygon in polygons {
         // group edges to nodes, num_edges_children at the time
         nodes.append(&mut group_edges(
             num_edges_children,
@@ -95,25 +91,6 @@ pub fn build_search_tree_h(
     }
 
     nodes
-}
-
-fn floats_are_same(f1: f64, f2: f64) -> bool {
-    return (f1 - f2).abs() < std::f64::EPSILON;
-}
-
-fn polygon_is_closed(polygon: &[(f64, f64, f64)]) -> bool {
-    let first_point = polygon.first().unwrap();
-    let last_point = polygon.last().unwrap();
-
-    if !floats_are_same(first_point.0, last_point.0) {
-        return false;
-    }
-
-    if !floats_are_same(first_point.1, last_point.1) {
-        return false;
-    }
-
-    true
 }
 
 fn pad(input: Vec<Vec<(f64, f64)>>) -> Vec<Vec<(f64, f64, f64)>> {
@@ -253,7 +230,7 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Tree {
 }
 
 fn points_to_edges(points: &[(f64, f64, f64)], offset: usize) -> Vec<Edge> {
-    points
+    let mut edges: Vec<Edge> = points
         .windows(2)
         .enumerate()
         .map(|(i, t)| Edge {
@@ -270,5 +247,23 @@ fn points_to_edges(points: &[(f64, f64, f64)], offset: usize) -> Vec<Edge> {
                 index: offset + i + 1,
             },
         })
-        .collect()
+        .collect();
+
+    let n = points.len() - 1;
+    edges.push(Edge {
+        p1: Point {
+            x: points[n].0,
+            y: points[n].1,
+            h: points[n].2,
+            index: offset + n,
+        },
+        p2: Point {
+            x: points[0].0,
+            y: points[0].1,
+            h: points[0].2,
+            index: offset,
+        },
+    });
+
+    edges
 }

@@ -1,8 +1,8 @@
-[![image](https://github.com/bast/polygons/workflows/Test/badge.svg)](https://github.com/bast/polygons/actions)
-[![image](https://img.shields.io/badge/license-%20GPL-blue.svg)](LICENSE)
-[![image](https://img.shields.io/crates/v/polygons.svg)](https://crates.io/crates/polygons)
-[![image](https://badge.fury.io/py/polygons.svg)](https://badge.fury.io/py/polygons)
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.3825616.svg)](https://doi.org/10.5281/zenodo.3825616)
+[![test status](https://github.com/bast/polygons/workflows/Test/badge.svg)](https://github.com/bast/polygons/actions)
+[![license badge](https://img.shields.io/badge/license-%20GPL-blue.svg)](LICENSE)
+[![link to Crates](https://img.shields.io/crates/v/polygons.svg)](https://crates.io/crates/polygons)
+[![link to PyPI](https://badge.fury.io/py/polygons.svg)](https://badge.fury.io/py/polygons)
+[![link to Zenodo/DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3825616.svg)](https://doi.org/10.5281/zenodo.3825616)
 
 
 # Polygons: Fast points-in-polygon test and distances to polygons

@@ -1,4 +1,6 @@
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+
 use rayon::prelude::*;
 
 use crate::distance;
@@ -25,7 +27,7 @@ pub struct Edge {
 // node is a box which has dimensions
 // it contains either other nodes
 // or it contains edges
-#[pyclass]
+#[cfg_attr(feature = "python", pyclass)]
 #[derive(Clone)]
 pub struct Node {
     pub xmin: f64,
@@ -56,7 +58,7 @@ impl Node {
     }
 }
 
-#[pyfunction]
+#[cfg_attr(feature = "python", pyfunction)]
 pub fn build_search_tree(
     polygons: Vec<Vec<(f64, f64)>>,
     num_edges_children: usize,
@@ -66,7 +68,7 @@ pub fn build_search_tree(
     build_search_tree_h(polygons_h, num_edges_children, num_nodes_children)
 }
 
-#[pyfunction]
+#[cfg_attr(feature = "python", pyfunction)]
 pub fn build_search_tree_h(
     polygons: Vec<Vec<(f64, f64, f64)>>,
     num_edges_children: usize,

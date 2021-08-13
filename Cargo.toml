@@ -19,3 +19,7 @@ classifier = ["Programming Language :: Python"]
 rand = "0.8.3"
 rayon = "1.5.0"
 pyo3 = { version = "0.13", features = ["extension-module"] }
+
+[features]
+default = ["python"]
+python = []

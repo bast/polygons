@@ -1,4 +1,6 @@
+#[cfg(feature = "pyo3")]
 use pyo3::prelude::*;
+#[cfg(feature = "rayon")]
 use rayon::prelude::*;
 
 use crate::distance;
@@ -25,7 +27,7 @@ pub struct Edge {
 // node is a box which has dimensions
 // it contains either other nodes
 // or it contains edges
-#[pyclass]
+#[cfg_attr(feature = "pyo3", pyclass)]
 #[derive(Clone)]
 pub struct Node {
     pub xmin: f64,
@@ -56,7 +58,7 @@ impl Node {
     }
 }
 
-#[pyfunction]
+#[cfg_attr(feature = "pyo3", pyfunction)]
 pub fn build_search_tree(
     polygons: Vec<Vec<(f64, f64)>>,
     num_edges_children: usize,
@@ -66,7 +68,7 @@ pub fn build_search_tree(
     build_search_tree_h(polygons_h, num_edges_children, num_nodes_children)
 }
 
-#[pyfunction]
+#[cfg_attr(feature = "pyo3", pyfunction)]
 pub fn build_search_tree_h(
     polygons: Vec<Vec<(f64, f64, f64)>>,
     num_edges_children: usize,
@@ -104,26 +106,42 @@ fn pad(input: Vec<Vec<(f64, f64)>>) -> Vec<Vec<(f64, f64, f64)>> {
 pub fn points_are_inside(tree: &Tree, points: &[(f64, f64)]) -> Vec<bool> {
     // point is inside some polygon if the number of intersections to reach
     // the point "from left" is impair
-    points
-        .par_iter()
+
+    #[cfg(feature = "rayon")]
+        let iter = points.par_iter();
+
+    #[cfg(not(feature = "rayon"))]
+        let iter = points.iter();
+
+    iter
         .map(|p| (intersections::num_intersections(&tree[0], 0, *p) % 2) != 0)
         .collect()
 }
 
 pub fn distances_nearest_edges(tree: &Tree, points: &[(f64, f64)]) -> Vec<f64> {
-    let large_number = std::f64::MAX;
+    let large_number = f64::MAX;
 
-    points
-        .par_iter()
+    #[cfg(feature = "rayon")]
+        let iter = points.par_iter();
+
+    #[cfg(not(feature = "rayon"))]
+        let iter = points.iter();
+
+    iter
         .map(|p| distance::get_distance_edge(&tree[0], large_number, *p))
         .collect()
 }
 
 pub fn distances_nearest_vertices(tree: &Tree, points: &[(f64, f64)]) -> (Vec<usize>, Vec<f64>) {
-    let large_number = std::f64::MAX;
+    let large_number = f64::MAX;
 
-    let tuples: Vec<(usize, f64)> = points
-        .par_iter()
+    #[cfg(feature = "rayon")]
+        let iter = points.par_iter();
+
+    #[cfg(not(feature = "rayon"))]
+        let iter = points.iter();
+
+    let tuples: Vec<(usize, f64)> = iter
         .map(|p| distance::get_distance_vertex(&tree[0], 0, large_number, *p))
         .collect();
 
@@ -146,7 +164,7 @@ fn group_nodes(num_nodes_children: usize, input: Vec<Node>) -> Vec<Node> {
         _ => n + 1,
     };
 
-    let large_number = std::f64::MAX;
+    let large_number = f64::MAX;
 
     let mut parents: Vec<Node> = Vec::new();
 
@@ -188,7 +206,7 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Tree {
         _ => n + 1,
     };
 
-    let large_number = std::f64::MAX;
+    let large_number = f64::MAX;
 
     let mut parents = Vec::new();
 

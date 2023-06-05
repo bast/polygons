@@ -21,7 +21,7 @@ fn box_distance(p: (f64, f64), node: &Node) -> f64 {
 }
 
 pub fn get_distance_edge(node: &Node, d: f64, p: (f64, f64)) -> f64 {
-    if box_distance(p, &node) > d {
+    if box_distance(p, node) > d {
         return d;
     }
 
@@ -29,7 +29,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: (f64, f64)) -> f64 {
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let temp = get_distance_edge(&child_node, d_min, p);
+            let temp = get_distance_edge(child_node, d_min, p);
             d_min = d_min.min(temp);
         }
         return d_min;
@@ -48,7 +48,7 @@ pub fn get_distance_edge(node: &Node, d: f64, p: (f64, f64)) -> f64 {
 }
 
 pub fn get_distance_vertex(node: &Node, i: usize, d: f64, p: (f64, f64)) -> (usize, f64) {
-    if box_distance(p, &node) + node.hmin > d {
+    if box_distance(p, node) + node.hmin > d {
         return (i, d);
     }
 
@@ -57,7 +57,7 @@ pub fn get_distance_vertex(node: &Node, i: usize, d: f64, p: (f64, f64)) -> (usi
 
     if !node.children_nodes.is_empty() {
         for child_node in node.children_nodes.iter() {
-            let (i_t, d_t) = get_distance_vertex(&child_node, i_min, d_min, p);
+            let (i_t, d_t) = get_distance_vertex(child_node, i_min, d_min, p);
             if d_t < d_min {
                 d_min = d_t;
                 i_min = i_t;

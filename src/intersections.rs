@@ -1,7 +1,7 @@
 use crate::tree::{Edge, Node};
 
 pub fn num_intersections(node: &Node, n: i32, p: (f64, f64)) -> i32 {
-    if skip_box_intersection(p, &node) {
+    if skip_box_intersection(p, node) {
         return n;
     }
 
@@ -9,14 +9,14 @@ pub fn num_intersections(node: &Node, n: i32, p: (f64, f64)) -> i32 {
 
     if !node.children_nodes.is_empty() {
         for child_node in &node.children_nodes {
-            n_ = num_intersections(&child_node, n_, p);
+            n_ = num_intersections(child_node, n_, p);
         }
         return n_;
     }
 
     if !node.edges.is_empty() {
         for edge in &node.edges {
-            if crosses(p, &edge) {
+            if crosses(p, edge) {
                 n_ += 1;
             }
         }
@@ -77,9 +77,9 @@ fn crosses(r: (f64, f64), e: &Edge) -> bool {
 
     if e.p1.y < e.p2.y {
         // upward edge
-        a_z(r, &e) < 0.0
+        a_z(r, e) < 0.0
     } else {
         // downward edge
-        a_z(r, &e) > 0.0
+        a_z(r, e) > 0.0
     }
 }

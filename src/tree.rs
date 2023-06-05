@@ -35,7 +35,7 @@ pub struct Node {
     pub ymin: f64,
     pub ymax: f64,
     pub hmin: f64,
-    pub children_nodes: Vec<Box<Node>>,
+    pub children_nodes: Vec<Node>,
     pub edges: Vec<Edge>,
 }
 
@@ -51,7 +51,7 @@ impl Node {
     }
     fn insert_node(&mut self, new_node: Node) {
         let boxed_node = Box::new(new_node);
-        self.children_nodes.push(boxed_node);
+        self.children_nodes.push(*boxed_node);
     }
     fn insert_edge(&mut self, new_edge: Edge) {
         self.edges.push(new_edge);
@@ -108,13 +108,12 @@ pub fn points_are_inside(tree: &Tree, points: &[(f64, f64)]) -> Vec<bool> {
     // the point "from left" is impair
 
     #[cfg(feature = "rayon")]
-        let iter = points.par_iter();
+    let iter = points.par_iter();
 
     #[cfg(not(feature = "rayon"))]
-        let iter = points.iter();
+    let iter = points.iter();
 
-    iter
-        .map(|p| (intersections::num_intersections(&tree[0], 0, *p) % 2) != 0)
+    iter.map(|p| (intersections::num_intersections(&tree[0], 0, *p) % 2) != 0)
         .collect()
 }
 
@@ -122,13 +121,12 @@ pub fn distances_nearest_edges(tree: &Tree, points: &[(f64, f64)]) -> Vec<f64> {
     let large_number = f64::MAX;
 
     #[cfg(feature = "rayon")]
-        let iter = points.par_iter();
+    let iter = points.par_iter();
 
     #[cfg(not(feature = "rayon"))]
-        let iter = points.iter();
+    let iter = points.iter();
 
-    iter
-        .map(|p| distance::get_distance_edge(&tree[0], large_number, *p))
+    iter.map(|p| distance::get_distance_edge(&tree[0], large_number, *p))
         .collect()
 }
 
@@ -136,10 +134,10 @@ pub fn distances_nearest_vertices(tree: &Tree, points: &[(f64, f64)]) -> (Vec<us
     let large_number = f64::MAX;
 
     #[cfg(feature = "rayon")]
-        let iter = points.par_iter();
+    let iter = points.par_iter();
 
     #[cfg(not(feature = "rayon"))]
-        let iter = points.iter();
+    let iter = points.iter();
 
     let tuples: Vec<(usize, f64)> = iter
         .map(|p| distance::get_distance_vertex(&tree[0], 0, large_number, *p))

@@ -2,9 +2,9 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
 use crate::tree;
+use crate::tree::build_search_tree;
+use crate::tree::build_search_tree_h;
 use crate::tree::Tree;
-use crate::tree::__pyo3_get_function_build_search_tree;
-use crate::tree::__pyo3_get_function_build_search_tree_h;
 
 #[pyfunction]
 fn points_are_inside(tree: Tree, points: Vec<(f64, f64)>) -> Vec<bool> {

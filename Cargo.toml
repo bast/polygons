@@ -15,10 +15,6 @@ crate-type = ["cdylib", "rlib"]
 
 default = ["rayon", "pyo3"]
 
-[package.metadata.maturin]
-requires-python = ">=3.6"
-classifier = ["Programming Language :: Python"]
-
 [dependencies]
 rayon = { version = "1.7", optional = true }
 pyo3 = { version = "0.19", features = ["extension-module"], optional = true }

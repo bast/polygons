@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Switch branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Build crate
       run: cargo build --verbose
     - name: Test crate

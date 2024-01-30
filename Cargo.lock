@@ -147,7 +147,7 @@ dependencies = [
 
 [[package]]
 name = "polygons"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "pyo3",
  "rand",

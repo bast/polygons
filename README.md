@@ -47,10 +47,10 @@ author(s):
 @misc{polygons,
   author    = {Bast, Radovan},
   title     = {Polygons: Fast points-in-polygon test and distances to polygons},
-  month     = {2},
-  year      = {2021},
+  month     = {1},
+  year      = {2024},
   publisher = {Zenodo},
-  version   = {v0.2.0},
+  version   = {v0.3.3},
   doi       = {10.5281/zenodo.3825616},
   url       = {https://doi.org/10.5281/zenodo.3825616}
 }

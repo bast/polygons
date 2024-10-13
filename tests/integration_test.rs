@@ -171,7 +171,7 @@ fn basic() {
     }
 
     let contains = polygons::points_are_inside(&tree, &reference_points);
-    let reference_bools = read_vector("tests/case-1/reference/points_are_inside.txt");
+    let reference_bools: Vec<bool> = read_vector("tests/case-1/reference/points_are_inside.txt");
     for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
         assert_eq!(x, rx);
     }

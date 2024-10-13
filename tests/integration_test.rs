@@ -183,6 +183,22 @@ fn basic() {
 }
 
 #[test]
+fn numerical_problem() {
+    let polygons = read_polygons("tests/case-2/boundary.txt");
+    let polygons = zero_out_h(polygons);
+
+    let tree = polygons::build_search_tree_h(polygons, 4, 4);
+
+    let reference_points = read_tuples("tests/case-2/reference/reference_points.txt");
+
+    let contains = polygons::points_are_inside(&tree, &reference_points);
+    let reference_bools: Vec<bool> = read_vector("tests/case-2/reference/points_are_inside.txt");
+    for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
+        assert_eq!(x, rx);
+    }
+}
+
+#[test]
 fn custom_distance() {
     let polygons = read_polygons("tests/case-1/islands.txt");
     let (x_min, x_max, y_min, y_max) = get_bounds(&polygons);

@@ -18,7 +18,7 @@ pub struct Point {
 }
 
 // edge connects two points
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Edge {
     pub p1: Point,
     pub p2: Point,

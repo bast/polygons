@@ -74,8 +74,13 @@ fn read_polygons(file_name: &str) -> Vec<Vec<(f64, f64, f64)>> {
             let words: Vec<&str> = line.split_whitespace().collect();
             let x = words[0].parse().unwrap();
             let y = words[1].parse().unwrap();
-            let h = words[2].parse().unwrap();
-            polygon.push((x, y, h));
+
+            if words.len() == 3 {
+                let h = words[2].parse().unwrap();
+                polygon.push((x, y, h));
+            } else {
+                polygon.push((x, y, 0.0));
+            }
         }
         i -= 1;
     }

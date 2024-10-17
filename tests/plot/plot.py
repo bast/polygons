@@ -59,7 +59,7 @@ def main(polygons_file, figure):
     ys_inside = []
     xs_outside = []
     ys_outside = []
-    for (i, (xs, ys)) in enumerate(points):
+    for i, (xs, ys) in enumerate(points):
         if inside[i]:
             xs_inside.append(xs)
             ys_inside.append(ys)

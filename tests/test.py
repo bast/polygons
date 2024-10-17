@@ -50,34 +50,34 @@ def read_data(file_name, g):
 def test_interface():
     here = os.path.dirname(os.path.realpath(__file__))
 
-    ps = read_polygons(os.path.join(here, "islands.txt"))
+    ps = read_polygons(os.path.join(here, "case-1", "islands.txt"))
     num_edges_children = 4
     num_nodes_children = 4
 
     tree = polygons.build_search_tree(ps, num_edges_children, num_nodes_children)
 
     points = read_data(
-        os.path.join(here, "reference", "reference_points.txt"),
+        os.path.join(here, "case-1", "reference", "reference_points.txt"),
         lambda x: tuple(map(float, x.split())),
     )
 
     inside = polygons.points_are_inside(tree, points)
     inside_reference = read_data(
-        os.path.join(here, "reference", "points_are_inside.txt"),
+        os.path.join(here, "case-1", "reference", "points_are_inside.txt"),
         lambda x: x.startswith("true"),
     )
     assert inside == inside_reference
 
     _, distances = polygons.distances_nearest_vertices(tree, points)
     distances_reference = read_data(
-        os.path.join(here, "reference", "distances_nearest_vertices.txt"),
+        os.path.join(here, "case-1", "reference", "distances_nearest_vertices.txt"),
         lambda x: float(x),
     )
     assert all([floats_are_same(a, b) for a, b in zip(distances, distances_reference)])
 
     distances = polygons.distances_nearest_edges(tree, points)
     distances_reference = read_data(
-        os.path.join(here, "reference", "distances_nearest_edges.txt"),
+        os.path.join(here, "case-1", "reference", "distances_nearest_edges.txt"),
         lambda x: float(x),
     )
     assert all([floats_are_same(a, b) for a, b in zip(distances, distances_reference)])

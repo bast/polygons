@@ -15,10 +15,11 @@ pub struct Point {
     pub y: f64,
     pub h: f64,
     pub index: usize,
+    pub in_between: bool,
 }
 
 // edge connects two points
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Edge {
     pub p1: Point,
     pub p2: Point,
@@ -113,7 +114,10 @@ pub fn points_are_inside(tree: &Tree, points: &[(f64, f64)]) -> Vec<bool> {
     #[cfg(not(feature = "rayon"))]
     let iter = points.iter();
 
-    iter.map(|p| (intersections::num_intersections(&tree[0], 0, *p) % 2) != 0)
+    // the division by 2 is because we count each edge intersection twice
+    // and the reason for that is that it makes it easier to deal with the case
+    // where the point has the same y coordinate as an edge point
+    iter.map(|p| ((intersections::num_intersections(&tree[0], 0, *p) / 2) % 2) != 0)
         .collect()
 }
 
@@ -245,39 +249,82 @@ fn group_edges(num_edges_children: usize, input: Vec<Edge>) -> Tree {
     parents
 }
 
+fn is_in_between(y1: &f64, y2: &f64, y3: &f64) -> bool {
+    (y1 < y2 && y2 < y3) || (y1 > y2 && y2 > y3)
+}
+
 fn points_to_edges(points: &[(f64, f64, f64)], offset: usize) -> Vec<Edge> {
     let mut edges: Vec<Edge> = points
-        .windows(2)
+        .windows(4)
         .enumerate()
         .map(|(i, t)| Edge {
             p1: Point {
-                x: t[0].0,
-                y: t[0].1,
-                h: t[0].2,
-                index: offset + i,
-            },
-            p2: Point {
                 x: t[1].0,
                 y: t[1].1,
                 h: t[1].2,
                 index: offset + i + 1,
+                in_between: is_in_between(&t[0].1, &t[1].1, &t[2].1),
+            },
+            p2: Point {
+                x: t[2].0,
+                y: t[2].1,
+                h: t[2].2,
+                index: offset + i + 2,
+                in_between: is_in_between(&t[1].1, &t[2].1, &t[3].1),
             },
         })
         .collect();
 
     let n = points.len() - 1;
+
+    edges.push(Edge {
+        p1: Point {
+            x: points[n - 1].0,
+            y: points[n - 1].1,
+            h: points[n - 1].2,
+            index: offset + n - 1,
+            in_between: is_in_between(&points[n - 2].1, &points[n - 1].1, &points[n].1),
+        },
+        p2: Point {
+            x: points[n].0,
+            y: points[n].1,
+            h: points[n].2,
+            index: offset + n,
+            in_between: is_in_between(&points[n - 1].1, &points[n].1, &points[0].1),
+        },
+    });
+
     edges.push(Edge {
         p1: Point {
             x: points[n].0,
             y: points[n].1,
             h: points[n].2,
             index: offset + n,
+            in_between: is_in_between(&points[n - 1].1, &points[n].1, &points[0].1),
         },
         p2: Point {
             x: points[0].0,
             y: points[0].1,
             h: points[0].2,
             index: offset,
+            in_between: is_in_between(&points[n].1, &points[0].1, &points[1].1),
+        },
+    });
+
+    edges.push(Edge {
+        p1: Point {
+            x: points[0].0,
+            y: points[0].1,
+            h: points[0].2,
+            index: offset,
+            in_between: is_in_between(&points[n].1, &points[0].1, &points[1].1),
+        },
+        p2: Point {
+            x: points[1].0,
+            y: points[1].1,
+            h: points[1].2,
+            index: offset + 1,
+            in_between: is_in_between(&points[0].1, &points[1].1, &points[2].1),
         },
     });
 

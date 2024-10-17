@@ -1,6 +1,6 @@
 [package]
 name = "polygons"
-version = "0.3.3"
+version = "0.3.4"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 description = "Fast points-in-polygon test and distances to polygons."
 license = "GPL-3.0-only"
@@ -16,8 +16,9 @@ crate-type = ["cdylib", "rlib"]
 default = ["rayon", "pyo3"]
 
 [dependencies]
-rayon = { version = "1.8", optional = true }
-pyo3 = { version = "0.20", features = ["extension-module"], optional = true }
+rayon = { version = "1.10", optional = true }
+pyo3 = { version = "0.22", features = ["extension-module"], optional = true }
+float-cmp = "0.10"
 
 [dev-dependencies]
 rand = "0.8"

@@ -74,8 +74,13 @@ fn read_polygons(file_name: &str) -> Vec<Vec<(f64, f64, f64)>> {
             let words: Vec<&str> = line.split_whitespace().collect();
             let x = words[0].parse().unwrap();
             let y = words[1].parse().unwrap();
-            let h = words[2].parse().unwrap();
-            polygon.push((x, y, h));
+
+            if words.len() == 3 {
+                let h = words[2].parse().unwrap();
+                polygon.push((x, y, h));
+            } else {
+                polygon.push((x, y, 0.0));
+            }
         }
         i -= 1;
     }
@@ -151,27 +156,43 @@ fn zero_out_h(polygons: Vec<Vec<(f64, f64, f64)>>) -> Vec<Vec<(f64, f64, f64)>> 
 
 #[test]
 fn basic() {
-    let polygons = read_polygons("tests/islands.txt");
+    let polygons = read_polygons("tests/case-1/islands.txt");
     let polygons = zero_out_h(polygons);
 
     let tree = polygons::build_search_tree_h(polygons, 4, 4);
 
-    let reference_points = read_tuples("tests/reference/reference_points.txt");
+    let reference_points = read_tuples("tests/case-1/reference/reference_points.txt");
 
     let distances = polygons::distances_nearest_edges(&tree, &reference_points);
-    let reference_distances = read_vector("tests/reference/distances_nearest_edges.txt");
+    let reference_distances = read_vector("tests/case-1/reference/distances_nearest_edges.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
     let (_, distances) = polygons::distances_nearest_vertices(&tree, &reference_points);
-    let reference_distances = read_vector("tests/reference/distances_nearest_vertices.txt");
+    let reference_distances = read_vector("tests/case-1/reference/distances_nearest_vertices.txt");
     for (&x, &rx) in distances.iter().zip(reference_distances.iter()) {
         assert!(floats_are_same(x, rx));
     }
 
     let contains = polygons::points_are_inside(&tree, &reference_points);
-    let reference_bools = read_vector("tests/reference/points_are_inside.txt");
+    let reference_bools: Vec<bool> = read_vector("tests/case-1/reference/points_are_inside.txt");
+    for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
+        assert_eq!(x, rx);
+    }
+}
+
+#[test]
+fn numerical_problem() {
+    let polygons = read_polygons("tests/case-2/boundary.txt");
+    let polygons = zero_out_h(polygons);
+
+    let tree = polygons::build_search_tree_h(polygons, 4, 4);
+
+    let reference_points = read_tuples("tests/case-2/reference/reference_points.txt");
+
+    let contains = polygons::points_are_inside(&tree, &reference_points);
+    let reference_bools: Vec<bool> = read_vector("tests/case-2/reference/points_are_inside.txt");
     for (&x, &rx) in contains.iter().zip(reference_bools.iter()) {
         assert_eq!(x, rx);
     }
@@ -179,7 +200,7 @@ fn basic() {
 
 #[test]
 fn custom_distance() {
-    let polygons = read_polygons("tests/islands.txt");
+    let polygons = read_polygons("tests/case-1/islands.txt");
     let (x_min, x_max, y_min, y_max) = get_bounds(&polygons);
 
     let num_reference_points = 10_000;
@@ -200,7 +221,7 @@ fn custom_distance() {
 #[ignore]
 #[test]
 fn benchmark() {
-    let polygons = read_polygons("tests/islands.txt");
+    let polygons = read_polygons("tests/case-1/islands.txt");
     let polygons = zero_out_h(polygons);
 
     let num_reference_points = 1_000_000;

@@ -18,6 +18,7 @@ default = ["rayon", "pyo3"]
 [dependencies]
 rayon = { version = "1.10", optional = true }
 pyo3 = { version = "0.22", features = ["extension-module"], optional = true }
+float-cmp = "0.10"
 
 [dev-dependencies]
 rand = "0.8"

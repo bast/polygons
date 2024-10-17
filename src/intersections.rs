@@ -1,5 +1,9 @@
 use crate::tree::{Edge, Node};
+use float_cmp::approx_eq;
 
+// we count each intersection twice since this makes it possible to deal with the reference point
+// has the same y-coordinate as an edge point and then we can avoid double-counting the
+// intersection
 pub fn num_intersections(node: &Node, n: i32, p: (f64, f64)) -> i32 {
     if skip_box_intersection(p, node) {
         return n;
@@ -17,7 +21,14 @@ pub fn num_intersections(node: &Node, n: i32, p: (f64, f64)) -> i32 {
     if !node.edges.is_empty() {
         for edge in &node.edges {
             if crosses(p, edge) {
-                n_ += 1;
+                // if y-coordinate of reference point is equal to y-coordinate of edge point
+                if (approx_eq!(f64, p.1, edge.p1.y, ulps = 2) && edge.p1.in_between)
+                    || (approx_eq!(f64, p.1, edge.p2.y, ulps = 2) && edge.p2.in_between)
+                {
+                    n_ += 1;
+                } else {
+                    n_ += 2;
+                }
             }
         }
         return n_;

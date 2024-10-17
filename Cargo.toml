@@ -1,6 +1,6 @@
 [package]
 name = "polygons"
-version = "0.3.3"
+version = "0.3.4"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 description = "Fast points-in-polygon test and distances to polygons."
 license = "GPL-3.0-only"

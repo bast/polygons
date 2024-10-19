@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python plot.py --polygons-file ../case-1/islands.txt --figure example.png
+python plot.py --polygons-file ../case-2/boundary.txt --figure example.png

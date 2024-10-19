@@ -46,13 +46,28 @@ def main(polygons_file, figure):
 
     num_edges_children = 4
     num_nodes_children = 4
-    tree = polygons.build_tree(ps, num_edges_children, num_nodes_children)
+    tree = polygons.build_search_tree(ps, num_edges_children, num_nodes_children)
 
-    num_points = 50000
-    points = [
-        (random.uniform(xmin, xmax), random.uniform(ymin, ymax))
-        for _ in range(num_points)
-    ]
+    points = []
+
+    # num_points = 50000
+    # points = [
+    #     (random.uniform(xmin, xmax), random.uniform(ymin, ymax))
+    #     for _ in range(num_points)
+    # ]
+
+    # add random points which have the same y-coordinate as the vertices of the polygons
+    for polygon in ps:
+        for _, y in polygon:
+            for _x in range(500):
+                points.append((random.uniform(xmin, xmax), y))
+
+    # add more random points
+    for _y in range(20):
+        y = random.uniform(ymin, ymax)
+        for _x in range(500):
+            points.append((random.uniform(xmin, xmax), y))
+
     inside = polygons.points_are_inside(tree, points)
 
     xs_inside = []

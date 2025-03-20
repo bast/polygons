@@ -27,7 +27,7 @@ $ pip install polygons
 
 ## Supported versions
 
-- Python: 3.8 - 3.12
+- Python: 3.10 - 3.13
 - Operating systems: Linux, macOS, and Windows
 
 
@@ -47,10 +47,10 @@ author(s):
 @misc{polygons,
   author    = {Bast, Radovan},
   title     = {Polygons: Fast points-in-polygon test and distances to polygons},
-  month     = {10},
-  year      = {2024},
+  month     = {03},
+  year      = {2025},
   publisher = {Zenodo},
-  version   = {v0.3.4},
+  version   = {v0.3.5},
   doi       = {10.5281/zenodo.3825616},
   url       = {https://doi.org/10.5281/zenodo.3825616}
 }

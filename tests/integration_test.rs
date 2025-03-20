@@ -42,10 +42,13 @@ fn get_random_points(
     y_min: f64,
     y_max: f64,
 ) -> Vec<(f64, f64)> {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let mut reference_points = Vec::new();
     for _ in 0..num_points {
-        reference_points.push((rng.gen_range(x_min..x_max), rng.gen_range(y_min..y_max)));
+        reference_points.push((
+            rng.random_range(x_min..x_max),
+            rng.random_range(y_min..y_max),
+        ));
     }
     reference_points
 }

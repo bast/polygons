@@ -13,10 +13,10 @@ points are inside/outside.
 This library is optimized to perform well with hundreds or thousands of
 polygons and thousands or millions of points.
 
-Example timings (190 polygons, 1 M reference points, run on i7-10710U):
-- distances to nearest edges: 0.7 s
-- distances to nearest vertices: 0.6 s
-- check whether points are inside or outside: 0.1 s
+Example timings (190 polygons, 1 M reference points, run on 12th Gen Intel i7-12700T at 4.6 GHz):
+- distances to nearest edges: 320 ms
+- distances to nearest vertices: 290 ms
+- check whether points are inside or outside: 45 ms
 
 
 ## Installation using pip

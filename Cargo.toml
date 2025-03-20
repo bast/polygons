@@ -4,7 +4,7 @@ version = "0.3.4"
 authors = ["Radovan Bast <bast@users.noreply.github.com>"]
 description = "Fast points-in-polygon test and distances to polygons."
 license = "GPL-3.0-only"
-edition = "2018"
+edition = "2024"
 readme = "README.md"
 homepage = "https://github.com/bast/polygons"
 

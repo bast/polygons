@@ -1,3 +1,2 @@
 maturin
 pytest
-black

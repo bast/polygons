@@ -17,7 +17,7 @@ default = ["rayon", "pyo3"]
 
 [dependencies]
 rayon = { version = "1.10.0", optional = true }
-pyo3 = { version = "0.24.0", features = ["extension-module"], optional = true }
+pyo3 = { version = "0.24.1", features = ["extension-module"], optional = true }
 float-cmp = "0.10.0"
 
 [dev-dependencies]
